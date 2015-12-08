@@ -1,0 +1,31 @@
+# DB connection configs. Do *NOT* version control these.
+*.conf
+alembic.ini
+
+# IntelliJ
+.idea
+
+# OSX
+*.DS_Store
+
+# Automatically generated files
+geneva/extension/chrome/g2e.js
+geneva/extension/firefox/g2e.js
+geneva/extension/firefox/geo2enrichr.xpi
+
+# Chrome Extension zip file
+*.zip
+
+# JS build files, dependencies, analysis
+resources/
+scripts/node_modules/
+misc/
+analysis/
+
+# Python
+*.pyc
+venv/
+
+# VIM
+*.swp
+*.swo

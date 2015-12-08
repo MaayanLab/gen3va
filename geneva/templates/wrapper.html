@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        {% if self.title() %}
+            <title>{% block title %}{% endblock %}</title>
+        {% else %}
+            <title>GENEVA</title>
+        {% endif %}
+
+        <base href="/geneva/" />
+
+        <link rel="icon" href="static/image/favicon.ico" type="image/x-icon">
+        <link href="static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <script src="static/lib/bootstrap/js/bootstrap.js"></script>
+        <link href="static/style/main.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        {% with use_simple_header = use_simple_header %}
+            {% include 'partial/header.html' %}
+        {% endwith %}
+        <div class="container-full">
+            <div id="page" class="container">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        {% include 'partial/footer.html' %}
+    </body>
+</html>

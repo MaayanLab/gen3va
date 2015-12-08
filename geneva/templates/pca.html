@@ -1,0 +1,21 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <script src="static/lib/highcharts/highcharts.js"></script>
+    <script src="static/lib/highcharts/highcharts-3d.js"></script>
+    <script src="static/lib/highcharts/highcharts-exporting.js"></script>
+    <script src="static/js/pca.js"></script>
+
+    <p><a href="{{ results_url }}/{{ extraction_id }}">Return to results page</a></p>
+    <div id="pca-container"></div>
+
+    <script>
+    $(function () {
+        // TODO: This is a *hack* and should be removed. I'm doing it for now
+        // because I don't expect this page to exist for much longer.
+        $('#page').css('margin-top', 50);
+
+        plotPCA({{ pca_data|safe }});
+    });
+    </script>
+{% endblock %}
