@@ -8,7 +8,7 @@ from geneva import app
 from flask import render_template
 
 
-error = Blueprint('error', __name__, url_prefix=Config.BASE_URL)
+error_page = Blueprint('error', __name__, url_prefix=Config.BASE_URL)
 
 
 @app.errorhandler(404)

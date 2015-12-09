@@ -9,10 +9,10 @@ from substrate import Tag
 from geneva.db import dataaccess
 
 
-explore_tags = Blueprint('explore_tags', __name__, url_prefix=Config.BASE_TAGS_URL)
+tags_page = Blueprint('explore_tags', __name__, url_prefix=Config.BASE_TAGS_URL)
 
 
-@explore_tags.route('/', methods=['GET'])
+@tags_page.route('/', methods=['GET'])
 def tags_endpoint():
     tags = dataaccess.fetch_all(Tag)
     return render_template('tags-all.html',
@@ -21,7 +21,7 @@ def tags_endpoint():
     )
 
 
-@explore_tags.route('/<tag_name>', methods=['GET'])
+@tags_page.route('/<tag_name>', methods=['GET'])
 def tag_endpoint(tag_name):
     tag = dataaccess.fetch_tag(tag_name)
     if tag is None:

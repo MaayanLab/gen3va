@@ -17,8 +17,11 @@ class Config(object):
     BASE_API_URL      = BASE_URL + '/api/1.0'
     BASE_PCA_URL      = BASE_URL + '/pca'
     BASE_CLUSTER_URL  = BASE_URL + '/cluster'
-    BASE_TAGS_URL     = BASE_URL + '/explore/tags'
-    BASE_METADATA_URL = BASE_URL + '/explore/metadata'
+
+    BASE_TAGS_URL     = BASE_URL + '/tags'
+    BASE_METADATA_URL = BASE_URL + '/metadata'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
+
+    BASE_RESULTS_URL = '/g2e/TODO'

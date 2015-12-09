@@ -10,10 +10,10 @@ from geneva.core.pca import pca
 from geneva.config import Config
 
 
-pca_blueprint = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
+pca_api = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
 
 
-@pca_blueprint.route('', methods=['POST'])
+@pca_api.route('', methods=['POST'])
 def perform_gene_signatures_pca():
     """Performs PCA on a list of gene signatures, referenced by extraction_id.
     """
@@ -21,7 +21,7 @@ def perform_gene_signatures_pca():
     return jsonify(pca_data)
 
 
-@pca_blueprint.route('/<extraction_id>', methods=['GET'])
+@pca_api.route('/<extraction_id>', methods=['GET'])
 def perform_soft_file_pca(extraction_id):
     """Performs PCA on a SOFT file, referenced by extraction_id.
     """

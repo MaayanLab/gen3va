@@ -46,7 +46,7 @@ h4,
 h5,
 h6 {
   color: #444444;
-  font-family: 'Open Sans', arial, sans-serif;
+  font-family: 'Roboto', arial, sans-serif;
   font-weight: bold;
 }
 h1 {
@@ -244,23 +244,10 @@ caption {
  * ----------------------------- */
 #header {
   border-bottom: 1px solid #eeeeee;
+  background-color: #004561;
+  color: white;
 }
 #header #logo {
-  background: #f5f5f5;
-  /* Old browsers */
-  background: -moz-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #f9f9f9));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
-  /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
-  /* IE10+ */
-  background: linear-gradient(to bottom, #f5f5f5 0%, #f9f9f9 100%);
-  /* W3C */
-  border-bottom: 1px solid #eeeeee;
   padding: 10px 0;
 }
 #header #logo a:hover {
@@ -268,15 +255,15 @@ caption {
 }
 #header a {
   border: none;
-  color: #444444;
-  font-family: 'Open Sans', arial, sans-serif;
+  color: white;
+  font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
   font-weight: bold;
   text-decoration: none;
 }
 #header a:hover {
   cursor: pointer;
-  color: #444444;
+  color: #f9f9f9;
 }
 #header ul.nav li {
   border-right: 1px solid #eeeeee;

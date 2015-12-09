@@ -1,4 +1,3 @@
-@import '../../extension/common/less/common.less';
 @import 'variable.less';
 
 
@@ -247,15 +246,9 @@ caption {
  * ----------------------------- */
 #header {
     border-bottom: 1px solid @color-lightgray3;
+    background-color: #004561;
+    color: white;
     #logo {
-        background: @color-lightgray1; /* Old browsers */
-        background: -moz-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color-lightgray1), color-stop(100%, @color-lightgray2)); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* IE10+ */
-        background: linear-gradient(to bottom, @color-lightgray1 0%, @color-lightgray2 100%); /* W3C */
-        border-bottom: 1px solid @color-lightgray3;
         padding: 10px 0;
         a {
             &:hover {
@@ -265,14 +258,14 @@ caption {
     }
     a {
         border: none;
-        color: @color-black-almost;
+        color: white;
         font-family: @font-family-accent;
         font-size: 16px;
         font-weight: bold;
         text-decoration: none;
         &:hover {
             cursor: pointer;
-            color: @color-black-almost;
+            color: @color-lightgray2;
         }
     }
     ul.nav {

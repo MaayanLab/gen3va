@@ -15,7 +15,7 @@ from geneva.core.cluster import cluster
 from geneva.config import Config
 
 
-cluster_blueprint = Blueprint('cluster', __name__, url_prefix=Config.BASE_URL + '/cluster')
+cluster_api = Blueprint('cluster', __name__, url_prefix=Config.BASE_URL + '/cluster')
 
 
 BASE_URL = 'http://amp.pharm.mssm.edu/clustergrammer/'
@@ -24,7 +24,7 @@ CG_ENRICHR_URL = BASE_URL + 'load_Enrichr_gene_lists'
 JSON_HEADERS = {'content-type': 'application/json'}
 
 
-@cluster_blueprint.route('/<extraction_id>', methods=['GET'])
+@cluster_api.route('/<extraction_id>', methods=['GET'])
 def perform_hierarchical_clustering(extraction_id):
     """Performs hierarchical clustering on a SOFT file.
     """
@@ -44,7 +44,7 @@ def perform_hierarchical_clustering(extraction_id):
     return redirect(target_app_link.link)
 
 
-@cluster_blueprint.route('/enrichr', methods=['POST'])
+@cluster_api.route('/enrichr', methods=['POST'])
 def enrichr_to_clustergrammer():
     """Based on extraction IDs, gets enrichment vectors from Enrichr
     and then creates a hierarchical cluster from Clustergrammer.
@@ -96,7 +96,7 @@ def enrichr_to_clustergrammer():
         })
 
 
-@cluster_blueprint.route('/l1000cds2', methods=['POST'])
+@cluster_api.route('/l1000cds2', methods=['POST'])
 def l1000cds2_to_clustergrammer():
     """Based on extraction IDs, gets enrichment vectors from Enrichr
     and then creates a hierarchical cluster from Clustergrammer.

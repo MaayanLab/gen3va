@@ -28,18 +28,18 @@ else:
     print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from geneva.endpoints.base import base
-from geneva.endpoints.error import error
-from geneva.endpoints.exploremetadata import explore_metadata
-from geneva.endpoints.exploretags import explore_tags
-from geneva.endpoints.pcaapi import pca_blueprint
-from geneva.endpoints.clusterapi import cluster_blueprint
+from geneva.endpoints.pages.index import index_page
+from geneva.endpoints.pages.error import error_page
+from geneva.endpoints.pages.metadata import metadata_page
+from geneva.endpoints.pages.tags import tags_page
+from geneva.endpoints.api.cluster import cluster_api
+from geneva.endpoints.api.pca import pca_api
 from geneva.util.jinjafilters import jinjafilters
 
-app.register_blueprint(base)
-app.register_blueprint(cluster_blueprint)
-app.register_blueprint(error)
-app.register_blueprint(pca_blueprint)
-app.register_blueprint(explore_metadata)
-app.register_blueprint(explore_tags)
+app.register_blueprint(index_page)
+app.register_blueprint(error_page)
+app.register_blueprint(metadata_page)
+app.register_blueprint(tags_page)
+app.register_blueprint(cluster_api)
+app.register_blueprint(pca_api)
 app.register_blueprint(jinjafilters)

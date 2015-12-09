@@ -9,11 +9,11 @@ import geneva.db.dataaccess as dataaccess
 import geneva.util.urlcodex as urlcodex
 
 
-explore_metadata = Blueprint('explore_metadata', __name__, url_prefix=Config.BASE_METADATA_URL)
+metadata_page = Blueprint('explore_metadata', __name__, url_prefix=Config.BASE_METADATA_URL)
 
 
-@explore_metadata.route('/<path:metadata_name>', methods=['GET'])
-def metadata_endpoint(metadata_name):
+@metadata_page.route('/<path:metadata_name>', methods=['GET'])
+def metadata(metadata_name):
     if metadata_name[-1] == '/':
         metadata_name = metadata_name[:-1]
 
@@ -35,8 +35,8 @@ def metadata_endpoint(metadata_name):
         )
 
 
-@explore_metadata.route('/<path:metadata_name>/<path:metadata_value>', methods=['GET'])
-def metadata_with_value_endpoint(metadata_name, metadata_value):
+@metadata_page.route('/<path:metadata_name>/<path:metadata_value>', methods=['GET'])
+def metadata_with_value(metadata_name, metadata_value):
     metadata_name = urlcodex.decode(metadata_name)
     metadata_value = urlcodex.decode(metadata_value)
     metadata = dataaccess.fetch_metadata_by_value(metadata_name, metadata_value)
