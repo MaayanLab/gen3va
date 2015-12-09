@@ -1,10 +1,10 @@
 function buildStats(stats) {
 
     Highcharts.setOptions({
-        colors: ['#005f99'],
+        colors: ['#428bca', '#005f99'],
         chart: {
             style: {
-                fontFamily: 'Open Sans'
+                fontFamily: 'Roboto'
             }
         }
     });

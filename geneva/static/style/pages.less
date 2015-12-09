@@ -3,44 +3,17 @@
 
 #index-page {
     margin-top: 30px;
-    table {
-        table-layout: fixed;
-        width: 100%;
-        &.extensions {
-            tr {
-                &:first-child {
-                    padding-bottom: 10px;
-                }
-                &.last {
-                    td {
-                        border: none;
-                    }
-                }
-                td {
-                    vertical-align: top;
-                    p {
-                        margin: 0;
-                    }
-                    &:first-child {
-                        width: 15%;
-                    }
-                }
-            }
+    ul {
+        li {
+            padding: 3px 0;
         }
     }
-    #intro-text {
-        p {
-            font-size: 16px;
-            &:first-child {
-                font-style: italic;
-            }
-        }
+    #introduction {
+        font-size: 20px;
+        border-bottom: 1px solid @color-gray;
     }
-    #example-file {
-        a {
-            position: relative;
-            left: 10px;
-        }
+    #platforms-bar-chart {
+        height: 1000px;
     }
 }
 

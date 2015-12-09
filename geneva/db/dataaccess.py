@@ -121,6 +121,12 @@ def get_statistics():
         num_gene_lists = session.query(GeneList).count()
         num_tags = session.query(Tag).count()
         platforms = session.query(sa.func.distinct(GeoDataset.platform))
+        tags_dao = fetch_all(Tag)
+        tags = []
+        for tag in tags_dao:
+            tags.append({
+                'name': tag.name
+            })
 
         platform_counts = []
         for tpl in platforms:
@@ -140,5 +146,6 @@ def get_statistics():
             'num_gene_lists': num_gene_lists,
             'num_tags': num_tags,
             'num_platforms': len(platform_counts),
-            'platform_counts': platform_counts
+            'platform_counts': platform_counts,
+            'tags': tags
         }
