@@ -239,6 +239,9 @@ caption {
 .label:hover {
   background-color: #006eb3;
 }
+.page {
+  margin-top: 20px;
+}
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
@@ -246,19 +249,14 @@ caption {
   border-bottom: 1px solid #eeeeee;
   background-color: #004561;
   color: white;
-}
-#header #logo {
   padding: 10px 0;
-}
-#header #logo a:hover {
-  text-decoration: none;
 }
 #header a {
   border: none;
   color: white;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 200;
   text-decoration: none;
 }
 #header a:hover {
@@ -287,7 +285,6 @@ caption {
 }
 #header h1 {
   display: inline;
-  margin-left: 10px;
 }
 #header h1 a {
   font-size: 40px;
