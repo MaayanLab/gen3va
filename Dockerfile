@@ -1,8 +1,7 @@
 FROM debian:stable
 
-RUN apt-get update
-
-RUN apt-get install -y \
+RUN apt-get update \
+ && apt-get install -y \
     python \
     python-dev \
     python-pip \
@@ -14,7 +13,9 @@ RUN apt-get install -y \
     liblapack-dev \
     r-base \
     r-base-dev \
-    python-rpy2
+    python-rpy2 \
+    python-mysqldb \
+    git-core
 
 RUN pip install \
     mod_wsgi \
@@ -23,7 +24,6 @@ RUN pip install \
     flask-cors==2.0.1 \
     flask-sqlalchemy==2.0 \
     alembic==0.8.0 \
-    mysql-connector-python==2.0.3 \
     nose==1.3.4 \
     numpy==1.9.2 \
     requests==2.6.0 \
@@ -33,7 +33,7 @@ RUN pip install \
     six==1.9.0 \
     sklearn==0.0 \
     wsgiref==0.1.2 \
-    --allow-external mysql-connector-python
+    git+git://github.com/MaayanLab/substrate.git@master
 
 RUN apt-get clean
 

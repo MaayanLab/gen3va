@@ -3,6 +3,6 @@
 # In production, Flask is run by mod_wsgi, which imports the via wsgi.py.
 
 
-from geneva import app
+from gen3va import app
 
 app.run(debug=True, port=8084, host='0.0.0.0')
