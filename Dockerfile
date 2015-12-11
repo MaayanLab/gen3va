@@ -39,6 +39,6 @@ RUN apt-get clean
 
 EXPOSE 80
 
-ADD . /geneva
+ADD . /gen3va
 
-CMD /geneva/boot.sh
+CMD /gen3va/boot.sh
