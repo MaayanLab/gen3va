@@ -26,12 +26,10 @@ $(function() {
         },
         clustergrammer: {
             init:  function() {
-                var chbxs = getSelectedCheckboxes(),
-                    promises;
+                var chbxs = getSelectedCheckboxes();
                 if (isValidSelection(chbxs)) {
                     loader.start();
-                    promises = buildPromises(chbxs);
-                    $.when.apply($, promises).done(requestClustergrammer);
+                    requestClustergramGeneSignatures(chbxs, loader.stop);
                 }
             }
         },
@@ -150,50 +148,18 @@ $(function() {
         });
     }
 
-    function requestClustergrammer() {
-        var geneSignatures = [],
-            titles = {};
-        $.each(arguments, function(i, response) {
-            var signature = response[0],
-                sf = signature.soft_file,
-                colTitle = sf.title,
-                newNumTitles;
-
-            if (sf.is_geo) {
-                colTitle = sf.accession + ': ' + colTitle;
-            }
-
-            if (titles[colTitle]) {
-                newNumTitles = titles[colTitle] + 1;
-                titles[colTitle] = newNumTitles;
-                colTitle = colTitle + newNumTitles;
-            } else {
-                titles[colTitle] = 1;
-            }
-
-            geneSignatures.push({
-                col_title: colTitle,
-                link: 'http://amp.pharm.mssm.edu/g2e/results/' + signature.extraction_id,
-                genes: getCombinedList(signature.gene_lists)
-            });
-        });
-
-        var data = JSON.stringify({
-            description: 'TODO',
-            link: window.location.href,
-            gene_signatures: geneSignatures
-        });
+    function requestClustergramGeneSignatures(chbxs, cb) {
         $.ajax({
-            url: 'http://amp.pharm.mssm.edu/clustergrammer/g2e/',
-            method: 'POST',
-            contentType: 'application/json',
-            data: data,
+            url: 'cluster/signatures',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                signatures: chbxs
+            }),
             success: function(data) {
                 showClustergrammerPreview('#clustergrammer-preview', data);
             },
-            complete: function() {
-                loader.stop();
-            }
+            complete: cb
         });
     }
 
@@ -206,7 +172,6 @@ $(function() {
             $cg.fadeOut(FADE_IN_OUT_SPEED);
         });
     }
-
 
     /* Principal Component Analysis
      * ---------------------------- */

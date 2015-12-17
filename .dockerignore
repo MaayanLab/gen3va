@@ -1,7 +1,4 @@
 # Ignore non-code directories.
-scripts/
-misc/
-resources/
-
+tests/
 .git
 .gitignore

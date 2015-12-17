@@ -10,11 +10,11 @@ CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/g2e/'
 
 
 def from_soft_file(gene_signature):
-    data = _get_raw_data(gene_signature.soft_file)
+    data = __get_raw_data(gene_signature.soft_file)
     sf = pandas.DataFrame(data)
 
     ranked_genes = []
-    for rg in gene_signature.gene_lists[2].ranked_genes:
+    for rg in gene_signature.gene_list.ranked_genes:
         ranked_genes.append(rg.gene.name)
 
     # Filter SOFT file based on genes extracted from differential expression
@@ -54,11 +54,11 @@ def from_soft_file(gene_signature):
     return None
 
 
-def _get_raw_data(soft_file):
+def __get_raw_data(soft_file):
     """Returns the raw data a two-dimensional array.
     """
     results = []
-    f = file('g2e/' + soft_file.text_file)
+    f = file('gen3va/' + soft_file.text_file)
     for i, line in enumerate(f):
         if i < 8:
             continue
