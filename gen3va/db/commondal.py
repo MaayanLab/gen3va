@@ -2,7 +2,6 @@
 and their relationships and saves them accordingly.
 """
 
-
 import sqlalchemy as sa
 
 from substrate import db, GeneList, GeneSignature, GeoDataset, SoftFile, Tag, OptionalMetadata

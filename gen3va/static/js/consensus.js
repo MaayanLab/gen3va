@@ -116,11 +116,11 @@ $(function() {
 
     function requestClustergramOfEnrichrResults(chbxs, cb) {
         $.ajax({
-            url: 'cluster/enrichr',
+            url: 'cluster/enriched_terms',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                signatures: chbxs,
+                gene_signatures: chbxs,
                 backgroundType: $('#enrichr-background').val()
             }),
             success: function(data) {
@@ -138,7 +138,7 @@ $(function() {
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                signatures: chbxs,
+                gene_signatures: chbxs,
                 mode: $('#l1000cds2-mode').val()
             }),
             success: function(data) {
@@ -150,11 +150,11 @@ $(function() {
 
     function requestClustergramGeneSignatures(chbxs, cb) {
         $.ajax({
-            url: 'cluster/signatures',
+            url: 'cluster/expression_data',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                signatures: chbxs
+                gene_signatures: chbxs
             }),
             success: function(data) {
                 showClustergrammerPreview('#clustergrammer-preview', data);

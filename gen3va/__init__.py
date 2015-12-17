@@ -32,13 +32,13 @@ else:
     print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from gen3va.endpoints.pages.index import index_page
-from gen3va.endpoints.pages.error import error_page
-from gen3va.endpoints.pages.metadata import metadata_page
-from gen3va.endpoints.pages.report import report_page
-from gen3va.endpoints.pages.tag import tag_page
-from gen3va.endpoints.api.cluster import cluster_api
-from gen3va.endpoints.api.pca import pca_api
+from gen3va.endpoints.pages.indexpage import index_page
+from gen3va.endpoints.pages.errorpage import error_page
+from gen3va.endpoints.pages.metadatapage import metadata_page
+from gen3va.endpoints.pages.reportpage import report_page
+from gen3va.endpoints.pages.tagpage import tag_page
+from gen3va.endpoints.api.clusterapi import cluster_api
+from gen3va.endpoints.api.pcaapi import pca_api
 from gen3va.util.jinjafilters import jinjafilters
 
 app.register_blueprint(index_page)

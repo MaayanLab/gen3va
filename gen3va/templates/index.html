@@ -20,7 +20,7 @@
             <ul class="list-inline">
                 {% for tag in stats.tags %}
                     <li>
-                        <a href="{{ report_url }}/{{ tag.name }}" class="label">{{ tag.name }}</a>
+                        <a href="{{ tag_url }}/{{ tag.name }}" class="label">{{ tag.name }}</a>
                     </li>
                 {% endfor %}
             </ul>

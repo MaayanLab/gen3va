@@ -23,9 +23,13 @@ class Config(object):
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
 
+    # Downstream applications
     if DEBUG:
-        G2E_URL = 'http://localhost:8083/g2e/'
+        G2E_URL = 'http://localhost:8083/g2e'
     else:
-        G2E_URL = 'http://amp.pharm.mssm.edu/g2e/'
-
+        G2E_URL = 'http://amp.pharm.mssm.edu/g2e'
     BASE_RESULTS_URL = G2E_URL + 'results'
+    JSON_HEADERS = {'content-type': 'application/json'}
+    CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer'
+    ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr'
+    L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2'
