@@ -83,13 +83,13 @@ def c_results_url(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_url')
 def c_metadata_url(context, value):
-    return '%s/%s' % (Config.BASE_METADATA_URL, value)
+    return '%s/%s' % (Config.METADATA_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_value_url')
 def c_metadata_value_url(context, value, name):
-    return '%s/%s/%s' % (Config.BASE_METADATA_URL, name, value)
+    return '%s/%s/%s' % (Config.METADATA_URL, name, value)
 
 
 @jinja2.contextfilter

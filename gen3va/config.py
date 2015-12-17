@@ -1,12 +1,10 @@
 """Handles global configurations.
 """
 
-
 import os
 
 
 class Config(object):
-
     with open('gen3va/app.conf') as f:
         lines = [x for x in f.read().split('\n')]
 
@@ -19,7 +17,8 @@ class Config(object):
     BASE_CLUSTER_URL = BASE_URL + '/cluster'
 
     REPORT_URL = BASE_URL + '/report'
-    BASE_METADATA_URL = BASE_URL + '/metadata'
+    TAG_URL = BASE_URL + '/tag'
+    METADATA_URL = BASE_URL + '/metadata'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
