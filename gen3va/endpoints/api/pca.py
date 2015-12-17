@@ -10,7 +10,9 @@ from gen3va.core.pca import pca
 from gen3va.config import Config
 
 
-pca_api = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
+pca_api = Blueprint('pca_api',
+                    __name__,
+                    url_prefix=Config.BASE_URL + '/pca')
 
 
 @pca_api.route('', methods=['POST'])

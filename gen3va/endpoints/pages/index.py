@@ -7,7 +7,10 @@ from flask import Blueprint, render_template
 from gen3va.config import Config
 from gen3va.db import commondal
 
-index_page = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
+
+index_page = Blueprint('index_page',
+                       __name__,
+                       url_prefix=Config.BASE_URL)
 
 
 @index_page.route('/')

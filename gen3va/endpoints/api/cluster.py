@@ -15,7 +15,7 @@ from gen3va.core.cluster import cluster
 from gen3va.config import Config
 
 
-cluster_api = Blueprint('cluster',
+cluster_api = Blueprint('cluster_api',
                         __name__,
                         url_prefix='%s/cluster' % Config.BASE_URL)
 

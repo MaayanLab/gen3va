@@ -1,14 +1,16 @@
 """Handles explore metadata pages.
 """
 
-
 from flask import Blueprint, render_template
 
 from gen3va.config import Config
 import gen3va.db.commondal as dataaccess
 import gen3va.util.urlcodex as urlcodex
 
-metadata_page = Blueprint('explore_metadata', __name__, url_prefix=Config.BASE_METADATA_URL)
+
+metadata_page = Blueprint('metadata_page',
+                          __name__,
+                          url_prefix=Config.METADATA_URL)
 
 
 @metadata_page.route('/<path:metadata_name>', methods=['GET'])
@@ -29,7 +31,7 @@ def metadata(metadata_name):
             metadata_name=metadata_name,
             results_url=Config.BASE_RESULTS_URL,
             tag_url=Config.REPORT_URL,
-            metadata_url=Config.BASE_METADATA_URL,
+            metadata_url=Config.METADATA_URL,
             metadata=metadata
         )
 
