@@ -11,7 +11,10 @@ from gen3va.config import Config
 from substrate import db
 
 
-app = Flask(__name__, static_url_path='/gen3va/static', static_folder='static')
+app = Flask(__name__,
+            static_url_path='/gen3va/static',
+            static_folder='static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 
