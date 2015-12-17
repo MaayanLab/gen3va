@@ -16,11 +16,13 @@ report_page = Blueprint('report_page',
 def tag_endpoint(tag_name):
     tag = commondal.fetch_tag(tag_name)
     if tag is None:
-        message = 'No report with tag "%s" found' % tag_name
-        return render_template('404.html', message=message)
+        return render_template('404.html')
     elif len(tag.reports) == 0:
         # Build repprt
         print('no report!')
-        return render_template('report.html', tag=tag)
+        return render_template('report.html',
+                               tag=tag)
     else:
-        return render_template('report.html', tag=tag, report=tag.reports)
+        return render_template('report.html',
+                               tag=tag,
+                               report=tag.reports)
