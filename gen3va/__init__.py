@@ -34,6 +34,7 @@ else:
 # Import these after connecting to the DB.
 from gen3va.endpoints.pages.indexpage import index_page
 from gen3va.endpoints.pages.errorpage import error_page
+from gen3va.endpoints.pages.menupages import menu_pages
 from gen3va.endpoints.pages.metadatapage import metadata_page
 from gen3va.endpoints.pages.reportpage import report_page
 from gen3va.endpoints.pages.tagpage import tag_page
@@ -43,6 +44,7 @@ from gen3va.util.jinjafilters import jinjafilters
 
 app.register_blueprint(index_page)
 app.register_blueprint(error_page)
+app.register_blueprint(menu_pages)
 app.register_blueprint(metadata_page)
 app.register_blueprint(report_page)
 app.register_blueprint(tag_page)
