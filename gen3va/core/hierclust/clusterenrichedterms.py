@@ -7,25 +7,28 @@ import requests
 
 from substrate import GeneSignature
 from gen3va.db import commondal
-from gen3va import Config
+from gen3va import Config, Session
+from gen3va.db.util import bare_session_scope
 
 
 CLUSTERGRAMMER_LOAD_LISTS = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
 ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
 
 
-def from_enriched_terms(extraction_ids=None, background_type='ChEA_2015'):
-    if True:
-        return 'hello'
-
+def from_enriched_terms(extraction_ids=None,
+                        background_type='ChEA_2015',
+                        report=None):
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
             gene_signature = commondal.fetch_gene_signature(extraction_id)
             gene_signatures.append(gene_signature)
+        link = __from_enriched_terms(gene_signatures, background_type)
     else:
-        gene_signatures = commondal.fetch_all(GeneSignature)
-    return __from_enriched_terms(gene_signatures, background_type)
+        import pdb; pdb.set_trace()
+        link = __from_enriched_terms(report.tag.gene_signatures,
+                                     background_type)
+    return link
 
 
 def __from_enriched_terms(gene_signatures, background_type):
@@ -35,7 +38,7 @@ def __from_enriched_terms(gene_signatures, background_type):
     signatures = []
     for i, gene_signature in enumerate(gene_signatures):
         extraction_id = gene_signature.extraction_id
-        print(extraction_id)
+        print(i, extraction_id)
         ranked_genes = gene_signature.gene_lists[2].ranked_genes
 
         if len(ranked_genes) == 0:

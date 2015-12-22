@@ -16,9 +16,6 @@ L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
 def from_perturbations(extraction_ids=None, mimic=False):
-    if True:
-        return 'world'
-
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:

@@ -6,13 +6,17 @@ import sqlalchemy as sa
 
 from substrate import db, GeneList, GeneSignature, GeoDataset, SoftFile, Tag, OptionalMetadata
 
+from gen3va import Session
 from gen3va.db.util import session_scope
 
 
-def fetch_all(klass):
+def fetch_all(klass, session=None):
     """Fetches all entities of a specific class.
     """
-    with session_scope() as session:
+    if not session:
+        with session_scope() as session:
+            return session.query(klass).all()
+    else:
         return session.query(klass).all()
 
 

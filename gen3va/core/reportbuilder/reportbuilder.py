@@ -5,7 +5,7 @@ handle separate database sessions.
 from threading import Thread
 
 from substrate import Report, TargetApp, TargetAppLink
-from gen3va.db.util import session_scope, get_or_create_with_session
+from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
 from gen3va import Session
 from gen3va.core import hierclust
 
@@ -24,16 +24,21 @@ def build(tag):
 def __build(report_id):
     """In separate thread, builds report and then changes report status.
     """
-    print('starting build')
+    # Outside of Flask-SQLAlchemy session.
+    with bare_session_scope() as session:
+        print('starting build')
+        report = session\
+            .query(Report)\
+            .get(report_id)
+        link_temp = hierclust.from_enriched_terms(report=report)
+        __save_report_link(session, report_id, link_temp)
 
-    # link_temp = hierclust.from_enriched_terms()
-    # __save_report_link(report_id, link_temp)
-    #
-    # link_temp = hierclust.from_perturbations()
-    # __save_report_link(report_id, link_temp)
+        # link_temp = hierclust.from_perturbations()
+        # __save_report_link(report_id, link_temp)
 
-    print('build complete')
-    __set_report_ready(report_id)
+        print('build complete')
+        report.status = 'ready'
+        session.merge(report)
 
 
 def __save(report):
@@ -45,24 +50,9 @@ def __save(report):
         return report
 
 
-def __set_report_ready(report_id):
-    """Sets the report as ready, outside of HTTP session.
-    """
-    session = Session()
-    report = session\
-        .query(Report)\
-        .get(report_id)
-    report.status = 'ready'
-    session.merge(report)
-    print('report ready')
-    session.commit()
-
-
-def __save_report_link(report_id, link,):
+def __save_report_link(session, report_id, link,):
     """Utility method for saving link based on report ID.
     """
-    # Outside of Flask-SQLAlchemy session.
-    session = Session()
     target_app = get_or_create_with_session(
         session,
         TargetApp,

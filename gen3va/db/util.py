@@ -6,11 +6,13 @@ from contextlib import contextmanager
 
 from substrate import db
 
+from gen3va import Session
+
 
 @contextmanager
 def session_scope():
-    """Provides a transactional scope around a series of operations. Credit:
-    http://docs.sqlalchemy.org/en/rel_0_9/orm/session_basics.html.
+    """Provides a transactional scope around a series of operations.
+    Context is HTTP request thread using Flask-SQLAlchemy.
     """
     try:
         yield db.session
@@ -19,6 +21,23 @@ def session_scope():
         print 'Rolling back database'
         print e
         db.session.rollback()
+    # Flask-SQLAlchemy handles closing the session after the HTTP request.
+
+
+@contextmanager
+def bare_session_scope():
+    """Provide a transactional scope around a series of operations.
+    Context is local to current thread.
+    """
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 
 def get_or_create(model, **kwargs):
