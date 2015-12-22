@@ -14,3 +14,6 @@ ALTER TABLE `target_app_link` ADD `report_fk` INT NULL AFTER `gene_list_fk`, ADD
 -- Create foreign key constraint.
 ALTER TABLE `report` ADD FOREIGN KEY (`tag_fk`) REFERENCES `euclid`.`tag`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `target_app_link` ADD FOREIGN KEY (`report_fk`) REFERENCES `euclid`.`report`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Description for target_app_links
+ALTER TABLE `target_app_link` ADD `description` TEXT NOT NULL AFTER `link`;

@@ -9,7 +9,7 @@ class Config(object):
         lines = [x for x in f.read().split('\n')]
 
     DEBUG = lines[1] == 'True'
-    SERVER_ROOT = os.path.dirname(os.getcwd()) + '/gen3va/gen3va'
+    SERVER_FILE_ROOT = os.path.dirname(os.getcwd()) + '/gen3va/gen3va'
 
     BASE_URL = '/gen3va'
     BASE_API_URL = BASE_URL + '/api/1.0'
@@ -26,8 +26,11 @@ class Config(object):
     # Downstream applications
     if DEBUG:
         G2E_URL = 'http://localhost:8083/g2e'
+        SERVER = 'http://localhost:8084/gen3va'
     else:
         G2E_URL = 'http://amp.pharm.mssm.edu/g2e'
+        SERVER = 'http://amp.pharm.mssm.edu/gen3va'
+
     BASE_RESULTS_URL = G2E_URL + 'results'
     JSON_HEADERS = {'content-type': 'application/json'}
     CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer'

@@ -6,8 +6,8 @@ from threading import Thread
 
 from substrate import Report, TargetApp, TargetAppLink
 from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
-from gen3va import Session
 from gen3va.core import hierclust
+from gen3va import Config
 
 
 def build(tag):
@@ -30,11 +30,24 @@ def __build(report_id):
         report = session\
             .query(Report)\
             .get(report_id)
-        link_temp = hierclust.from_enriched_terms(report=report)
-        __save_report_link(session, report_id, link_temp)
 
-        # link_temp = hierclust.from_perturbations()
-        # __save_report_link(report_id, link_temp)
+        back_link = '{0}{1}/{2}/{3}'.format(Config.SERVER,
+                                            Config.REPORT_URL,
+                                            report.id,
+                                            report.tag.name)
+
+        link_temp = hierclust.from_enriched_terms(report=report)
+        description = 'Hierarchical clustering of enriched terms'
+        __save_report_link(session, report, link_temp, description)
+
+        link_temp = hierclust.from_perturbations(report=report,
+                                                 back_link=back_link)
+        description = 'Hierarchical clustering of perturbations ' \
+                      'that mimic expression'
+        __save_report_link(session,
+                           report,
+                           link_temp,
+                           description)
 
         print('build complete')
         report.status = 'ready'
@@ -50,7 +63,7 @@ def __save(report):
         return report
 
 
-def __save_report_link(session, report_id, link,):
+def __save_report_link(session, report, link, description):
     """Utility method for saving link based on report ID.
     """
     target_app = get_or_create_with_session(
@@ -58,10 +71,7 @@ def __save_report_link(session, report_id, link,):
         TargetApp,
         name='clustergrammer'
     )
-    target_app_link = TargetAppLink(target_app, link)
-    report = session\
-        .query(Report)\
-        .get(report_id)
+    target_app_link = TargetAppLink(target_app, link, description)
     report.set_link(target_app_link)
     session.merge(report)
     session.commit()

@@ -44,68 +44,43 @@
     }
 }
 
-#results-page {
-    ul {
-        padding-left: 15px;
-    }
-    .gene-lists {
-        img {
-            width: 15px;
-            &:hover {
-                opacity: .5;
-            }
-        }
-        td {
-            height: 20px;
-        }
-        /* This over-selects but we don't care since the table is filled with images. */
-        tr {
-            font-weight: bold;
-        }
+#report-page {
+    iframe {
+        border: 1px solid @color-gray;
+        height: 500px;
+        width: 100%;
     }
 }
-
-#manual-page,
-#pipeline-page {
-    img {
-        width: 700px;
-    }
-}
-
-#stats-page {
-    #platforms-bar-chart {
-        height: 1000px;
-    }
-}
-table {
-    td {
-        vertical-align: middle !important;
-    }
-    .optional-metadata-content {
-        background-color: @color-lightgray1;
-        padding: 10px;
-        table {
-            width: 100%;
-            td:first-child {
-                font-weight: bold !important;
-                padding-right: 10px;
-                width: 30%;
-            }
-        }
-    }
-}
-.tag-page,
-.metadata-page {
-    .note {
-        font-size: 12px;
-        font-weight: normal;
-        margin-left: 15px;
-    }
-}
-.metadata-page,
-.tag-page {
-    th {
-        border-bottom: 2px solid @color-lightgray3;
-        text-align: left;
-    }
-}
+//
+//table {
+//    td {
+//        vertical-align: middle !important;
+//    }
+//    .optional-metadata-content {
+//        background-color: @color-lightgray1;
+//        padding: 10px;
+//        table {
+//            width: 100%;
+//            td:first-child {
+//                font-weight: bold !important;
+//                padding-right: 10px;
+//                width: 30%;
+//            }
+//        }
+//    }
+//}
+//.tag-page,
+//.metadata-page {
+//    .note {
+//        font-size: 12px;
+//        font-weight: normal;
+//        margin-left: 15px;
+//    }
+//}
+//.metadata-page,
+//.tag-page {
+//    th {
+//        border-bottom: 2px solid @color-lightgray3;
+//        text-align: left;
+//    }
+//}

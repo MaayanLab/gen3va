@@ -17,21 +17,19 @@ ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
 
 def from_enriched_terms(extraction_ids=None,
                         background_type='ChEA_2015',
-                        report=None):
+                        report=None,
+                        back_link=''):
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
             gene_signature = commondal.fetch_gene_signature(extraction_id)
             gene_signatures.append(gene_signature)
-        link = __from_enriched_terms(gene_signatures, background_type)
     else:
-        import pdb; pdb.set_trace()
-        link = __from_enriched_terms(report.tag.gene_signatures,
-                                     background_type)
-    return link
+        gene_signatures = report.tag.gene_signatures
+    return __from_enriched_terms(gene_signatures, background_type, back_link)
 
 
-def __from_enriched_terms(gene_signatures, background_type):
+def __from_enriched_terms(gene_signatures, background_type, back_link):
     """Based on extraction IDs, gets enrichment vectors from Enrichr and then
     creates hierarchical clustering from Clustergrammer.
     """
@@ -71,6 +69,7 @@ def __from_enriched_terms(gene_signatures, background_type):
         })
 
     payload = {
+        'back_link': back_link,
         'signature_ids': signatures,
         'background_type': background_type
     }
@@ -80,8 +79,9 @@ def __from_enriched_terms(gene_signatures, background_type):
                          headers=Config.JSON_HEADERS)
     if resp.ok:
         link_base = json.loads(resp.text)['link']
-        link = '%s&row_label=Enriched+terms+from+%s' \
-               '&col_label=Gene+signatures' % (
+        link = '{0}' \
+               '&row_label=Enriched%20terms%20from%20{1}' \
+               '&col_label=Gene%20signatures'.format(
                     link_base,
                     background_type
                 )

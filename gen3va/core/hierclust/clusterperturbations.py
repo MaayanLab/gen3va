@@ -15,24 +15,24 @@ CLUSTERGRAMMER_URL = '%s/g2e' % Config.CLUSTERGRAMMER_URL
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def from_perturbations(extraction_ids=None, mimic=False):
+def from_perturbations(extraction_ids=None, mimic=False, report=None, back_link=''):
+    """Based on extraction IDs, a set of gene signatures to find perturbations
+    that reverse or mimic their expression pattern.
+    """
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
             gene_signature = commondal.fetch_gene_signature(extraction_id)
             gene_signatures.append(gene_signature)
     else:
-        gene_signatures = commondal.fetch_all(GeneSignature)
-    return __from_perturbations(gene_signatures, mimic)
+        gene_signatures = report.tag.gene_signatures
+    return __from_perturbations(gene_signatures, mimic, back_link)
 
 
-def __from_perturbations(extraction_ids, mimic):
-    """Based on extraction IDs, a set of gene signatures to find perturbations
-    that reverse or mimic their expression pattern.
-    """
+def __from_perturbations(gene_signatures, mimic, back_link):
     samples = []
-    for i, extraction_id in enumerate(extraction_ids):
-        gene_signature = commondal.fetch_gene_signature(extraction_id)
+    for i, gene_signature in enumerate(gene_signatures):
+        print(i, gene_signature.extraction_id)
         perts, scores = __mimic_or_reverse_gene_signature(
             gene_signature,
             mimic
@@ -42,7 +42,7 @@ def __from_perturbations(extraction_ids, mimic):
         col_title = '%s %s' % (accession, i)
         samples.append({
             'col_title': col_title,
-            'link': 'todo',
+            'link': back_link,
             'genes': [[x,y] for x,y in zip(perts, scores)],
             'name': 'todo'
         })
@@ -52,7 +52,7 @@ def __from_perturbations(extraction_ids, mimic):
         'gene_signatures': samples
     }
 
-    print(payload)
+    print(len(samples))
     resp = requests.post(CLUSTERGRAMMER_URL,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
@@ -68,8 +68,8 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
     """
     payload = {
         'data': {
-            'genes': [rg.gene.name for rg in gene_signature.gene_list.ranked_genes],
-            'vals': [rg.value for rg in gene_signature.gene_list.ranked_genes]
+            'genes': [rg.gene.name for rg in gene_signature.gene_lists[2].ranked_genes],
+            'vals': [rg.value for rg in gene_signature.gene_lists[2].ranked_genes]
         },
         'config': {
             'aggravate': mimic,

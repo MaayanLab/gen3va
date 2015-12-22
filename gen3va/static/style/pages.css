@@ -35,54 +35,8 @@
 #results-page .gene-lists {
   table-layout: fixed;
 }
-#results-page ul {
-  padding-left: 15px;
-}
-#results-page .gene-lists {
-  /* This over-selects but we don't care since the table is filled with images. */
-}
-#results-page .gene-lists img {
-  width: 15px;
-}
-#results-page .gene-lists img:hover {
-  opacity: .5;
-}
-#results-page .gene-lists td {
-  height: 20px;
-}
-#results-page .gene-lists tr {
-  font-weight: bold;
-}
-#manual-page img,
-#pipeline-page img {
-  width: 700px;
-}
-#stats-page #platforms-bar-chart {
-  height: 1000px;
-}
-table td {
-  vertical-align: middle !important;
-}
-table .optional-metadata-content {
-  background-color: #f5f5f5;
-  padding: 10px;
-}
-table .optional-metadata-content table {
+#report-page iframe {
+  border: 1px solid #aaaaaa;
+  height: 500px;
   width: 100%;
-}
-table .optional-metadata-content table td:first-child {
-  font-weight: bold !important;
-  padding-right: 10px;
-  width: 30%;
-}
-.tag-page .note,
-.metadata-page .note {
-  font-size: 12px;
-  font-weight: normal;
-  margin-left: 15px;
-}
-.metadata-page th,
-.tag-page th {
-  border-bottom: 2px solid #eeeeee;
-  text-align: left;
 }

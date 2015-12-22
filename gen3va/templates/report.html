@@ -4,15 +4,14 @@
 
 {% block body %}
 
-    <div class="report-page">
+    <div id="report-page">
 
         <h1>Report for {{ tag.name }}</h1>
-        <p>Hurray, the report is ready!</p>
-        <ul>
-            {% for target_app_link in report.links %}
-                <li>{{ target_app_link.link }}</li>
-            {% endfor %}
-        </ul>
+        <p>The report is ready!</p>
+        {% for target_app_link in report.links %}
+            <h4>{{ target_app_link.description }}</h4>
+            <iframe src="{{ target_app_link.link }}"></iframe>
+        {% endfor %}
 
     </div>
 
