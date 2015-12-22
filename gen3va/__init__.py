@@ -6,6 +6,8 @@ import sys
 
 from flask import Flask
 from flask.ext.cors import CORS
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from gen3va.config import Config
 from substrate import db
@@ -24,6 +26,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 cors = CORS(app)
+
+# Create a standalone session factory for non Flask-SQLAlchemy transactions.
+# See reportbuilder.py.
+engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+Session = sessionmaker(bind=engine)
 
 if not Config.DEBUG:
     # Configure Apache logging.

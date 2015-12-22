@@ -8,6 +8,11 @@
 
         <h1>Report for {{ tag.name }}</h1>
         <p>Hurray, the report is ready!</p>
+        <ul>
+            {% for target_app_link in report.links %}
+                <li>{{ target_app_link.link }}</li>
+            {% endfor %}
+        </ul>
 
     </div>
 

@@ -35,8 +35,8 @@ def enrichr_to_clustergrammer():
     and then creates a hierarchical cluster from Clustergrammer.
     """
     extraction_ids = __get_extraction_ids(request)
-    if 'background_type' in request.json:
-        background_type = request.json['background_type']
+    if 'backgroundType' in request.json:
+        background_type = request.json['backgroundType']
     else:
         background_type = 'ChEA_2015'
     link = hierclust.from_enriched_terms(extraction_ids, background_type)

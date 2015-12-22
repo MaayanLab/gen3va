@@ -247,8 +247,8 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-    border-bottom: 1px solid @color-lightgray3;
-    background-color: #004561;
+    background-color: @color-primary;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     color: white;
     padding: 10px 0;
     a {
@@ -263,11 +263,20 @@ caption {
             color: @color-lightgray2;
         }
     }
+    .nav.navbar-nav.navbar-right {
+        a {
+            font-size: 13px;
+            &:hover,
+            &:focus {
+                opacity: .8;
+                background-color: @color-primary;
+            }
+        }
+    }
     ul.nav {
         li {
-            border-right: 1px solid @color-lightgray3;
+            border-right: 1px solid white;
             a {
-                font-size: 12px;
                 line-height: inherit;
                 padding-top: 10px;
                 padding-bottom: 10px;
@@ -287,6 +296,7 @@ caption {
     }
     h1 {
         display: inline;
+        margin-left: 10px;
         a {
             font-size: 40px;
         }
@@ -298,8 +308,7 @@ caption {
 }
 
 #footer {
-    border-top: 1px solid @color-footer-dark;
-    background-color: @color-footer;
+    border-top: 1px solid @color-gray;
     a,
     p {
         font-size: 12px;

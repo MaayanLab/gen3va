@@ -15,6 +15,9 @@ ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
 
 
 def from_enriched_terms(extraction_ids=None, background_type='ChEA_2015'):
+    if True:
+        return 'hello'
+
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
@@ -33,7 +36,7 @@ def __from_enriched_terms(gene_signatures, background_type):
     for i, gene_signature in enumerate(gene_signatures):
         extraction_id = gene_signature.extraction_id
         print(extraction_id)
-        ranked_genes = gene_signature.gene_list.ranked_genes
+        ranked_genes = gene_signature.gene_lists[2].ranked_genes
 
         if len(ranked_genes) == 0:
             print('Skipping %s' % extraction_id)
@@ -50,8 +53,16 @@ def __from_enriched_terms(gene_signatures, background_type):
             print('Skipping %s' % extraction_id)
             continue
 
+        cell_or_tissue = ''
+        for c_key in ['cell', 'cell_type', 'tissue']:
+            c = gene_signature.get_optional_metadata(c_key)
+            if c != '':
+                cell_or_tissue = c
+
         signatures.append({
             'col_title': col_title,
+            'organism': gene_signature.soft_file.dataset.organism,
+            'cell_or_tissue': cell_or_tissue,
             'enr_id_up': str(enrichr_id_up),
             'enr_id_dn': str(enrichr_id_down)
         })
@@ -78,7 +89,7 @@ def __from_enriched_terms(gene_signatures, background_type):
 def __enrich_gene_signature(gene_signature):
     """Gets enrichment vector from Enrichr.
     """
-    ranked_genes = gene_signature.gene_list.ranked_genes
+    ranked_genes = gene_signature.gene_lists[2].ranked_genes
 
     if len(ranked_genes) == 0:
         print('Skipping because no ranked genes')
