@@ -2,3 +2,5 @@
 tests/
 .git
 .gitignore
+
+gen3va/static/softfile/
