@@ -51,7 +51,11 @@ def tag_report_id_endpoint(report_id, tag_name):
         new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
         return redirect(new_url)
     elif report.ready:
-        return render_template('report.html', tag=tag, report=report)
+        pca_json = report.pca_visualization.data
+        return render_template('report.html',
+                               tag=tag,
+                               report=report,
+                               pca_json=pca_json)
     else:
         return render_template('report-pending.html', tag=tag)
 

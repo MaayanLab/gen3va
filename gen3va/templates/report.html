@@ -4,15 +4,30 @@
 
 {% block body %}
 
+    <script src="static/lib/highcharts/highcharts.js"></script>
+    <script src="static/lib/highcharts/highcharts-3d.js"></script>
+    <script src="static/lib/highcharts/highcharts-exporting.js"></script>
+    <script src="static/js/pca.js"></script>
+
     <div id="report-page">
 
         <h1>Report for {{ tag.name }}</h1>
-        <p>The report is ready!</p>
+        <div>
+            <h4>Principal Component Analysis</h4>
+            <div id="pca-container"></div>
+        </div>
+        <p><strong>{{ tag.gene_signatures|length }} processed gene signatures</strong></p>
         {% for target_app_link in report.links %}
             <h4>{{ target_app_link.description }}</h4>
             <iframe src="{{ target_app_link.link }}"></iframe>
         {% endfor %}
 
     </div>
+
+    <script>
+        $(function () {
+            plotPCA({{ pca_json|safe }});
+        });
+    </script>
 
 {% endblock %}

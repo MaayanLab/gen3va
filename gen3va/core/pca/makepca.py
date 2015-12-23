@@ -1,6 +1,5 @@
-"""Delegates to principal component analysis module.
+"""Computes principal component analysis.
 """
-
 
 import pandas
 import numpy as np
@@ -10,15 +9,27 @@ from gen3va.db import commondal
 from gen3va.core.pca.utils import avg_dups
 
 
-def from_gene_signatures(extraction_ids):
-    data_frames = []
+
+def from_report(report):
+    return __from_gene_signatures(report.tag.gene_signatures)
+
+
+def from_extraction_ids(extraction_ids):
+    gene_signatures = []
     for extraction_id in extraction_ids:
+        gene_signature = commondal.fetch_gene_signature(extraction_id)
+        gene_signatures.append(gene_signature)
+    return __from_gene_signatures(gene_signatures)
+
+
+def __from_gene_signatures(gene_signatures):
+    data_frames = []
+    for gene_signature in gene_signatures:
 
         # TODO: Fetch all gene signatures with a single DB query.
-        gene_sig = commondal.fetch_gene_signature(extraction_id)
         genes = []
         values = []
-        for rg in gene_sig.gene_lists[2].ranked_genes:
+        for rg in gene_signature.gene_lists[2].ranked_genes:
             genes.append(rg.gene.name)
             values.append([rg.value])
 
@@ -39,50 +50,12 @@ def from_gene_signatures(extraction_ids):
 
     series = [{'name': 'Gene signatures', 'data': []}]
     for i, (x,y,z) in enumerate(pca_coords):
-        key = extraction_ids[i]
+        key = gene_signatures[i].soft_file.dataset.title
         series[0]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
 
     pca_obj = {'series': series}
 
     # This is common with `from_soft_file`. Abstract it?
-    max_vals = np.max(pca_coords, axis=0)
-    min_vals = np.min(pca_coords, axis=0)
-    ranges = np.vstack((max_vals*1.1, min_vals*1.1))
-    pca_obj['ranges'] = ranges.tolist()
-
-    titles = ['PC%s (%.2f' %
-              (i, pct) + '%' + ' variance captured)' for i, pct in enumerate(variance_explained, start=1)]
-    pca_obj['titles'] = titles
-
-    return pca_obj
-
-
-def from_soft_file(soft_file):
-    df = pandas.read_csv('g2e/' + soft_file.text_file, sep='\t', skiprows=8)
-
-    genes = df.ix[:,0]
-    df = df.ix[:,1:]
-
-    if not soft_file.normalize:
-        df = np.log10(df + 1.)
-
-    # sklearn performs its analysis against a (samples, features) matrix, while
-    # the SOFT file is a (features, samples) matrix.
-    pca_coords, variance_explained = compute_pca(df.T)
-
-    series = [
-        {'name': 'control', 'data': []},
-        {'name': 'treatment', 'data': []}
-    ]
-    for i, (x,y,z) in enumerate(pca_coords):
-        key = soft_file.samples[i].name
-        if soft_file.samples[i].is_control:
-            series[0]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
-        else:
-            series[1]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
-
-    pca_obj = {'series': series}
-
     max_vals = np.max(pca_coords, axis=0)
     min_vals = np.min(pca_coords, axis=0)
     ranges = np.vstack((max_vals*1.1, min_vals*1.1))

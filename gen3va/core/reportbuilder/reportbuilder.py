@@ -2,10 +2,12 @@
 handle separate database sessions.
 """
 
+import json
 from threading import Thread
 
-from substrate import Report, TargetApp, TargetAppLink
+from substrate import PCAVisualization, Report, TargetApp, TargetAppLink
 from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
+from gen3va.core import pca
 from gen3va.core import hierclust
 from gen3va import Config
 
@@ -36,9 +38,16 @@ def __build(report_id):
                                             report.id,
                                             report.tag.name)
 
-        link_temp = hierclust.from_enriched_terms(report=report)
-        description = 'Hierarchical clustering of enriched terms'
-        __save_report_link(session, report, link_temp, description)
+        pca_data = pca.from_report(report)
+        pca_data = json.dumps(pca_data)
+        pca_visualization = PCAVisualization(pca_data)
+        report.set_pca_visualization(pca_visualization)
+        session.merge(report)
+        session.commit()
+
+        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+            print('Enriched terms from %s' % library)
+            __cluster_enriched_terms_from_library(session, report, library)
 
         link_temp = hierclust.from_perturbations(report=report,
                                                  back_link=back_link)
@@ -52,6 +61,16 @@ def __build(report_id):
         print('build complete')
         report.status = 'ready'
         session.merge(report)
+
+
+def __cluster_enriched_terms_from_library(session, report, library):
+    """
+    """
+    link_temp = hierclust.from_enriched_terms(report=report,
+                                              background_type=library)
+    description = 'Hierarchical clustering of enriched terms from {0}'\
+        .format(library)
+    __save_report_link(session, report, link_temp, description)
 
 
 def __save(report):

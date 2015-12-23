@@ -36,3 +36,11 @@ class Config(object):
     CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer'
     ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr'
     L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2'
+
+    SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015', 'ENCODE_TF_ChIP-seq_2015']
+
+    # SUPPORTED_ENRICHR_LIBRARIES = [
+    #     'ChEA_2015', 'ENCODE_TF_ChIP-seq_2015',
+    #     'Epigenomics_Roadmap_HM_ChIP-seq', 'KEGG_2015', 'PPI_Hub_Proteins',
+    #     'GO_Biological_Process', 'MGI_Mammalian_Phenotype_Level_4'
+    # ]

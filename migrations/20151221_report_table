@@ -17,3 +17,15 @@ ALTER TABLE `target_app_link` ADD FOREIGN KEY (`report_fk`) REFERENCES `euclid`.
 
 -- Description for target_app_links
 ALTER TABLE `target_app_link` ADD `description` TEXT NOT NULL AFTER `link`;
+
+-- Create table for PCA visualizations
+CREATE TABLE IF NOT EXISTS `pca_visualization` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `data` blob NOT NULL,
+  `report_fk` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `report_fk` (`report_fk`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- Create foreign key relationship
+ALTER TABLE `pca_visualization` ADD FOREIGN KEY (`report_fk`) REFERENCES `euclid`.`report`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
