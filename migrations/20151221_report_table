@@ -29,3 +29,6 @@ CREATE TABLE IF NOT EXISTS `pca_visualization` (
 
 -- Create foreign key relationship
 ALTER TABLE `pca_visualization` ADD FOREIGN KEY (`report_fk`) REFERENCES `euclid`.`report`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- is_curated flag for tag table
+ALTER TABLE `tag` ADD `is_curated` BOOLEAN NOT NULL AFTER `name`;

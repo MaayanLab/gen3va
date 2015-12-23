@@ -121,8 +121,15 @@ def get_statistics():
         tags_dao = fetch_all(Tag)
         tags = []
         for tag in tags_dao:
+            if len(tag.reports) == 0:
+                report_status = 'inactive'
+            else:
+                report_status = tag.reports[-1].status
             tags.append({
-                'name': tag.name
+                'name': tag.name,
+                'is_curated': tag.is_curated,
+                'report_status': report_status,
+                'num_gene_signatures': len(tag.gene_signatures)
             })
 
         platform_counts = []

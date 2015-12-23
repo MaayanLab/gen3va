@@ -2,54 +2,34 @@
 
 {% block body %}
 
-    <script src="static/lib/highcharts/highcharts.js"></script>
-    <script src="static/js/stats.js"></script>
-    <script>
-        $(function() {
-            buildStats({{ stats_json|safe }});
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
+    <script src="static/js/index.js"></script>
 
     <div class="page" id="index-page">
         <div>
             <h2><strong>Analyze labeled consensus signatures extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a>.</strong></h2>
         </div>
-        <div>
-            <h2>Tags</h2>
-            <ul class="list-inline">
-                {% for tag in stats.tags %}
-                    <li>
-                        <a href="{{ tag_url }}/{{ tag.name }}" class="label">{{ tag.name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h1>Gene signatures by platform</h1>
-                <p class="instruction">Log10 scale</p>
-                <div id="platforms-bar-chart"></div>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div id="isotope-container">
+            <div id="filters" class="button-group">
+                <button class="btn btn-default is-checked" data-filter="*">Show all</button>
+                <button class="btn btn-default" data-filter=".curated">Curated</button>
+                <button class="btn btn-default" data-filter=".uncurated">Uncurated</button>
+                <button class="btn btn-default" data-filter=".ready">Analyzed</button>
+                <button class="btn btn-default" data-filter=".pending">Pending</button>
+                <button class="btn btn-default" data-filter=".inactive">Inactive</button>
             </div>
-            <div class="col-md-6">
-                <h1>Stats</h1>
-                <table class="table">
-                    <tr>
-                        <td class="col-md-3">Gene signatures</td>
-                        <td class="col-md-9">{{ stats.num_gene_signatures }}</td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-3">Gene lists</td>
-                        <td class="col-md-9">{{ stats.num_gene_lists }}</td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-3">Tags</td>
-                        <td class="col-md-9">{{ stats.num_tags }}</td>
-                    </tr>
-                    <tr class="last">
-                        <td class="col-md-3">Platforms</td>
-                        <td class="col-md-9">{{ stats.num_platforms }}</td>
-                    </tr>
-                </table>
+            <div id="isotope">
+                <div class="grid-sizer"></div>
+                {% for tag in stats.tags %}
+                    {% set curated_status = 'curated' if tag.is_curated else 'uncurated' %}
+                    <div class="tag-box {{ curated_status }} {{ tag.report_status }}">
+                        <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
+                        <p>{{ curated_status|capitalize }}</p>
+                        <p><a href="{{ report_url }}/{{ tag.name }}">Report</a> ({{ tag.report_status }})</p>
+                        <p><a href="{{ tag_url }}/{{ tag.name }}">{{ tag.num_gene_signatures }} signatures</a></p>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

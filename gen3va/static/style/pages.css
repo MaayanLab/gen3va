@@ -5,11 +5,27 @@
   padding: 3px 0;
 }
 #index-page #introduction {
-  font-size: 20px;
   border-bottom: 1px solid #aaaaaa;
 }
-#index-page #platforms-bar-chart {
-  height: 1000px;
+#index-page #isotope {
+  margin-top: 10px;
+}
+#index-page button {
+  background-color: #eeeeee;
+}
+#index-page .tag-box {
+  background-color: #f9f9f9;
+  border: 1px solid #aaaaaa;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+#index-page .tag-box p {
+  margin: 0;
+}
+#index-page .tag-box h5 {
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 #index-page table,
 #results-page table {
@@ -35,6 +51,9 @@
 #results-page .gene-lists {
   table-layout: fixed;
 }
+#about-page #platforms-bar-chart {
+  height: 1000px;
+}
 #report-page iframe,
 #report-page #pca-container {
   border: 1px solid #aaaaaa;
@@ -42,4 +61,30 @@
 #report-page iframe {
   height: 500px;
   width: 100%;
+}
+table td {
+  vertical-align: middle !important;
+}
+table .optional-metadata-content {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+table .optional-metadata-content table {
+  width: 100%;
+}
+table .optional-metadata-content table td:first-child {
+  font-weight: bold !important;
+  padding-right: 10px;
+  width: 30%;
+}
+.tag-page .note,
+.metadata-page .note {
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 15px;
+}
+.metadata-page th,
+.tag-page th {
+  border-bottom: 2px solid #eeeeee;
+  text-align: left;
 }

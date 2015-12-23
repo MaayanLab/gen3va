@@ -9,11 +9,29 @@
         }
     }
     #introduction {
-        font-size: 20px;
         border-bottom: 1px solid @color-gray;
     }
-    #platforms-bar-chart {
-        height: 1000px;
+    #isotope {
+        margin-top: 10px;
+    }
+    button {
+        background-color: @color-lightgray3;
+    }
+    .tag-box {
+        background-color: @color-lightgray2;
+        border: 1px solid @color-gray;
+        padding: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        //float: left;
+        //height: 125px;
+        p {
+            margin: 0;
+        }
+        h5 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
     }
 }
 
@@ -44,6 +62,12 @@
     }
 }
 
+#about-page {
+    #platforms-bar-chart {
+        height: 1000px;
+    }
+}
+
 #report-page {
     iframe,
     #pca-container {
@@ -54,36 +78,36 @@
         width: 100%;
     }
 }
-//
-//table {
-//    td {
-//        vertical-align: middle !important;
-//    }
-//    .optional-metadata-content {
-//        background-color: @color-lightgray1;
-//        padding: 10px;
-//        table {
-//            width: 100%;
-//            td:first-child {
-//                font-weight: bold !important;
-//                padding-right: 10px;
-//                width: 30%;
-//            }
-//        }
-//    }
-//}
-//.tag-page,
-//.metadata-page {
-//    .note {
-//        font-size: 12px;
-//        font-weight: normal;
-//        margin-left: 15px;
-//    }
-//}
-//.metadata-page,
-//.tag-page {
-//    th {
-//        border-bottom: 2px solid @color-lightgray3;
-//        text-align: left;
-//    }
-//}
+
+table {
+    td {
+        vertical-align: middle !important;
+    }
+    .optional-metadata-content {
+        background-color: @color-lightgray1;
+        padding: 10px;
+        table {
+            width: 100%;
+            td:first-child {
+                font-weight: bold !important;
+                padding-right: 10px;
+                width: 30%;
+            }
+        }
+    }
+}
+.tag-page,
+.metadata-page {
+    .note {
+        font-size: 12px;
+        font-weight: normal;
+        margin-left: 15px;
+    }
+}
+.metadata-page,
+.tag-page {
+    th {
+        border-bottom: 2px solid @color-lightgray3;
+        text-align: left;
+    }
+}

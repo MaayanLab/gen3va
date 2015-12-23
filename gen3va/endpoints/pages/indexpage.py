@@ -19,9 +19,6 @@ def index():
     stats_json = json.dumps(stats)
     return render_template('index.html',
                            report_url=Config.REPORT_URL,
-
-                           # TODO: Get rid of in favor of report_url
                            tag_url=Config.TAG_URL,
-
                            stats=stats,
                            stats_json=stats_json)
