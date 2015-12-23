@@ -13,6 +13,11 @@
 #index-page button {
   background-color: #eeeeee;
 }
+#index-page #intoduction {
+  border-bottom: 1px solid #aaaaaa;
+  padding-bottom: 23px;
+  margin-bottom: 25px;
+}
 #index-page .tag-box {
   background-color: #f9f9f9;
   border: 1px solid #aaaaaa;
