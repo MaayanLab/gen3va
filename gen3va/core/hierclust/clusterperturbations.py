@@ -56,8 +56,13 @@ def __from_perturbations(gene_signatures, mimic, back_link):
     resp = requests.post(CLUSTERGRAMMER_URL,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
+
     if resp.ok:
-        link = json.loads(resp.text)['link']
+        link_base = json.loads(resp.text)['link']
+        link = '{0}' \
+               '?preview=true' \
+               '&row_label=Perturbations%20from%20L1000CDS2' \
+               '&col_label=Gene%20signatures'.format(link_base)
         return link
     return None
 
@@ -88,7 +93,6 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
     for obj in json.loads(resp.text)['topMeta']:
         desc_temp = obj['pert_desc']
         if desc_temp == '-666':
-            print('using broad id: ' + str(obj['pert_id']))
             desc_temp = obj['pert_id']
         desc = '%s - %s' % (desc_temp, obj['cell_id'])
         perts.append(desc)

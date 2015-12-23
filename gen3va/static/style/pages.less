@@ -19,6 +19,8 @@
     }
     #intoduction {
         border-bottom: 1px solid @color-gray;
+        font-size: 18px;
+        line-height: 1.3em;
         padding-bottom: 23px;
         margin-bottom: 25px;
     }
@@ -33,11 +35,32 @@
         p {
             margin: 0;
         }
-        h5 {
+        .tag-name {
+            font-size: 20px;
             margin-top: 0;
             margin-bottom: 5px;
         }
+        .signature-count {
+            font-family: @font-family-accent;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        &.curated {
+            border-color: @color-palette-dark-red;
+            background-color: @color-palette-red;
+            color: white;
+            .tag-name {
+                color: white;
+            }
+            a {
+                color: white;
+                &:hover {
+                    opacity: .7;
+                }
+            }
+        }
     }
+
 }
 
 #index-page,
@@ -81,6 +104,24 @@
     iframe {
         height: 500px;
         width: 100%;
+    }
+    #report-metadata {
+        #gene-signatures-count {
+            font-size: 20px;
+        }
+        #curated-tag {
+            color: @color-palette-red;
+            font-size: 16px;
+            padding: 5px;
+        }
+    }
+    .section {
+        border-top: 1px solid @color-gray;
+        padding-top: 20px;
+        margin-top: 40px;
+        h4 {
+            font-weight: bold;
+        }
     }
 }
 

@@ -80,11 +80,10 @@ def __from_enriched_terms(gene_signatures, background_type, back_link):
     if resp.ok:
         link_base = json.loads(resp.text)['link']
         link = '{0}' \
+               '?preview=true' \
                '&row_label=Enriched%20terms%20from%20{1}' \
-               '&col_label=Gene%20signatures'.format(
-                    link_base,
-                    background_type
-                )
+               '&col_label=Gene%20signatures'.format(link_base,
+                                                     background_type)
         return link
     return None
 

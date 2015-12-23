@@ -4,6 +4,7 @@ handle separate database sessions.
 
 import json
 from threading import Thread
+import urlparse
 
 from substrate import PCAVisualization, Report, TargetApp, TargetAppLink
 from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
@@ -64,7 +65,8 @@ def __build(report_id):
 
 
 def __cluster_enriched_terms_from_library(session, report, library):
-    """
+    """Get enriched terms based on Enrichr library and then perform
+    hierarchical clustering.
     """
     link_temp = hierclust.from_enriched_terms(report=report,
                                               background_type=library)

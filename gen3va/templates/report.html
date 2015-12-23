@@ -10,16 +10,24 @@
     <script src="static/js/pca.js"></script>
 
     <div id="report-page">
-
-        <h1>Report for {{ tag.name }}</h1>
-        <div>
-            <h4>Principal Component Analysis</h4>
+        <div id="report-metadata">
+            <h1>Report for <strong>{{ tag.name }}</strong>
+                {% if tag.is_curated %}
+                    <strong id="curated-tag">Curated Tag</strong>
+                {% endif %}
+            </h1>
+            <p id="gene-signatures-count">{{ tag.gene_signatures|length }} processed gene signatures</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        <div class="section">
+            <h4>Principal Component Analysis of gene signatures</h4>
             <div id="pca-container"></div>
         </div>
-        <p><strong>{{ tag.gene_signatures|length }} processed gene signatures</strong></p>
         {% for target_app_link in report.links %}
-            <h4>{{ target_app_link.description }}</h4>
-            <iframe src="{{ target_app_link.link }}"></iframe>
+            <div class="section">
+                <h4>{{ target_app_link.description }}</h4>
+                <iframe src="{{ target_app_link.link }}"></iframe>
+            </div>
         {% endfor %}
 
     </div>
