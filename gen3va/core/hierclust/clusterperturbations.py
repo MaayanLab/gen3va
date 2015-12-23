@@ -11,7 +11,7 @@ from gen3va.db import commondal
 from gen3va import Config
 
 
-CLUSTERGRAMMER_URL = '%s/g2e' % Config.CLUSTERGRAMMER_URL
+CLUSTERGRAMMER_URL = '%s/g2e/' % Config.CLUSTERGRAMMER_URL
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 

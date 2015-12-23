@@ -47,29 +47,39 @@ def __build(report_id):
         session.commit()
 
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-            print('Enriched terms from %s' % library)
-            __cluster_enriched_terms_from_library(session, report, library)
+            __cluster_enriched_terms(session, report, library, back_link)
 
-        link_temp = hierclust.from_perturbations(report=report,
-                                                 back_link=back_link)
-        description = 'Hierarchical clustering of perturbations ' \
-                      'that mimic expression'
-        __save_report_link(session,
-                           report,
-                           link_temp,
-                           description)
+        for mimic in [True, False]:
+            __cluster_perturbations(session, report, mimic, back_link)
 
         print('build complete')
         report.status = 'ready'
         session.merge(report)
 
 
-def __cluster_enriched_terms_from_library(session, report, library):
+def __cluster_perturbations(session, report, mimic, back_link):
+    """Get perturbations to reverse/mimic expression and then perform
+    hierarchical clustering.
+    """
+    link_temp = hierclust.from_perturbations(report=report,
+                                             mimic=mimic,
+                                             back_link=back_link)
+    mimic_str = 'mimics' if mimic else 'reverses'
+    description = 'Hierarchical clustering of perturbations ' \
+                  'that {0} expression'.format(mimic_str)
+    __save_report_link(session,
+                       report,
+                       link_temp,
+                       description)
+
+
+def __cluster_enriched_terms(session, report, library, back_link):
     """Get enriched terms based on Enrichr library and then perform
     hierarchical clustering.
     """
     link_temp = hierclust.from_enriched_terms(report=report,
-                                              background_type=library)
+                                              background_type=library,
+                                              back_link=back_link)
     description = 'Hierarchical clustering of enriched terms from {0}'\
         .format(library)
     __save_report_link(session, report, link_temp, description)

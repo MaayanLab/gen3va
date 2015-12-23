@@ -26,10 +26,10 @@ class Config(object):
     # Downstream applications
     if DEBUG:
         G2E_URL = 'http://localhost:8083/g2e'
-        SERVER = 'http://localhost:8084/gen3va'
+        SERVER = 'http://localhost:8084'
     else:
         G2E_URL = 'http://amp.pharm.mssm.edu/g2e'
-        SERVER = 'http://amp.pharm.mssm.edu/gen3va'
+        SERVER = 'http://amp.pharm.mssm.edu'
 
     BASE_RESULTS_URL = G2E_URL + 'results'
     JSON_HEADERS = {'content-type': 'application/json'}
