@@ -4,7 +4,7 @@
 from flask import Blueprint, render_template
 
 from gen3va.config import Config
-import gen3va.db.commondal as dataaccess
+import gen3va.db.dataaccess as dataaccess
 import gen3va.util.urlcodex as urlcodex
 
 

@@ -6,7 +6,7 @@ import json
 import requests
 
 from substrate import GeneSignature
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 from gen3va import Config, Session
 from gen3va.db.util import bare_session_scope
 
@@ -22,7 +22,7 @@ def from_enriched_terms(extraction_ids=None,
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
-            gene_signature = commondal.fetch_gene_signature(extraction_id)
+            gene_signature = dataaccess.fetch_gene_signature(extraction_id)
             gene_signatures.append(gene_signature)
     else:
         gene_signatures = report.tag.gene_signatures

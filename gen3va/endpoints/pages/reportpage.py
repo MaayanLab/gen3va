@@ -4,7 +4,7 @@
 from flask import Blueprint, render_template, redirect
 
 from gen3va.config import Config
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 from gen3va.core import reportbuilder
 
 
@@ -18,7 +18,7 @@ def tag_report_endpoint(tag_name):
     """If a report is ready, is in progress, or can be kicked off, the user is
     redirected to the appropriate page.
     """
-    tag = commondal.fetch_tag(tag_name)
+    tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
         return render_template('404.html')
     elif len(tag.reports) == 0:
@@ -41,7 +41,7 @@ def tag_report_endpoint(tag_name):
 
 @report_page.route('/<int:report_id>/<tag_name>', methods=['GET'])
 def tag_report_id_endpoint(report_id, tag_name):
-    tag = commondal.fetch_tag(tag_name)
+    tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
         return render_template('404.html')
     report = __report_by_id(tag.reports, report_id)

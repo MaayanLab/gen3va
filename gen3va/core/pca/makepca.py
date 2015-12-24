@@ -5,7 +5,7 @@ import pandas
 import numpy as np
 from sklearn import decomposition
 
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 from gen3va.core.pca.utils import avg_dups
 
 
@@ -17,7 +17,7 @@ def from_report(report):
 def from_extraction_ids(extraction_ids):
     gene_signatures = []
     for extraction_id in extraction_ids:
-        gene_signature = commondal.fetch_gene_signature(extraction_id)
+        gene_signature = dataaccess.fetch_gene_signature(extraction_id)
         gene_signatures.append(gene_signature)
     return __from_gene_signatures(gene_signatures)
 

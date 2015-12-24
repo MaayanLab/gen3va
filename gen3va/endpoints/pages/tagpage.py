@@ -5,7 +5,7 @@
 from flask import Blueprint, render_template
 
 from gen3va.config import Config
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 
 
 tag_page = Blueprint('tag_page',
@@ -16,7 +16,7 @@ tag_page = Blueprint('tag_page',
 @tag_page.route('/<tag_name>', methods=['GET'])
 def tag_endpoint(tag_name):
     print(tag_name)
-    tag = commondal.fetch_tag(tag_name)
+    tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
         message = 'No gene signatures with tag "%s" found' % tag_name
         return render_template('404.html', message=message)

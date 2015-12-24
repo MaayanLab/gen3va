@@ -5,7 +5,7 @@ import json
 from flask import Blueprint, render_template
 
 from gen3va.config import Config
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 
 
 index_page = Blueprint('index_page',
@@ -15,7 +15,7 @@ index_page = Blueprint('index_page',
 
 @index_page.route('/')
 def index():
-    stats = commondal.get_statistics()
+    stats = dataaccess.get_statistics()
     stats_json = json.dumps(stats)
     return render_template('index.html',
                            report_url=Config.REPORT_URL,

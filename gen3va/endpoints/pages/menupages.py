@@ -5,7 +5,7 @@ import json
 
 from flask import Blueprint, render_template
 
-from gen3va.db import commondal
+from gen3va.db import dataaccess
 from gen3va.config import Config
 
 
@@ -26,7 +26,7 @@ def getting_started():
 
 @menu_pages.route('/about')
 def about():
-    stats = commondal.get_statistics()
+    stats = dataaccess.get_statistics()
     stats_json = json.dumps(stats)
     return render_template('pages/about.html',
                            stats=stats,
