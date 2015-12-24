@@ -110,6 +110,7 @@ def _get_optional_metadata_suggestions(query):
             seen.add(x)
         return seen
 
+
 def get_statistics():
     """Returns hash with DB statistics for about page.
     """
@@ -125,6 +126,10 @@ def get_statistics():
                 report_status = 'inactive'
             else:
                 report_status = tag.reports[-1].status
+
+            if len(tag.gene_signatures) < 3:
+                continue
+
             tags.append({
                 'name': tag.name,
                 'is_curated': tag.is_curated,
