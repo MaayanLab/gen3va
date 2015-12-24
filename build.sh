@@ -53,6 +53,7 @@ docker-machine start default
 eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/gen3va:latest'
 if [[ $3 = 'build' ]]; then
+    echo 'building container'
     docker build -t $DOCKER_IMAGE .
 fi
 
