@@ -11,14 +11,14 @@ html {
   min-height: 100%;
 }
 body {
-  margin-bottom: 50px;
+  margin-bottom: 125px;
   /* bottom = footer height */
 }
 #footer {
   position: absolute;
   left: 0;
   bottom: 0;
-  height: 50px;
+  height: 125px;
   width: 100%;
 }
 /* Class and tag selectors.
