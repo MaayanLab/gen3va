@@ -5,17 +5,9 @@
 {% block body %}
 
     <div id="report-pending-page">
-        <div id="report-metadata">
-            <h1>Report for <strong>{{ tag.name }}</strong>
-                {% if tag.is_curated %}
-                    <strong id="curated-tag">Curated Tag</strong>
-                {% endif %}
-            </h1>
-            <p id="gene-signatures-count">{{ tag.gene_signatures|length }} processed gene signatures</p>
-            {% if report.tag.description %}
-                <p>{{ report.tag.description }}</p>
-            {% endif %}
-        </div>
+
+        {% include 'partial/report-page-metadata.html' %}
+
         <p class="notification">
             Report is being processed. This may take a few hours. Please come back later.
         </p>

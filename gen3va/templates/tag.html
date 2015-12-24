@@ -4,9 +4,12 @@
 
 {% block body %}
 
-    <div class="tag-page">
+    <div id="tag-page">
 
-        <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
+        <h1>{{ num_tags }} gene signatures for <strong>{{ tag.name }}</strong></h1>
+        <p class="report-tag-inter-link">
+            <a href="{{ report_url }}/{{ tag.name }}">View Report</a>
+        </p>
 
         {% include 'partial/consensus.html' %}
 

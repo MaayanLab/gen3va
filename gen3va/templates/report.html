@@ -10,17 +10,9 @@
     <script src="static/js/pca.js"></script>
 
     <div id="report-page">
-        <div id="report-metadata">
-            <h1>Report for <strong>{{ tag.name }}</strong>
-                {% if tag.is_curated %}
-                    <strong id="curated-tag">Curated Tag</strong>
-                {% endif %}
-            </h1>
-            <p id="gene-signatures-count">{{ tag.gene_signatures|length }} processed gene signatures</p>
-            {% if report.tag.description %}
-                <p>{{ report.tag.description }}</p>
-            {% endif %}
-        </div>
+
+        {% include 'partial/report-page-metadata.html' %}
+
         <div class="section">
             <h4>Principal Component Analysis of gene signatures</h4>
             <div id="pca-container"></div>

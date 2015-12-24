@@ -1,37 +1,4 @@
 /* Links */
-#consensus .description {
-  background: #f9f9f9;
-  margin-top: 20px;
-  padding: 10px;
-}
-#consensus .description h4 {
-  margin: 0;
-}
-#consensus .options button {
-  display: block;
-  margin-top: 5px;
-}
-#consensus ol {
-  margin-top: 10px;
-  padding-left: 20px;
-}
-#consensus #pca-container,
-#consensus #clustergrammer-preview,
-#consensus #l1000cds2-preview,
-#consensus #enrichr-preview {
-  display: none;
-}
-#consensus #clustergrammer-preview iframe,
-#consensus #enrichr-preview iframe,
-#consensus #l1000cds2-preview iframe {
-  border: 1px solid #eeeeee;
-  height: 1000px;
-  margin-top: 20px;
-  width: 100%;
-}
-#consensus #pca-container {
-  margin-top: 20px;
-}
 table .optional-metadata {
   min-width: 300px;
 }

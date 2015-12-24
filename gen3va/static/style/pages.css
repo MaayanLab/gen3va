@@ -37,9 +37,10 @@
   margin-top: 0;
   margin-bottom: 5px;
 }
+#index-page .tag-box .report-link,
 #index-page .tag-box .signature-count {
   font-family: 'Roboto', arial, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
 }
 #index-page .tag-box .description {
@@ -84,15 +85,10 @@
 #about-page #platforms-bar-chart {
   height: 1000px;
 }
-#report-page #report-metadata #gene-signatures-count,
-#report-pending-page #report-metadata #gene-signatures-count {
+#report-page .report-tag-inter-link,
+#report-pending-page .report-tag-inter-link,
+#tag-page .report-tag-inter-link {
   font-size: 20px;
-}
-#report-page #report-metadata #curated-tag,
-#report-pending-page #report-metadata #curated-tag {
-  color: #e74c3c;
-  font-size: 16px;
-  padding: 5px;
 }
 #report-pending-page .notification {
   color: #e74c3c;
@@ -109,36 +105,88 @@
   width: 100%;
 }
 #report-page .section {
-  border-top: 1px solid #aaaaaa;
+  border-top: 1px solid #eeeeee;
   padding-top: 20px;
-  margin-top: 40px;
 }
 #report-page .section h4 {
   font-weight: bold;
 }
-table td {
+#tag-page table td,
+#metadata-page table td {
   vertical-align: middle !important;
 }
-table .optional-metadata-content {
+#tag-page table .optional-metadata-content,
+#metadata-page table .optional-metadata-content {
   background-color: #f9f9f9;
   padding: 10px;
 }
-table .optional-metadata-content table {
+#tag-page table .optional-metadata-content table,
+#metadata-page table .optional-metadata-content table {
   width: 100%;
 }
-table .optional-metadata-content table td:first-child {
+#tag-page table .optional-metadata-content table td:first-child,
+#metadata-page table .optional-metadata-content table td:first-child {
   font-weight: bold !important;
   padding-right: 10px;
   width: 30%;
 }
-.tag-page .note,
-.metadata-page .note {
+#tag-page .note,
+#metadata-page .note {
   font-size: 12px;
   font-weight: normal;
   margin-left: 15px;
 }
-.metadata-page th,
-.tag-page th {
+#tag-page #consensus,
+#metadata-page #consensus {
+  margin-bottom: 20px;
+}
+#tag-page #consensus .description,
+#metadata-page #consensus .description {
+  background: #f9f9f9;
+  margin-top: 20px;
+  padding: 10px;
+}
+#tag-page #consensus .description h4,
+#metadata-page #consensus .description h4 {
+  margin: 0;
+}
+#tag-page #consensus .options button,
+#metadata-page #consensus .options button {
+  display: block;
+  margin-top: 5px;
+}
+#tag-page #consensus ol,
+#metadata-page #consensus ol {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+#tag-page #consensus #pca-container,
+#metadata-page #consensus #pca-container,
+#tag-page #consensus #clustergrammer-preview,
+#metadata-page #consensus #clustergrammer-preview,
+#tag-page #consensus #l1000cds2-preview,
+#metadata-page #consensus #l1000cds2-preview,
+#tag-page #consensus #enrichr-preview,
+#metadata-page #consensus #enrichr-preview {
+  display: none;
+}
+#tag-page #consensus #clustergrammer-preview iframe,
+#metadata-page #consensus #clustergrammer-preview iframe,
+#tag-page #consensus #enrichr-preview iframe,
+#metadata-page #consensus #enrichr-preview iframe,
+#tag-page #consensus #l1000cds2-preview iframe,
+#metadata-page #consensus #l1000cds2-preview iframe {
+  border: 1px solid #eeeeee;
+  height: 1000px;
+  margin-top: 20px;
+  width: 100%;
+}
+#tag-page #consensus #pca-container,
+#metadata-page #consensus #pca-container {
+  margin-top: 20px;
+}
+#metadata-page th,
+#tag-page th {
   border-bottom: 2px solid #eeeeee;
   text-align: left;
 }

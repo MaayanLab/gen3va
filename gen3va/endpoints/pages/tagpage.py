@@ -22,6 +22,6 @@ def tag_endpoint(tag_name):
         return render_template('404.html', message=message)
     else:
         return render_template('tag.html',
-            num_tags=len(tag.gene_signatures),
-            tag=tag
-        )
+                               num_tags=len(tag.gene_signatures),
+                               report_url=Config.REPORT_URL,
+                               tag=tag)

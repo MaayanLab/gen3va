@@ -30,7 +30,7 @@
                         <div class="tag-box {{ curated_status }} {{ tag_status }}">
                             <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
                             <p><em>{{ curated_status|capitalize }}</em></p>
-                            <p><a href="{{ report_url }}/{{ tag.name }}">Report</a> ({{ tag_status }})</p>
+                            <p><a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a> ({{ tag_status }})</p>
                             <p><a href="{{ tag_url }}/{{ tag.name }}">
                                 <span class="signature-count">{{ tag.gene_signatures|length }}</span> signatures</a>
                             </p>

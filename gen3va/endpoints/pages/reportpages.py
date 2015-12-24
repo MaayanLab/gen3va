@@ -54,6 +54,7 @@ def tag_report_id_endpoint(report_id, tag_name):
         pca_json = report.pca_visualization.data
         return render_template('report.html',
                                tag=tag,
+                               tag_url=Config.TAG_URL,
                                report=report,
                                pca_json=pca_json)
     else:
@@ -62,12 +63,14 @@ def tag_report_id_endpoint(report_id, tag_name):
                                report=report)
 
 
-# @report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
-# def tag_report_id_endpoint(report_id, tag_name):
-#     tag = dataaccess.fetch_tag(tag_name)
-#     report = __report_by_id(tag.reports, report_id)
-#     reportbuilder.rebuild(report)
-
+@report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
+def rebuild_tag_report_id_endpoint(report_id, tag_name):
+    tag = dataaccess.fetch_tag(tag_name)
+    report = __report_by_id(tag.reports, report_id)
+    reportbuilder.rebuild(report)
+    return render_template('report-pending.html',
+                           tag=tag,
+                           report=report)
 
 def __latest_ready_report(reports):
     """Returns the most recent ready report if it exists.

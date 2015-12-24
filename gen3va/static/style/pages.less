@@ -41,9 +41,10 @@
             margin-top: 0;
             margin-bottom: 5px;
         }
+        .report-link,
         .signature-count {
             font-family: @font-family-accent;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
         .description {
@@ -102,16 +103,10 @@
 }
 
 #report-page,
-#report-pending-page {
-   #report-metadata {
-        #gene-signatures-count {
-            font-size: 20px;
-        }
-        #curated-tag {
-            color: @color-palette-red;
-            font-size: 16px;
-            padding: 5px;
-        }
+#report-pending-page,
+#tag-page {
+    .report-tag-inter-link {
+        font-size: 20px;
     }
 }
 
@@ -134,42 +129,81 @@
         width: 100%;
     }
     .section {
-        border-top: 1px solid @color-gray;
+        border-top: 1px solid @color-gray-light;
         padding-top: 20px;
-        margin-top: 40px;
         h4 {
             font-weight: bold;
         }
     }
 }
 
-table {
-    td {
-        vertical-align: middle !important;
-    }
-    .optional-metadata-content {
-        background-color: @color-gray-very-light;
-        padding: 10px;
-        table {
-            width: 100%;
-            td:first-child {
-                font-weight: bold !important;
-                padding-right: 10px;
-                width: 30%;
+#tag-page,
+#metadata-page {
+    table {
+        td {
+            vertical-align: middle !important;
+        }
+        .optional-metadata-content {
+            background-color: @color-gray-very-light;
+            padding: 10px;
+            table {
+                width: 100%;
+                td:first-child {
+                    font-weight: bold !important;
+                    padding-right: 10px;
+                    width: 30%;
+                }
             }
         }
     }
-}
-.tag-page,
-.metadata-page {
     .note {
         font-size: 12px;
         font-weight: normal;
         margin-left: 15px;
     }
+    #consensus {
+        margin-bottom: 20px;
+        .description {
+            background: @color-gray-very-light;
+            margin-top: 20px;
+            padding: 10px;
+            h4 {
+                margin: 0;
+            }
+        }
+        .options {
+            button {
+                display: block;
+                margin-top: 5px;
+            }
+        }
+        ol {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        #pca-container,
+        #clustergrammer-preview,
+        #l1000cds2-preview,
+        #enrichr-preview {
+            display: none;
+        }
+        #clustergrammer-preview,
+        #enrichr-preview,
+        #l1000cds2-preview {
+            iframe {
+                border: 1px solid @color-gray-light;
+                height: @dim-page-width;
+                margin-top: 20px;
+                width: 100%;
+            }
+        }
+        #pca-container {
+            margin-top: 20px;
+        }
+    }
 }
-.metadata-page,
-.tag-page {
+#metadata-page,
+#tag-page {
     th {
         border-bottom: 2px solid @color-gray-light;
         text-align: left;

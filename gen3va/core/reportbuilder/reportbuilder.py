@@ -24,12 +24,21 @@ def build(tag):
     return report.id
 
 
+def rebuild(report):
+    """Rebuilds an existing report, overwriting old links.
+    """
+    __clean_report(report)
+    thread = Thread(target=__build, args=(report.id,))
+    thread.daemon = True
+    thread.start()
+
+
 def __build(report_id):
     """In separate thread, builds report and then changes report status.
     """
     # Outside of Flask-SQLAlchemy session.
     with bare_session_scope() as session:
-        print('starting build')
+        print('starting report build %s' % report_id)
         report = session\
             .query(Report)\
             .get(report_id)
@@ -39,6 +48,7 @@ def __build(report_id):
                                             report.id,
                                             report.tag.name)
 
+        print('PCA visualization')
         pca_data = pca.from_report(report)
         pca_data = json.dumps(pca_data)
         pca_visualization = PCAVisualization(pca_data)
@@ -106,3 +116,19 @@ def __save_report_link(session, report, link, description):
     report.set_link(target_app_link)
     session.merge(report)
     session.commit()
+
+
+def __clean_report(report):
+    """Remove all generated visualizations in preparation to rebuild report.
+    """
+    with session_scope() as session:
+        for link in report.links:
+            TargetAppLink.query.filter_by(id=link.id).delete()
+
+        PCAVisualization\
+            .query\
+            .filter_by(id=report.pca_visualization.id)\
+            .delete()
+
+        report.status = 'pending'
+        session.merge(report)

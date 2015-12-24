@@ -10,9 +10,10 @@
 
 {% block body %}
 
-    {% include 'partial/consensus.html' %}
+    <div id="metadata-page">
 
-    <div class="metadata-page">
+        {% include 'partial/consensus.html' %}
+
         <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
         <div class="table-responsive">
             <table class="table data-table">

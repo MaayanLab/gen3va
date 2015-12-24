@@ -43,7 +43,7 @@ from gen3va.endpoints.pages.indexpage import index_page
 from gen3va.endpoints.pages.errorpage import error_page
 from gen3va.endpoints.pages.menupages import menu_pages
 from gen3va.endpoints.pages.metadatapage import metadata_page
-from gen3va.endpoints.pages.reportpage import report_page
+from gen3va.endpoints.pages.reportpages import report_page
 from gen3va.endpoints.pages.tagpage import tag_page
 from gen3va.endpoints.api.clusterapi import cluster_api
 from gen3va.endpoints.api.pcaapi import pca_api

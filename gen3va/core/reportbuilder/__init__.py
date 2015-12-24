@@ -1,1 +1,1 @@
-from reportbuilder import build
+from reportbuilder import build, rebuild
