@@ -11,11 +11,11 @@ from gen3va.db import dataaccess
 from gen3va import Config
 
 
-CLUSTERGRAMMER_URL = '%s/g2e/' % Config.CLUSTERGRAMMER_URL
+CLUSTERGRAMMER_URL = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def from_perturbations(extraction_ids=None, mimic=False, report=None, back_link=''):
+def from_perturbations(extraction_ids=None, report=None, back_link=''):
     """Based on extraction IDs, a set of gene signatures to find perturbations
     that reverse or mimic their expression pattern.
     """
@@ -26,33 +26,48 @@ def from_perturbations(extraction_ids=None, mimic=False, report=None, back_link=
             gene_signatures.append(gene_signature)
     else:
         gene_signatures = report.tag.gene_signatures
-    return __from_perturbations(gene_signatures, mimic, back_link)
+    return __from_perturbations(gene_signatures, back_link)
 
 
-def __from_perturbations(gene_signatures, mimic, back_link):
-    samples = []
+def __from_perturbations(gene_signatures, back_link):
+    columns = []
     for i, gene_signature in enumerate(gene_signatures):
         print(i, gene_signature.extraction_id)
-        perts, scores = __mimic_or_reverse_gene_signature(
+
+        # First mimic
+        up_perts, up_scores = __mimic_or_reverse_gene_signature(
             gene_signature,
-            mimic
+            True
         )
+        #vector_up = [[x,y] for x,y in zip(up_perts, up_scores)]
+
+        # Then reverse
+        down_perts, down_scores = __mimic_or_reverse_gene_signature(
+            gene_signature,
+            False
+        )
+        #vector_down = [[x,y] for x,y in zip(down_perts, down_scores)]
 
         accession = gene_signature.soft_file.dataset.accession
         col_title = '%s %s' % (accession, i)
-        samples.append({
-            'col_title': col_title,
-            'link': back_link,
-            'genes': [[x,y] for x,y in zip(perts, scores)],
-            'name': 'todo'
+        columns.append({
+            # 'col_title': col_title,
+            # # 'link': '', optional
+            #
+            # # In principal, 'vector' could be processed differently.
+            # # Clustergrammer clusters on 'vector' but then displays split
+            # # tiles on 'vector_up' and 'vector_dn'.
+            # 'vector': vector_up + vector_down,
+            # 'vector_up': vector_up,
+            # 'vector_dn': vector_down
         })
 
     payload = {
-        'link': 'todo',
-        'gene_signatures': samples
+        'link': back_link,
+        #'title': '', optional
+        'columns': columns
     }
 
-    print(len(samples))
     resp = requests.post(CLUSTERGRAMMER_URL,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
@@ -105,3 +120,8 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
         scores.append(score)
 
     return perts, scores
+
+
+def fill_with_0s(A, B):
+    pass
+

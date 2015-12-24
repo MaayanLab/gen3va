@@ -56,27 +56,24 @@ def __build(report_id):
         session.merge(report)
         session.commit()
 
-        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-            __cluster_enriched_terms(session, report, library, back_link)
+        # for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+        #     __cluster_enriched_terms(session, report, library, back_link)
 
-        for mimic in [True, False]:
-            __cluster_perturbations(session, report, mimic, back_link)
+        __cluster_perturbations(session, report, back_link)
 
         print('build complete')
         report.status = 'ready'
         session.merge(report)
 
 
-def __cluster_perturbations(session, report, mimic, back_link):
+def __cluster_perturbations(session, report, back_link):
     """Get perturbations to reverse/mimic expression and then perform
     hierarchical clustering.
     """
     link_temp = hierclust.from_perturbations(report=report,
-                                             mimic=mimic,
                                              back_link=back_link)
-    mimic_str = 'mimics' if mimic else 'reverses'
     description = 'Hierarchical clustering of perturbations ' \
-                  'that {0} expression'.format(mimic_str)
+                  'that mimics (blue) and reverses (red) expression'
     __save_report_link(session,
                        report,
                        link_temp,
@@ -125,10 +122,11 @@ def __clean_report(report):
         for link in report.links:
             TargetAppLink.query.filter_by(id=link.id).delete()
 
-        PCAVisualization\
-            .query\
-            .filter_by(id=report.pca_visualization.id)\
-            .delete()
+        if report.pca_visualization:
+            PCAVisualization\
+                .query\
+                .filter_by(id=report.pca_visualization.id)\
+                .delete()
 
         report.status = 'pending'
         session.merge(report)

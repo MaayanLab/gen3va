@@ -69,9 +69,9 @@ def rebuild_tag_report_id_endpoint(report_id, tag_name):
     tag = dataaccess.fetch_tag(tag_name)
     report = __report_by_id(tag.reports, report_id)
     reportbuilder.rebuild(report)
-    return render_template('report-pending.html',
-                           tag=tag,
-                           report=report)
+    new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
+    return redirect(new_url)
+
 
 def __latest_ready_report(reports):
     """Returns the most recent ready report if it exists.
