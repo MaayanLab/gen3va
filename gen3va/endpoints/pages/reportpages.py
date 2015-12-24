@@ -60,6 +60,7 @@ def tag_report_id_endpoint(report_id, tag_name):
     else:
         return render_template('report-pending.html',
                                tag=tag,
+                               tag_url=Config.TAG_URL,
                                report=report)
 
 
