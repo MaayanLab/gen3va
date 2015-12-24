@@ -15,7 +15,7 @@
         margin-top: 10px;
     }
     button {
-        background-color: @color-lightgray3;
+        background-color: @color-gray-very-light;
     }
     #intoduction {
         border-bottom: 1px solid @color-gray;
@@ -25,7 +25,8 @@
         margin-bottom: 25px;
     }
     .tag-box {
-        background-color: @color-lightgray2;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
+        background-color: @color-gray-very-light;
         border: 1px solid @color-gray;
         padding: 10px;
         margin-right: 10px;
@@ -45,15 +46,19 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .description {
+            max-width: 400px;
+        }
         &.curated {
-            border-color: @color-palette-dark-red;
-            background-color: @color-palette-red;
-            color: white;
+            border: 1px solid @color-palette-dark-red;
+            em {
+                color: @color-palette-red;
+            }
             .tag-name {
-                color: white;
+                color: @color-palette-red;
             }
             a {
-                color: white;
+                //color: @color-palette-red;
                 &:hover {
                     opacity: .7;
                 }
@@ -67,13 +72,13 @@
 #results-page {
     table {
         caption {
-            border-bottom: 1px solid @color-lightgray3;
+            border-bottom: 1px solid @color-gray-light;
         }
         vertical-align: middle;
         tr {
             th,
             td {
-                border-top: 1px solid @color-lightgray3;
+                border-top: 1px solid @color-gray-light;
                 padding: 4px;
             }
             td {
@@ -96,16 +101,9 @@
     }
 }
 
-#report-page {
-    iframe,
-    #pca-container {
-        border: 1px solid @color-gray;
-    }
-    iframe {
-        height: 500px;
-        width: 100%;
-    }
-    #report-metadata {
+#report-page,
+#report-pending-page {
+   #report-metadata {
         #gene-signatures-count {
             font-size: 20px;
         }
@@ -114,6 +112,26 @@
             font-size: 16px;
             padding: 5px;
         }
+    }
+}
+
+#report-pending-page {
+    .notification {
+        color: @color-palette-red;
+        font-weight: bold;
+        font-size: 14px;
+        text-decoration: underline;
+    }
+}
+
+#report-page {
+    iframe,
+    #pca-container {
+        border: 1px solid @color-gray-light;
+    }
+    iframe {
+        height: 800px;
+        width: 100%;
     }
     .section {
         border-top: 1px solid @color-gray;
@@ -130,7 +148,7 @@ table {
         vertical-align: middle !important;
     }
     .optional-metadata-content {
-        background-color: @color-lightgray1;
+        background-color: @color-gray-very-light;
         padding: 10px;
         table {
             width: 100%;
@@ -153,7 +171,7 @@ table {
 .metadata-page,
 .tag-page {
     th {
-        border-bottom: 2px solid @color-lightgray3;
+        border-bottom: 2px solid @color-gray-light;
         text-align: left;
     }
 }

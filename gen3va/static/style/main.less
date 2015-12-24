@@ -69,7 +69,7 @@ form {
         font-size: 14px;
     }
     .description {
-        background: @color-lightgray1;
+        background: @color-gray-very-light;
         margin-top: 10px;
         padding: 5px;
         p {
@@ -85,7 +85,7 @@ table {
 }
 section {
     margin-bottom: 20px;
-    border-bottom: 1px solid @color-lightgray3;
+    border-bottom: 1px solid @color-gray-light;
     &.last {
         border: none;
     }
@@ -104,7 +104,7 @@ select {
 pre,
 .code {
     border-radius: 0;
-    background: @color-lightgray2;
+    background: @color-gray-very-light;
     font-family: @font-family-mono;
     /* Example links overflow the pre tag if the text is too large. */
     font-size: 12px;
@@ -133,7 +133,7 @@ pre {
     width: 100%;
     z-index: 9999;
     .modal {
-        background: @color-lightyellow;
+        background: @color-yellow-light;
         border: 1px solid @color-yellow;
         color: @color-black-almost;
         font-size: 12px;
@@ -159,9 +159,6 @@ pre {
 .clear {
     clear: both;
 }
-.highlight {
-    color: @color-red;
-}
 caption {
     font-style: italic;
     margin-top: 10px;
@@ -170,7 +167,7 @@ caption {
 .tooltip {
     opacity: 1 !important;
     .tooltip-inner {
-        background: @color-lightyellow;
+        background: @color-yellow-light;
         border: 1px solid @color-yellow;
         color: @color-black-almost;
         font-weight: bold;
@@ -196,7 +193,7 @@ caption {
 }
 
 .instruction {
-    font-size: @font-size-base;
+    font-size: 13px;
     font-style: italic;
 }
 .capitalize-initial:first-letter {
@@ -247,7 +244,7 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-    background-color: @color-primary;
+    background-color: @color-palette-blue;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     color: white;
     padding: 10px 0;
@@ -260,7 +257,7 @@ caption {
         text-decoration: none;
         &:hover {
             cursor: pointer;
-            color: @color-lightgray2;
+            color: @color-gray-very-light;
         }
     }
     .nav.navbar-nav.navbar-right {
@@ -269,7 +266,7 @@ caption {
             &:hover,
             &:focus {
                 opacity: .8;
-                background-color: @color-primary;
+                background-color: @color-palette-blue;
             }
         }
     }
@@ -328,7 +325,7 @@ caption {
  * ----------------- */
 .ui-widget {
     font-family: @font-family-base;
-    font-size: @font-size-base;
+    font-size: 13px;
 }
 .ui-state-default,
 .ui-widget-content .ui-state-default,
@@ -336,7 +333,7 @@ caption {
     color: @color-black-almost;
 }
 .hljs {
-    background-color: @color-lightgray2 !important;
+    background-color: @color-gray-very-light !important;
 }
 .btn-default {
     border-radius: 0;

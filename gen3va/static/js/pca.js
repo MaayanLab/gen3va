@@ -1,7 +1,7 @@
 function plotPCA(pcaObj, container, tooltipFormatter) {
 
     Highcharts.setOptions({
-        colors: ['#009dff', '#d90000']
+        colors: ['#428bca', '#004561']
     });
 
     container = container || 'pca-container';

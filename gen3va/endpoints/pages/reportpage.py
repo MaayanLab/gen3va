@@ -57,7 +57,16 @@ def tag_report_id_endpoint(report_id, tag_name):
                                report=report,
                                pca_json=pca_json)
     else:
-        return render_template('report-pending.html', tag=tag)
+        return render_template('report-pending.html',
+                               tag=tag,
+                               report=report)
+
+
+# @report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
+# def tag_report_id_endpoint(report_id, tag_name):
+#     tag = dataaccess.fetch_tag(tag_name)
+#     report = __report_by_id(tag.reports, report_id)
+#     reportbuilder.rebuild(report)
 
 
 def __latest_ready_report(reports):

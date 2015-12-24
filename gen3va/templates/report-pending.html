@@ -4,11 +4,21 @@
 
 {% block body %}
 
-    <div class="report-page">
-
-        <h1>Report for {{ tag.name }}</h1>
-        <p>The report is pending. Please come back later.</p>
-
+    <div id="report-pending-page">
+        <div id="report-metadata">
+            <h1>Report for <strong>{{ tag.name }}</strong>
+                {% if tag.is_curated %}
+                    <strong id="curated-tag">Curated Tag</strong>
+                {% endif %}
+            </h1>
+            <p id="gene-signatures-count">{{ tag.gene_signatures|length }} processed gene signatures</p>
+            {% if report.tag.description %}
+                <p>{{ report.tag.description }}</p>
+            {% endif %}
+        </div>
+        <p class="notification">
+            Report is being processed. This may take a few hours. Please come back later.
+        </p>
     </div>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+/* Links */
 #index-page {
   margin-top: 30px;
 }
@@ -11,7 +12,7 @@
   margin-top: 10px;
 }
 #index-page button {
-  background-color: #eeeeee;
+  background-color: #f9f9f9;
 }
 #index-page #intoduction {
   border-bottom: 1px solid #aaaaaa;
@@ -21,6 +22,7 @@
   margin-bottom: 25px;
 }
 #index-page .tag-box {
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
   background-color: #f9f9f9;
   border: 1px solid #aaaaaa;
   padding: 10px;
@@ -40,16 +42,17 @@
   font-size: 20px;
   font-weight: bold;
 }
+#index-page .tag-box .description {
+  max-width: 400px;
+}
 #index-page .tag-box.curated {
-  border-color: #bf2718;
-  background-color: #e74c3c;
-  color: white;
+  border: 1px solid #bf2718;
+}
+#index-page .tag-box.curated em {
+  color: #e74c3c;
 }
 #index-page .tag-box.curated .tag-name {
-  color: white;
-}
-#index-page .tag-box.curated a {
-  color: white;
+  color: #e74c3c;
 }
 #index-page .tag-box.curated a:hover {
   opacity: .7;
@@ -81,21 +84,29 @@
 #about-page #platforms-bar-chart {
   height: 1000px;
 }
-#report-page iframe,
-#report-page #pca-container {
-  border: 1px solid #aaaaaa;
-}
-#report-page iframe {
-  height: 500px;
-  width: 100%;
-}
-#report-page #report-metadata #gene-signatures-count {
+#report-page #report-metadata #gene-signatures-count,
+#report-pending-page #report-metadata #gene-signatures-count {
   font-size: 20px;
 }
-#report-page #report-metadata #curated-tag {
+#report-page #report-metadata #curated-tag,
+#report-pending-page #report-metadata #curated-tag {
   color: #e74c3c;
   font-size: 16px;
   padding: 5px;
+}
+#report-pending-page .notification {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: underline;
+}
+#report-page iframe,
+#report-page #pca-container {
+  border: 1px solid #eeeeee;
+}
+#report-page iframe {
+  height: 800px;
+  width: 100%;
 }
 #report-page .section {
   border-top: 1px solid #aaaaaa;
@@ -109,7 +120,7 @@ table td {
   vertical-align: middle !important;
 }
 table .optional-metadata-content {
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
   padding: 10px;
 }
 table .optional-metadata-content table {

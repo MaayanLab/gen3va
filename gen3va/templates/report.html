@@ -17,7 +17,9 @@
                 {% endif %}
             </h1>
             <p id="gene-signatures-count">{{ tag.gene_signatures|length }} processed gene signatures</p>
-            <p>Tag descriptions are under construction.</p>
+            {% if report.tag.description %}
+                <p>{{ report.tag.description }}</p>
+            {% endif %}
         </div>
         <div class="section">
             <h4>Principal Component Analysis of gene signatures</h4>
@@ -29,7 +31,6 @@
                 <iframe src="{{ target_app_link.link }}"></iframe>
             </div>
         {% endfor %}
-
     </div>
 
     <script>
