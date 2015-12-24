@@ -1,3 +1,4 @@
+
 FROM debian:stable
 
 RUN apt-get update \
@@ -23,7 +24,6 @@ RUN pip install \
     SQLAlchemy==0.9.9 \
     flask-cors==2.0.1 \
     flask-sqlalchemy==2.0 \
-    alembic==0.8.0 \
     nose==1.3.4 \
     numpy==1.9.2 \
     requests==2.6.0 \
