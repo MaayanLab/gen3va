@@ -100,12 +100,14 @@
 #report-page #pca-container {
   border: 1px solid #eeeeee;
 }
+#report-page #enrichr-hier-clusts .description {
+  margin-bottom: 10px;
+}
 #report-page iframe {
   height: 800px;
   width: 100%;
 }
 #report-page .section {
-  border-top: 1px solid #eeeeee;
   padding-top: 20px;
 }
 #report-page .section h4 {

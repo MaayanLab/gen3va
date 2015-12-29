@@ -4,9 +4,8 @@ handle separate database sessions.
 
 import json
 from threading import Thread
-import urlparse
 
-from substrate import PCAVisualization, Report, TargetApp, TargetAppLink
+from substrate import PCAVisualization, Report, TargetApp, HierClustVisualization
 from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
 from gen3va.core import pca
 from gen3va.core import hierclust
@@ -28,6 +27,7 @@ def rebuild(report):
     """Rebuilds an existing report, overwriting old links.
     """
     __clean_report(report)
+    import pdb; pdb.set_trace()
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
@@ -56,8 +56,8 @@ def __build(report_id):
         session.merge(report)
         session.commit()
 
-        # for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-        #     __cluster_enriched_terms(session, report, library, back_link)
+        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+            __cluster_enriched_terms(session, report, back_link, library)
 
         __cluster_perturbations(session, report, back_link)
 
@@ -72,24 +72,20 @@ def __cluster_perturbations(session, report, back_link):
     """
     link_temp = hierclust.from_perturbations(report=report,
                                              back_link=back_link)
-    description = 'Hierarchical clustering of perturbations ' \
-                  'that mimics (blue) and reverses (red) expression'
     __save_report_link(session,
                        report,
                        link_temp,
-                       description)
+                       'l1000cds2')
 
 
-def __cluster_enriched_terms(session, report, library, back_link):
+def __cluster_enriched_terms(session, report, back_link, library):
     """Get enriched terms based on Enrichr library and then perform
     hierarchical clustering.
     """
     link_temp = hierclust.from_enriched_terms(report=report,
                                               background_type=library,
                                               back_link=back_link)
-    description = 'Hierarchical clustering of enriched terms from {0}'\
-        .format(library)
-    __save_report_link(session, report, link_temp, description)
+    __save_report_link(session, report, link_temp, 'enrichr', library=library)
 
 
 def __save(report):
@@ -101,16 +97,20 @@ def __save(report):
         return report
 
 
-def __save_report_link(session, report, link, description):
+def __save_report_link(session, report, link, viz_type, library=None):
     """Utility method for saving link based on report ID.
     """
-    target_app = get_or_create_with_session(
-        session,
-        TargetApp,
-        name='clustergrammer'
-    )
-    target_app_link = TargetAppLink(target_app, link, description)
-    report.set_link(target_app_link)
+    # title, description, link, viz_type, target_app
+    title = ''
+    target_app = get_or_create_with_session(session,
+                                            TargetApp,
+                                            name='clustergrammer')
+    hier_clust = HierClustVisualization(link,
+                                        viz_type,
+                                        target_app,
+                                        enrichr_library=library)
+    print(hier_clust.viz_type)
+    report.set_hier_clust(hier_clust)
     session.merge(report)
     session.commit()
 
@@ -119,8 +119,11 @@ def __clean_report(report):
     """Remove all generated visualizations in preparation to rebuild report.
     """
     with session_scope() as session:
-        for link in report.links:
-            TargetAppLink.query.filter_by(id=link.id).delete()
+        for hier_clust in report.hier_clusts:
+            HierClustVisualization\
+                .query\
+                .filter_by(id=hier_clust.id)\
+                .delete()
 
         if report.pca_visualization:
             PCAVisualization\

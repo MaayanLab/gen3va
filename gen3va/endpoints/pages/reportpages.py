@@ -53,10 +53,24 @@ def tag_report_id_endpoint(report_id, tag_name):
         return redirect(new_url)
     elif report.ready:
         pca_json = report.pca_visualization.data
+
+        enrichr_links = [viz for viz in report.hier_clusts
+                         if viz.viz_type == 'enrichr']
+
+        l1000cds_hier_clust = None
+        for viz in report.hier_clusts:
+            if viz.viz_type == 'l1000cds2':
+                l1000cds_hier_clust = viz
+
+        print(len(enrichr_links))
+
         return render_template('pages/report.html',
                                tag=tag,
                                tag_url=Config.TAG_URL,
                                report=report,
+                               enrichr_links=enrichr_links,
+                               enrichr_libraries=Config.SUPPORTED_ENRICHR_LIBRARIES,
+                               l1000cds_hier_clust=l1000cds_hier_clust,
                                pca_json=pca_json)
     else:
         return render_template('pages/report-processing.html',

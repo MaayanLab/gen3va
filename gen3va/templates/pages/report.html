@@ -8,21 +8,41 @@
     <script src="static/lib/highcharts/highcharts-3d.js"></script>
     <script src="static/lib/highcharts/highcharts-exporting.js"></script>
     <script src="static/js/pca.js"></script>
+    <script src="static/js/hierclust.js"></script>
 
     <div id="report-page">
 
         {% include 'partial/report-page-metadata.html' %}
 
+        <!-- Principal Component Analysis -->
         <div class="section">
-            <h4>Principal Component Analysis of gene signatures</h4>
+            <h4>PCA</h4>
+            <p>Principal component analysis of gene signatures</p>
             <div id="pca-container"></div>
         </div>
-        {% for target_app_link in report.links %}
-            <div class="section">
-                <h4>{{ target_app_link.description }}</h4>
-                <iframe src="{{ target_app_link.link }}"></iframe>
+
+        <!-- Enrichr hierarchical clusterings -->
+        <div id="enrichr-hier-clusts" class="section">
+            <h4>Enrichr</h4>
+            <div class="description">
+                <span>Hierarchical clustering of enriched terms from</span>
+                <select>
+                    {% for library in enrichr_libraries %}
+                        <option>{{ library }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        {% endfor %}
+            {% for clust in enrichr_links %}
+                <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
+            {% endfor %}
+        </div>
+
+        <!--L1000CD2 hierarchical clusterings -->
+        <div class="section">
+            <h4>L1000CDS2</h4>
+            <p>Hierarchical clustering of perturbations that mimic (blue) and reverse (red) expression</p>
+            <iframe src="{{ l1000cds_hier_clust.link }}"></iframe>
+        </div>
     </div>
 
     <script>
