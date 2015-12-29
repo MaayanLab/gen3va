@@ -1,6 +1,7 @@
 """Handles report pages.
 """
 
+import time
 from flask import Blueprint, render_template, redirect
 
 from gen3va.config import Config
@@ -20,7 +21,7 @@ def tag_report_endpoint(tag_name):
     """
     tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
-        return render_template('404.html')
+        return render_template('pages/404.html')
     elif len(tag.reports) == 0:
         report_id = reportbuilder.build(tag)
         new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
@@ -43,7 +44,7 @@ def tag_report_endpoint(tag_name):
 def tag_report_id_endpoint(report_id, tag_name):
     tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
-        return render_template('404.html')
+        return render_template('pages/404.html')
     report = __report_by_id(tag.reports, report_id)
 
     if not report:
@@ -52,13 +53,13 @@ def tag_report_id_endpoint(report_id, tag_name):
         return redirect(new_url)
     elif report.ready:
         pca_json = report.pca_visualization.data
-        return render_template('report.html',
+        return render_template('pages/report.html',
                                tag=tag,
                                tag_url=Config.TAG_URL,
                                report=report,
                                pca_json=pca_json)
     else:
-        return render_template('report-pending.html',
+        return render_template('pages/report-processing.html',
                                tag=tag,
                                tag_url=Config.TAG_URL,
                                report=report)
