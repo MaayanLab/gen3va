@@ -47,8 +47,8 @@ def __from_enriched_terms(gene_signatures, background_type, back_link):
             gene_signature
         )
 
-        dataset_title = gene_signature.soft_file.dataset.title
-        col_title = '%s %s' % (dataset_title, i)
+        accession = gene_signature.soft_file.dataset.accession
+        col_title = '%s - %s' % (i, accession)
 
         if enrichr_id_up is None or enrichr_id_down is None:
             print('Skipping %s' % extraction_id)

@@ -2,16 +2,6 @@ import unittest
 
 from gen3va.core.hierclust.utils import build_vectors
 
-# Input
-A = [['A',1], ['B',1], ['C',1], ['D',1]]
-B = [['C',-1], ['D',-1], ['E',-1], ['F',-1]]
-
-# Output
-A  = [['A',1], ['B',1], ['C',1],  ['D',1],  ['E',0],  ['F',0]]
-B  = [['A',0], ['B',0], ['C',-1], ['D',-1], ['E',-1], ['F',-1]]
-AB = [['A',1], ['B',1], ['C',0],  ['D',0],  ['E',-1], ['F',-1]]
-
-
 def _in(lst, tpl):
     for t in lst:
         if tpl[0] == t[0] and tpl[1] == t[1]:
@@ -20,6 +10,17 @@ def _in(lst, tpl):
 
 
 class TestSumPerturbations(unittest.TestCase):
+
+    """
+    # Input
+    A = [['A',1], ['B',1], ['C',1], ['D',1]]
+    B = [['C',-1], ['D',-1], ['E',-1], ['F',-1]]
+
+    # Output
+    A  = [['A',1], ['B',1], ['C',1],  ['D',1],  ['E',0],  ['F',0]]
+    B  = [['A',0], ['B',0], ['C',-1], ['D',-1], ['E',-1], ['F',-1]]
+    AB = [['A',1], ['B',1], ['C',0],  ['D',0],  ['E',-1], ['F',-1]]
+    """
 
     def test_overlapping_sets(self):
         up, down, combined = build_vectors(

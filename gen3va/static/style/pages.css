@@ -86,11 +86,11 @@
   height: 1000px;
 }
 #report-page .report-tag-inter-link,
-#report-pending-page .report-tag-inter-link,
+#report-processing-page .report-tag-inter-link,
 #tag-page .report-tag-inter-link {
   font-size: 20px;
 }
-#report-pending-page .notification {
+#report-processing-page .notification {
   color: #e74c3c;
   font-weight: bold;
   font-size: 14px;

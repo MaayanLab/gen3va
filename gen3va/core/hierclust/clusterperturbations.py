@@ -50,7 +50,7 @@ def __from_perturbations(gene_signatures, back_link):
                                                  down_perts_to_scores)
 
         accession = gene_signature.soft_file.dataset.accession
-        col_title = '%s %s' % (accession, i)
+        col_title = '%s - %s' % (i, accession)
         columns.append({
             'col_title': col_title,
             # 'link': '', optional
@@ -107,7 +107,9 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
                          headers=Config.JSON_HEADERS)
 
     perts_to_scores = {}
-    for obj in json.loads(resp.text)['topMeta']:
+    top_meta = json.loads(resp.text)['topMeta']
+    top_meta = top_meta[:25]
+    for obj in top_meta:
         desc_temp = obj['pert_desc']
         if desc_temp == '-666':
             desc_temp = obj['pert_id']
