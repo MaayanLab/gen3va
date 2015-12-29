@@ -6,9 +6,9 @@ import json
 
 import requests
 
-from substrate import GeneSignature
 from gen3va.db import dataaccess
 from gen3va import Config
+from . import utils
 
 
 CLUSTERGRAMMER_URL = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
@@ -35,31 +35,32 @@ def __from_perturbations(gene_signatures, back_link):
         print(i, gene_signature.extraction_id)
 
         # First mimic
-        up_perts, up_scores = __mimic_or_reverse_gene_signature(
+        up_perts_to_scores = __mimic_or_reverse_gene_signature(
             gene_signature,
             True
         )
-        #vector_up = [[x,y] for x,y in zip(up_perts, up_scores)]
 
         # Then reverse
-        down_perts, down_scores = __mimic_or_reverse_gene_signature(
+        down_perts_to_scores = __mimic_or_reverse_gene_signature(
             gene_signature,
             False
         )
-        #vector_down = [[x,y] for x,y in zip(down_perts, down_scores)]
+
+        up, down, combined = utils.build_vectors(up_perts_to_scores,
+                                                 down_perts_to_scores)
 
         accession = gene_signature.soft_file.dataset.accession
         col_title = '%s %s' % (accession, i)
         columns.append({
-            # 'col_title': col_title,
-            # # 'link': '', optional
-            #
-            # # In principal, 'vector' could be processed differently.
-            # # Clustergrammer clusters on 'vector' but then displays split
-            # # tiles on 'vector_up' and 'vector_dn'.
-            # 'vector': vector_up + vector_down,
-            # 'vector_up': vector_up,
-            # 'vector_dn': vector_down
+            'col_title': col_title,
+            # 'link': '', optional
+            'vector_up': up,
+            'vector_dn': down,
+
+            # In principal, 'vector' could be processed differently.
+            # Clustergrammer clusters on 'vector' but then displays split
+            # tiles on 'vector_up' and 'vector_dn'.
+            'vector': combined
         })
 
     payload = {
@@ -86,10 +87,11 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
+    ranked_genes = gene_signature.gene_lists[2].ranked_genes
     payload = {
         'data': {
-            'genes': [rg.gene.name for rg in gene_signature.gene_lists[2].ranked_genes],
-            'vals': [rg.value for rg in gene_signature.gene_lists[2].ranked_genes]
+            'genes': [rg.gene.name for rg in ranked_genes],
+            'vals': [rg.value for rg in ranked_genes]
         },
         'config': {
             'aggravate': mimic,
@@ -103,25 +105,19 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
     resp = requests.post(L1000CDS2_QUERY,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
-    perts = []
-    scores = []
+
+    perts_to_scores = {}
     for obj in json.loads(resp.text)['topMeta']:
         desc_temp = obj['pert_desc']
         if desc_temp == '-666':
             desc_temp = obj['pert_id']
-        desc = '%s - %s' % (desc_temp, obj['cell_id'])
-        perts.append(desc)
+        pert = '%s - %s' % (desc_temp, obj['cell_id'])
 
         # L1000CDS^2 gives scores from 0 to 2. With mimic, low scores are
         # better; with reverse, high scores are better. If we subtract
         # this score from 1, we get a negative value for reverse and a
         # positive value for mimic.
         score = 1 - obj['score']
-        scores.append(score)
+        perts_to_scores[pert] = score
 
-    return perts, scores
-
-
-def fill_with_0s(A, B):
-    pass
-
+    return perts_to_scores
