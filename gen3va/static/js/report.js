@@ -19,7 +19,9 @@ $(function() {
     }
 
     function dataTables() {
-        $('table').DataTable();
+        $('table').DataTable({
+            iDisplayLength: 5,
+        });
     }
 
     window.plotPCA = function plotPCA(pcaObj, container, tooltipFormatter) {

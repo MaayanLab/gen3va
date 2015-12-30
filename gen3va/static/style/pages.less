@@ -2,26 +2,18 @@
 
 #index-page {
   margin-top: 30px;
-  ul {
-    li {
-      padding: 3px 0;
-    }
-  }
-  #introduction {
-    border-bottom: 1px solid @color-gray;
-  }
-  #isotope {
-    margin-top: 10px;
-  }
   button {
     background-color: @color-gray-very-light;
   }
   #intoduction {
-    border-bottom: 1px solid @color-gray;
     font-size: 16px;
     line-height: 1.3em;
-    padding-bottom: 23px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    p {
+      border-top: 1px solid @color-gray;
+      margin-top: 15px;
+      padding-top: 20px;
+    }
   }
   #legend {
     margin-bottom: 10px;
@@ -54,37 +46,40 @@
       }
     }
   }
-  .tag-box {
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
-    background-color: @color-gray-very-light;
-    border: 2px solid @color-gray-light;
-    padding: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    //float: left;
-    //height: 125px;
-    p {
-      margin: 0;
-    }
-    .tag-name {
-      font-size: 20px;
-      margin-top: 0;
-      margin-bottom: 5px;
-    }
-    .report-link,
-    .signature-count span {
-      font-family: @font-family-accent;
-      font-size: 16px;
-      font-weight: bold;
-    }
-    .description {
-      max-width: 400px;
-    }
-    &.ready {
-      border: 2px solid @color-palette-yellow;
-    }
-    &.curated {
-      border: 2px solid @color-palette-red;
+  #isotope {
+    margin-top: 10px;
+    .tag-box {
+      box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
+      background-color: @color-gray-very-light;
+      border: 2px solid @color-gray-light;
+      padding: 10px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      //float: left;
+      //height: 125px;
+      p {
+        margin: 0;
+      }
+      .tag-name {
+        font-size: 20px;
+        margin-top: 0;
+        margin-bottom: 5px;
+      }
+      .report-link,
+      .signature-count span {
+        font-family: @font-family-accent;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .description {
+        max-width: 400px;
+      }
+      &.ready {
+        border: 2px solid @color-palette-yellow;
+      }
+      &.curated {
+        border: 2px solid @color-palette-red;
+      }
     }
   }
 }

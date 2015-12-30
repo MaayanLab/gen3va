@@ -6,49 +6,59 @@
     <script src="static/js/index.js"></script>
 
     <div class="page" id="index-page">
-        <div>
-            <h2><strong>Analyze labeled consensus signatures extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a>.</strong></h2>
+        <div id="intoduction">
+            <h3><strong>Collections of labeled gene expression signatures extracted from the <a
+                    href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">Gene Expression Omnibus</a> (GEO) and other
+                resources.</strong></h3>
+
+            <p><strong>GEN3VA:</strong> the <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
+                <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures
+                extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a> by the crowd using <a
+                        href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. Clicking on a tag below,
+                you can view an aggregated report that provides global, interactive views, including enrichment
+                analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
         </div>
-        <p id="intoduction">
-            <strong>GEN3VA:</strong> the <strong>GENE E</strong>xpression and <strong>E</strong>nrichment <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a> by the crowd using <a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. Clicking on a tag below, you can view an aggregated report that provides global, interactive views, including enrichment analyses, for collections of signatures from multiple studies sharing a biological theme.
-        </p>
-        <div id="isotope-container">
-            <div id="legend">
-                <div class="legend-box processed">
-                    <div></div>
-                    <p><em>Processed</em> - Reports can take a few hours to build. Processed reports are ready for exploration.</p>
-                </div>
-                <div class="clear"></div>
-                <div class="legend-box curated">
-                    <div></div>
-                    <p><em>Curated</em> - Gene signatures in curated reports have been quality controlled by the Ma'ayan Lab.</p>
-                </div>
-                <div class="clear"></div>
+
+        <div id="legend">
+            <div class="legend-box processed">
+                <div></div>
+                <p><em>Processed</em> - Reports can take a few hours to build. Processed reports are ready for
+                    exploration.</p>
             </div>
-            <div id="filters" class="button-group">
-                <button class="btn btn-default is-checked" data-filter="*">All</button>
-                <button class="btn btn-default" data-filter=".ready">Processed</button>
-                <button class="btn btn-default" data-filter=".curated">Curated</button>
+            <div class="clear"></div>
+            <div class="legend-box curated">
+                <div></div>
+                <p><em>Curated</em> - Gene signatures in curated reports have been quality controlled by the Ma'ayan
+                    Lab.</p>
             </div>
-            <div id="isotope">
-                <div class="grid-sizer"></div>
-                {% for tag in tags %}
-                    {% if tag.gene_signatures|length > 2 %}
-                        {% set curated_status = 'curated' if tag.is_curated else 'uncurated' %}
-                        {% set tag_status = tag.reports[-1].status if tag.reports|length > 0 else 'inactive' %}
-                        <div class="tag-box {{ curated_status }} {{ tag_status }}">
-                            <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
-                            <p class="signature-count">
-                                <span>{{ tag.gene_signatures|length }}</span> signatures
-                            </p>
-                            {% if tag.description %}
-                                <p class="description">{{ tag.description|truncate(250) }}</p>
-                            {% endif %}
-                            <p><a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a> ({{ tag_status }})</p>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div id="filters" class="button-group">
+            <button class="btn btn-default is-checked" data-filter="*">All</button>
+            <button class="btn btn-default" data-filter=".ready">Processed</button>
+            <button class="btn btn-default" data-filter=".curated">Curated</button>
+        </div>
+
+        <div id="isotope">
+            {% for tag in tags %}
+                {% if tag.gene_signatures|length > 2 %}
+                    {% set curated_status = 'curated' if tag.is_curated else 'uncurated' %}
+                    {% set tag_status = tag.reports[-1].status if tag.reports|length > 0 else 'inactive' %}
+                    <div class="tag-box {{ curated_status }} {{ tag_status }}">
+                        <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
+
+                        <p class="signature-count">
+                            <span>{{ tag.gene_signatures|length }}</span> signatures
+                        </p>
+                        {% if tag.description %}
+                            <p class="description">{{ tag.description|truncate(250) }}</p>
+                        {% endif %}
+                        <p><a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a>
+                            ({{ tag_status }})</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 

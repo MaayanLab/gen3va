@@ -46,7 +46,7 @@
                                     </a>
                                 </td>
                                 <td class="title">
-                                    {{ dataset.title|c_filter_empty }}
+                                    {{ dataset.title|c_filter_empty|truncate(150) }}
                                 </td>
                                 <td class="organism">
                                     {{ dataset.organism|c_filter_empty }}
@@ -62,7 +62,7 @@
         <!-- Principal Component Analysis -->
         <div class="section">
             <h4>PCA</h4>
-            <p>Principal component analysis of gene signatures</p>
+            <p>Interactive 3D principal component analysis of gene signatures. You can rotate the visualization and mouse over the data points.</p>
             <div id="pca-container"></div>
         </div>
 

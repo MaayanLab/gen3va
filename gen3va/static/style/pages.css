@@ -2,24 +2,18 @@
 #index-page {
   margin-top: 30px;
 }
-#index-page ul li {
-  padding: 3px 0;
-}
-#index-page #introduction {
-  border-bottom: 1px solid #aaaaaa;
-}
-#index-page #isotope {
-  margin-top: 10px;
-}
 #index-page button {
   background-color: #f9f9f9;
 }
 #index-page #intoduction {
-  border-bottom: 1px solid #aaaaaa;
   font-size: 16px;
   line-height: 1.3em;
-  padding-bottom: 23px;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+}
+#index-page #intoduction p {
+  border-top: 1px solid #aaaaaa;
+  margin-top: 15px;
+  padding-top: 20px;
 }
 #index-page #legend {
   margin-bottom: 10px;
@@ -45,7 +39,10 @@
 #index-page #legend .legend-box.curated div {
   border: 2px solid #e74c3c;
 }
-#index-page .tag-box {
+#index-page #isotope {
+  margin-top: 10px;
+}
+#index-page #isotope .tag-box {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
   background-color: #f9f9f9;
   border: 2px solid #eeeeee;
@@ -53,27 +50,27 @@
   margin-right: 10px;
   margin-bottom: 10px;
 }
-#index-page .tag-box p {
+#index-page #isotope .tag-box p {
   margin: 0;
 }
-#index-page .tag-box .tag-name {
+#index-page #isotope .tag-box .tag-name {
   font-size: 20px;
   margin-top: 0;
   margin-bottom: 5px;
 }
-#index-page .tag-box .report-link,
-#index-page .tag-box .signature-count span {
+#index-page #isotope .tag-box .report-link,
+#index-page #isotope .tag-box .signature-count span {
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
   font-weight: bold;
 }
-#index-page .tag-box .description {
+#index-page #isotope .tag-box .description {
   max-width: 400px;
 }
-#index-page .tag-box.ready {
+#index-page #isotope .tag-box.ready {
   border: 2px solid #ffd34e;
 }
-#index-page .tag-box.curated {
+#index-page #isotope .tag-box.curated {
   border: 2px solid #e74c3c;
 }
 #index-page table,
