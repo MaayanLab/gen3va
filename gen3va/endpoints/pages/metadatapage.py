@@ -29,7 +29,7 @@ def metadata(metadata_name):
         return render_template(
             'metadata.html',
             metadata_name=metadata_name,
-            results_url=Config.BASE_RESULTS_URL,
+            results_url=Config.RESULTS_URL,
             tag_url=Config.REPORT_URL,
             metadata_url=Config.METADATA_URL,
             metadata=metadata
@@ -51,7 +51,7 @@ def metadata_with_value(metadata_name, metadata_value):
             'metadata.html',
             metadata_name=metadata_name,
             metadata_value=metadata_value,
-            results_url=Config.BASE_RESULTS_URL,
+            results_url=Config.RESULTS_URL,
             tag_url=Config.REPORT_URL,
             metadata=metadata
         )

@@ -31,7 +31,7 @@ class Config(object):
         G2E_URL = 'http://amp.pharm.mssm.edu/g2e'
         SERVER = 'http://amp.pharm.mssm.edu'
 
-    BASE_RESULTS_URL = G2E_URL + 'results'
+    RESULTS_URL = G2E_URL + '/results'
     JSON_HEADERS = {'content-type': 'application/json'}
     CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer'
     ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr'

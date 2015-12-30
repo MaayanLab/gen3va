@@ -21,10 +21,34 @@
   padding-bottom: 23px;
   margin-bottom: 25px;
 }
+#index-page #legend {
+  margin-bottom: 10px;
+}
+#index-page #legend .legend-box div {
+  height: 19px;
+  width: 50px;
+  float: left;
+}
+#index-page #legend .legend-box p {
+  float: left;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+}
+#index-page #legend .legend-box p em {
+  font-weight: bold;
+}
+#index-page #legend .legend-box.processed div {
+  border: 2px solid #ffd34e;
+}
+#index-page #legend .legend-box.curated div {
+  border: 2px solid #e74c3c;
+}
 #index-page .tag-box {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
   background-color: #f9f9f9;
-  border: 1px solid #aaaaaa;
+  border: 2px solid #eeeeee;
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -38,25 +62,23 @@
   margin-bottom: 5px;
 }
 #index-page .tag-box .report-link,
-#index-page .tag-box .signature-count {
+#index-page .tag-box .signature-count span {
   font-family: 'Roboto', arial, sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 #index-page .tag-box .description {
   max-width: 400px;
 }
+#index-page .tag-box.ready {
+  border: 2px solid #ffd34e;
+}
 #index-page .tag-box.curated {
-  border: 1px solid #bf2718;
+  border: 2px solid #e74c3c;
 }
-#index-page .tag-box.curated em {
-  color: #e74c3c;
-}
+#index-page .tag-box.curated .signature-count,
 #index-page .tag-box.curated .tag-name {
   color: #e74c3c;
-}
-#index-page .tag-box.curated a:hover {
-  opacity: .7;
 }
 #index-page table,
 #results-page table {
@@ -96,6 +118,9 @@
   font-size: 14px;
   text-decoration: underline;
 }
+#report-page h4 {
+  border-bottom: 1px solid #eeeeee;
+}
 #report-page iframe,
 #report-page #pca-container {
   border: 1px solid #eeeeee;
@@ -112,6 +137,24 @@
 }
 #report-page .section h4 {
   font-weight: bold;
+}
+#report-page .pagination,
+#report-page .pagination li a,
+#report-page input {
+  border-radius: 0;
+}
+#report-page .pagination > li > a,
+#report-page .pagination > li > span {
+  color: #004561;
+}
+#report-page .pagination > .active > a,
+#report-page .pagination > .active > a:focus,
+#report-page .pagination > .active > a:hover,
+#report-page .pagination > .active > span,
+#report-page .pagination > .active > span:focus,
+#report-page .pagination > .active > span:hover {
+  border-color: #aaaaaa;
+  background-color: #eeeeee;
 }
 #tag-page table td,
 #metadata-page table td {

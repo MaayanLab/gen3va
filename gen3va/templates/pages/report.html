@@ -7,12 +7,54 @@
     <script src="static/lib/highcharts/highcharts.js"></script>
     <script src="static/lib/highcharts/highcharts-3d.js"></script>
     <script src="static/lib/highcharts/highcharts-exporting.js"></script>
-    <script src="static/js/pca.js"></script>
-    <script src="static/js/hierclust.js"></script>
+
+    <link href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+
+    <script src="static/js/report.js"></script>
 
     <div id="report-page">
 
         {% include 'partial/report-page-metadata.html' %}
+
+        <!-- Gene signatures -->
+        <div class="section">
+            <h4>Gene signatures</h4>
+            <div class="table-responsive">
+                <table class="table data-table responsive">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Results</th>
+                            <th>Title</th>
+                            <th>Organism</th>
+                            <th>Platform</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for gene_signature in tag.gene_signatures %}
+                            {% set dataset = gene_signature.soft_file.dataset %}
+                            <tr>
+                                <td class="index">{{ loop.index }}</td>
+                                <td class="results" >
+                                    <a href="{{ gene_signature.extraction_id|c_results_url }}" target="_blank">
+                                        <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
+                                    </a>
+                                </td>
+                                <td class="title">
+                                    {{ dataset.title|c_filter_empty }}
+                                </td>
+                                <td class="organism">
+                                    {{ dataset.organism|c_filter_empty }}
+                                </td>
+                                <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- Principal Component Analysis -->
         <div class="section">

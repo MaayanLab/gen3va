@@ -27,7 +27,6 @@ def rebuild(report):
     """Rebuilds an existing report, overwriting old links.
     """
     __clean_report(report)
-    import pdb; pdb.set_trace()
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
