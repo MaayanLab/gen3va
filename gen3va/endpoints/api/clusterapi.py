@@ -23,7 +23,7 @@ def perform_hierarchical_clustering():
     """Performs hierarchical clustering on a SOFT file.
     """
     extraction_ids = __get_extraction_ids(request)
-    link = hierclust.from_expression_data(extraction_ids)
+    link = hierclust.from_gene_signatures(extraction_ids)
     return jsonify({
         'link': link
     })

@@ -35,4 +35,7 @@ def column_title(i, gene_signature):
     hierarchical clusterings.
     """
     ds = gene_signature.soft_file.dataset
-    return '%s - %s - %s' % (i, ds.accession, ds.title)
+    if ds.record_type == 'geo':
+        return '%s - %s - %s' % (i, ds.accession, ds.title)
+    else:
+        return '%s - %s' % (i, ds.title)

@@ -6,7 +6,7 @@ import json
 from threading import Thread
 
 from substrate import PCAVisualization, Report, TargetApp, HierClustVisualization
-from gen3va.db.util import session_scope, bare_session_scope, get_or_create_with_session
+from gen3va.db.utils import session_scope, bare_session_scope, get_or_create_with_session
 from gen3va.core import pca
 from gen3va.core import hierclust
 from gen3va import Config
@@ -55,14 +55,30 @@ def __build(report_id):
         session.merge(report)
         session.commit()
 
+        print('enrichr visualizations')
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             __cluster_enriched_terms(session, report, back_link, library)
 
+        print('l1000cds2 visualization')
         __cluster_perturbations(session, report, back_link)
+
+        print('gene visualization')
+        __cluster_genes(session, report, back_link)
 
         print('build complete')
         report.status = 'ready'
         session.merge(report)
+
+
+def __cluster_genes(session, report, back_link):
+    """Performs hierarchical clustering on genes.
+    """
+    link_temp = hierclust.from_gene_signatures(report=report,
+                                               back_link=back_link)
+    __save_report_link(session,
+                       report,
+                       link_temp,
+                       'gen3va')
 
 
 def __cluster_perturbations(session, report, back_link):

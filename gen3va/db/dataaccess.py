@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from substrate import db, GeneList, GeneSignature, GeoDataset, SoftFile, Tag, OptionalMetadata
 
 from gen3va import Session
-from gen3va.db.util import session_scope
+from gen3va.db.utils import session_scope
 
 
 def fetch_all(klass, session=None):

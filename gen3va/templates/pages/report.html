@@ -66,6 +66,13 @@
             <div id="pca-container"></div>
         </div>
 
+        <!-- Genes hierarchical clusterings -->
+        <div class="section">
+            <h4>Genes</h4>
+            <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
+            <iframe src="{{ gene_hier_clust.link }}"></iframe>
+        </div>
+
         <!-- Enrichr hierarchical clusterings -->
         <div id="enrichr-hier-clusts" class="section">
             <h4>Enrichr</h4>
@@ -82,7 +89,7 @@
             {% endfor %}
         </div>
 
-        <!--L1000CD2 hierarchical clusterings -->
+        <!-- L1000CD2 hierarchical clusterings -->
         <div class="section">
             <h4>L1000CDS2</h4>
             <p>Hierarchical clustering of perturbations that mimic (blue) and reverse (red) expression</p>
