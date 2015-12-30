@@ -35,13 +35,13 @@
       }
       &.processed {
         div {
-          border: 2px solid @color-palette-yellow;
+          background-color: @color-palette-yellow;
         }
 
       }
       &.curated {
         div {
-          border: 2px solid @color-palette-red;
+          background-color: @color-palette-red;
         }
       }
     }
@@ -75,10 +75,23 @@
         max-width: 400px;
       }
       &.ready {
-        border: 2px solid @color-palette-yellow;
+        background-color: @color-palette-yellow;
+        border: 2px solid @color-palette-dark-yellow;
       }
       &.curated {
-        border: 2px solid @color-palette-red;
+        background-color: @color-palette-red;
+        border: 2px solid @color-palette-dark-red;
+        color: white;
+        h5 {
+          color: white;
+        }
+        a {
+          /* Light blue, lighter than @color-palette-baby-blue. */
+          color: #a7e2fd;
+          &:hover {
+            color: @color-palette-baby-blue;
+          }
+        }
       }
     }
   }

@@ -44,16 +44,13 @@
             {% for tag in tags %}
                 {% if tag.gene_signatures|length > 2 %}
                     {% set curated_status = 'curated' if tag.is_curated else 'uncurated' %}
-                    {% set tag_status = tag.reports[-1].status if tag.reports|length > 0 else 'inactive' %}
+                    {% set tag_status = tag.reports[-1].status if tag.reports|length > 0 else 'unprocessed' %}
                     <div class="tag-box {{ curated_status }} {{ tag_status }}">
                         <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
 
                         <p class="signature-count">
                             <span>{{ tag.gene_signatures|length }}</span> signatures
                         </p>
-                        {% if tag.description %}
-                            <p class="description">{{ tag.description|truncate(250) }}</p>
-                        {% endif %}
                         <p><a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a>
                             ({{ tag_status }})</p>
                     </div>
