@@ -1,6 +1,8 @@
 """Utility functions for hierarchical clustering.
 """
 
+import urllib
+
 
 def build_vectors(up_perts_to_scores, down_perts_to_scores):
     """Builds the up, down, and combined vectors for hierarchical clustering.
@@ -39,3 +41,15 @@ def column_title(i, gene_signature):
         return '%s - %s - %s' % (i, ds.accession, ds.title)
     else:
         return '%s - %s' % (i, ds.title)
+
+
+def link(base, row_title, col_title='Gene signatures'):
+    """Utility method for building Clustergrammer link query strings.
+    """
+    row_title = urllib.quote(row_title)
+    col_title = urllib.quote(col_title)
+    return '{0}' \
+       '?preview=true' \
+       '&row_label={1}' \
+       '&col_label={2}' \
+       '&N_row_sum=100'.format(base, row_title, col_title)

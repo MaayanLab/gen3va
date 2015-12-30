@@ -55,15 +55,15 @@ def __build(report_id):
         session.merge(report)
         session.commit()
 
+        print('gene visualization')
+        __cluster_genes(session, report, back_link)
+
         print('enrichr visualizations')
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             __cluster_enriched_terms(session, report, back_link, library)
 
         print('l1000cds2 visualization')
         __cluster_perturbations(session, report, back_link)
-
-        print('gene visualization')
-        __cluster_genes(session, report, back_link)
 
         print('build complete')
         report.status = 'ready'

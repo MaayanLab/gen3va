@@ -73,11 +73,7 @@ def __from_perturbations(gene_signatures, back_link):
 
     if resp.ok:
         link_base = json.loads(resp.text)['link']
-        link = '{0}' \
-               '?preview=true' \
-               '&row_label=Perturbations%20from%20L1000CDS2' \
-               '&col_label=Gene%20signatures'.format(link_base)
-        return link
+        return utils.link(link_base, 'Perturbations from L1000CDS2')
     return None
 
 
