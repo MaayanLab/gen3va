@@ -67,6 +67,7 @@ def tag_report_id_endpoint(report_id, tag_name):
         return render_template('pages/report.html',
                                tag=tag,
                                tag_url=Config.TAG_URL,
+                               download_url=Config.DOWNLOAD_URL,
                                report=report,
                                enrichr_links=enrichr_links,
                                enrichr_libraries=Config.SUPPORTED_ENRICHR_LIBRARIES,

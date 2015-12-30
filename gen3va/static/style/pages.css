@@ -76,10 +76,6 @@
 #index-page .tag-box.curated {
   border: 2px solid #e74c3c;
 }
-#index-page .tag-box.curated .signature-count,
-#index-page .tag-box.curated .tag-name {
-  color: #e74c3c;
-}
 #index-page table,
 #results-page table {
   vertical-align: middle;
@@ -127,6 +123,9 @@
 }
 #report-page #enrichr-hier-clusts .description {
   margin-bottom: 10px;
+}
+#report-page #gene-signatures-table .download-link {
+  margin-bottom: 20px;
 }
 #report-page iframe {
   height: 800px;

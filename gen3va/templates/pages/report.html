@@ -19,8 +19,11 @@
         {% include 'partial/report-page-metadata.html' %}
 
         <!-- Gene signatures -->
-        <div class="section">
+        <div id="gene-signatures-table" class="section">
             <h4>Gene signatures</h4>
+            <div class="download-link">
+                <a href="{{ download_url }}/{{ tag.name }}" target="_blank">Download genes signatures as TSV</a>
+            </div>
             <div class="table-responsive">
                 <table class="table data-table responsive">
                     <thead>
