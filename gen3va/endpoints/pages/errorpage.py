@@ -16,4 +16,4 @@ error_page = Blueprint('error_page',
 @app.errorhandler(404)
 def page_not_found(e):
     print(e)
-    return render_template('404.html')
+    return render_template('pages/404.html')
