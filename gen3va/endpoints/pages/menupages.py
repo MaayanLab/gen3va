@@ -24,10 +24,10 @@ def getting_started():
     return render_template('pages/getting-started.html')
 
 
-@menu_pages.route('/about')
-def about():
+@menu_pages.route('/statistics')
+def statistics():
     stats = dataaccess.get_statistics()
     stats_json = json.dumps(stats)
-    return render_template('pages/about.html',
+    return render_template('pages/statistics.html',
                            stats=stats,
                            stats_json=stats_json)
