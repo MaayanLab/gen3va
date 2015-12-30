@@ -28,3 +28,11 @@ def build_vectors(up_perts_to_scores, down_perts_to_scores):
         combined.append([p, up_score_temp + down_score_temp])
 
     return up, down, combined
+
+
+def column_title(i, gene_signature):
+    """Utility method for normalizing how column names are built across
+    hierarchical clusterings.
+    """
+    ds = gene_signature.soft_file.dataset
+    return '%s - %s - %s' % (i, ds.accession, ds.title)

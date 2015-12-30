@@ -5,11 +5,9 @@ import json
 
 import requests
 
-from substrate import GeneSignature
 from gen3va.db import dataaccess
-from gen3va import Config, Session
-from gen3va.db.util import bare_session_scope
-
+from gen3va import Config
+from . import utils
 
 CLUSTERGRAMMER_LOAD_LISTS = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
 ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
@@ -47,9 +45,6 @@ def __from_enriched_terms(gene_signatures, background_type, back_link):
             gene_signature
         )
 
-        accession = gene_signature.soft_file.dataset.accession
-        col_title = '%s - %s' % (i, accession)
-
         if enrichr_id_up is None or enrichr_id_down is None:
             print('Skipping %s' % extraction_id)
             continue
@@ -61,7 +56,7 @@ def __from_enriched_terms(gene_signatures, background_type, back_link):
                 cell_or_tissue = c
 
         signatures.append({
-            'col_title': col_title,
+            'col_title': utils.column_title(i, gene_signature),
             'organism': gene_signature.soft_file.dataset.organism,
             'cell_or_tissue': cell_or_tissue,
             'enr_id_up': str(enrichr_id_up),

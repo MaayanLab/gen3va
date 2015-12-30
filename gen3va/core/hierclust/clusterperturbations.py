@@ -49,10 +49,8 @@ def __from_perturbations(gene_signatures, back_link):
         up, down, combined = utils.build_vectors(up_perts_to_scores,
                                                  down_perts_to_scores)
 
-        accession = gene_signature.soft_file.dataset.accession
-        col_title = '%s - %s' % (i, accession)
         columns.append({
-            'col_title': col_title,
+            'col_title': utils.column_title(i, gene_signature),
             # 'link': '', optional
             'vector_up': up,
             'vector_dn': down,
