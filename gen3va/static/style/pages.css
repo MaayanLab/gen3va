@@ -73,46 +73,22 @@
 #index-page #isotope .tag-box.curated {
   border: 2px solid #e74c3c;
 }
-#index-page table,
-#results-page table {
-  vertical-align: middle;
-}
-#index-page table caption,
-#results-page table caption {
-  border-bottom: 1px solid #eeeeee;
-}
-#index-page table tr th,
-#results-page table tr th,
-#index-page table tr td,
-#results-page table tr td {
-  border-top: 1px solid #eeeeee;
-  padding: 4px;
-}
-#index-page table tr td:first-child,
-#results-page table tr td:first-child {
-  font-weight: bold;
-  width: 30%;
-}
-#index-page .gene-lists,
-#results-page .gene-lists {
-  table-layout: fixed;
-}
 #about-page #platforms-bar-chart {
   height: 1000px;
-}
-#report-page .report-tag-inter-link,
-#report-processing-page .report-tag-inter-link,
-#tag-page .report-tag-inter-link {
-  font-size: 20px;
 }
 #report-processing-page .notification {
   color: #e74c3c;
   font-weight: bold;
   font-size: 14px;
-  text-decoration: underline;
 }
 #report-page h4 {
   border-bottom: 1px solid #eeeeee;
+}
+#report-page .report-metadata .label-highlight {
+  color: #e74c3c;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 8px;
 }
 #report-page iframe,
 #report-page #pca-container {

@@ -84,44 +84,9 @@
   }
 }
 
-#index-page,
-#results-page {
-  table {
-    caption {
-      border-bottom: 1px solid @color-gray-light;
-    }
-    vertical-align: middle;
-    tr {
-      th,
-      td {
-        border-top: 1px solid @color-gray-light;
-        padding: 4px;
-      }
-      td {
-        &:first-child {
-          font-weight: bold;
-          width: 30%;
-        }
-      }
-
-    }
-  }
-  .gene-lists {
-    table-layout: fixed;
-  }
-}
-
 #about-page {
   #platforms-bar-chart {
     height: 1000px;
-  }
-}
-
-#report-page,
-#report-processing-page,
-#tag-page {
-  .report-tag-inter-link {
-    font-size: 20px;
   }
 }
 
@@ -130,13 +95,20 @@
     color: @color-palette-red;
     font-weight: bold;
     font-size: 14px;
-    text-decoration: underline;
   }
 }
 
 #report-page {
   h4 {
     border-bottom: 1px solid @color-gray-light;
+  }
+  .report-metadata {
+    .label-highlight {
+      color: @color-palette-red;
+      font-size: 14px;
+      font-weight: bold;
+      padding-left: 8px;
+    }
   }
   iframe,
   #pca-container {

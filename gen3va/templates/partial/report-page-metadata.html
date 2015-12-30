@@ -1,10 +1,11 @@
 <div class="report-metadata">
-    <h1>Report for <strong>{{ tag.name }}</strong>
+    <h1><strong>{{ tag.name }}</strong>
+        <span>Report</span>
         {% if tag.is_curated %}
-            <span class="highlight-label">Curated Tag</span>
+            <span class="label-highlight">Curated Tag</span>
         {% endif %}
     </h1>
-    <p class="report-tag-inter-link">
+    <p>
         Detailed view: <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.gene_signatures|length }} processed gene signatures</a>
     </p>
     {% if report.tag.description %}
