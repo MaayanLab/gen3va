@@ -1,7 +1,7 @@
 """Handles report pages.
 """
 
-import time
+import requests
 from flask import Blueprint, render_template, redirect
 
 from gen3va.config import Config
@@ -51,7 +51,7 @@ def tag_report_id_endpoint(report_id, tag_name):
         # No report with this ID. Redirect to report-building URL.
         new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
         return redirect(new_url)
-    elif report.ready:
+    elif __report_ready(report):
         pca_json = report.pca_visualization.data
         enrichr_links = [viz for viz in report.hier_clusts
                          if viz.viz_type == 'enrichr']
@@ -62,6 +62,9 @@ def tag_report_id_endpoint(report_id, tag_name):
                 gene_hier_clust = viz
             if viz.viz_type == 'l1000cds2':
                 l1000cds_hier_clust = viz
+
+        for link in enrichr_links:
+            print link.link
 
         return render_template('pages/report.html',
                                tag=tag,
@@ -87,6 +90,20 @@ def rebuild_tag_report_id_endpoint(report_id, tag_name):
     reportbuilder.rebuild(report)
     new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
     return redirect(new_url)
+
+
+def __report_ready(report):
+    """Returns True if report is ready on GEN3VA's end, as well as all the
+    Clustergrammer links as ready.
+    """
+    ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
+    for viz in report.hier_clusts:
+        clustergrammer_id = viz.link.split('/')[-2:-1][0]
+        url = ENDPOINT + str(clustergrammer_id)
+        resp = requests.get(url)
+        if resp.text != 'finished':
+            return False
+    return report.ready
 
 
 def __latest_ready_report(reports):
