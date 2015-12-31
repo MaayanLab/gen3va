@@ -19,11 +19,6 @@ def documentation():
     return render_template('pages/documentation.html')
 
 
-@menu_pages.route('/getting-started')
-def getting_started():
-    return render_template('pages/getting-started.html')
-
-
 @menu_pages.route('/statistics')
 def statistics():
     stats = dataaccess.get_statistics()
