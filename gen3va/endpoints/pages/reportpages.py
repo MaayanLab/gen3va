@@ -51,7 +51,9 @@ def tag_report_id_endpoint(report_id, tag_name):
         # No report with this ID. Redirect to report-building URL.
         new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
         return redirect(new_url)
-    elif __report_ready(report):
+
+    report_status = __report_ready(report)
+    if report_status == 1:
         pca_json = report.pca_visualization.data
         enrichr_links = [viz for viz in report.hier_clusts
                          if viz.viz_type == 'enrichr']
@@ -76,11 +78,18 @@ def tag_report_id_endpoint(report_id, tag_name):
                                enrichr_libraries=Config.SUPPORTED_ENRICHR_LIBRARIES,
                                l1000cds_hier_clust=l1000cds_hier_clust,
                                pca_json=pca_json)
+    elif report_status == 0:
+        return render_template('pages/report-processing.html',
+                               tag=tag,
+                               tag_url=Config.TAG_URL,
+                               report=report,
+                               message='Report has been processed. Waiting for hierarchical clusterings.')
     else:
         return render_template('pages/report-processing.html',
                                tag=tag,
                                tag_url=Config.TAG_URL,
-                               report=report)
+                               report=report,
+                               message='Report is being processed. This may take a few hours. Please come back later.')
 
 
 @report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
@@ -93,17 +102,19 @@ def rebuild_tag_report_id_endpoint(report_id, tag_name):
 
 
 def __report_ready(report):
-    """Returns True if report is ready on GEN3VA's end, as well as all the
-    Clustergrammer links as ready.
+    """Returns 1 if report is ready on GEN3VA's end; 0 if it is ready but
+    waiting for Clustergrammer; and -1 if it is not ready.
     """
-    ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
-    for viz in report.hier_clusts:
-        clustergrammer_id = viz.link.split('/')[-2:-1][0]
-        url = ENDPOINT + str(clustergrammer_id)
-        resp = requests.get(url)
-        if resp.text != 'finished':
-            return False
-    return report.ready
+    if report.ready:
+        ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
+        for viz in report.hier_clusts:
+            clustergrammer_id = viz.link.split('/')[-2:-1][0]
+            url = ENDPOINT + str(clustergrammer_id)
+            resp = requests.get(url)
+            if resp.text != 'finished':
+                return 0
+        return 1
+    return -1
 
 
 def __latest_ready_report(reports):
