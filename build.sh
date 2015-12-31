@@ -47,7 +47,7 @@ eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/gen3va:latest'
 if [[ $2 = 'build' ]]; then
     echo 'building container'
-    docker build --no-cache -t $DOCKER_IMAGE .
+    docker build -t $DOCKER_IMAGE .
 fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing
