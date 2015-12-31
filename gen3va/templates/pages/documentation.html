@@ -38,8 +38,11 @@
         </div>
 
         <div class="section">
-            <h4>Implementation details and backend database</h4>
-            <p>Under construction.</p>
+            <h4>Implementation details and database</h4>
+            <p>The GEN3VA web server is <a href="http://flask.pocoo.org/docs/0.10/" target="_blank">Flask</a> app running in an <a href="https://httpd.apache.org/" target="_blank">Apache HTTP Server</a> with the Apache WSGI module installed. Flask is a <a href="https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface" target="_blank">WSGI-compliant</a> framework for building web applications in Python. The application and its dependencies are packaged and deployed in a Docker virtual machine onto a 16-node computer cluster maintained by the Ma'ayan Lab.</p>
+            <p>The GEN3VA database runs on an internal <a href="https://mariadb.org/" target="_blank">MariaDB</a> server, a drop-in replacement for MySQL, that is maintained by the Ma'ayan Lab. This database is common to both GEN3VA and GEO2Enrichr. Both applications use <a href="http://www.sqlalchemy.org/" target="_blank">SQLAlchemy ORM</a>. An ORM (Object-Relational Mapping) is a framework that maps a tabular schema onto an object paradigm. GEN3VA and GEO2Enrichr share ORM models and utility functions for accessing gene signatures through an external project, <a href="https://github.com/MaayanLab/substrate" target="_blank">Substrate</a>.
+
+            </p>
         </div>
     </div>
 
