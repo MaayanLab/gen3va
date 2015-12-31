@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # ARGUMENTS:
-# $1 dev | prod [required - configure for development or production]
-# $2 skip       [optional - skip unit tests]
-# $3 build      [optional - use any other string to skip]
-# $4 push       [optional - use any other string to skip]
+# $1 skip       [optional - skip unit tests]
+# $2 build      [optional - use any other string to skip]
+# $3 push       [optional - use any other string to skip]
 
 # Any subsequent(*) commands which fail will cause the shell script to exit
 # immediately:
@@ -22,7 +21,7 @@ fi
 
 # Run unit tests
 # =============================================================================
-if [[ $2 = 'skip' ]]; then
+if [[ $1 = 'skip' ]]; then
     printf '%s\n' 'Skipping Python unit tests'
 else
     printf '%s\n' 'Running Python unit tests'
@@ -39,22 +38,16 @@ set +e
 # logged in production.
 printf '%s\n' 'Configuring the database.'
 dbconf='gen3va/app.conf'
-if [[ $1 = 'dev' ]]; then
-    credentials=$(head -n 1 gen3va/dev.conf)
-    debug=$(tail -n +2 gen3va/dev.conf)
-    printf '%s\n%s' $credentials $debug > $dbconf
-else
-    credentials=$(head -n 1 gen3va/prod.conf)
-    debug=$(tail -n +2 gen3va/prod.conf)
-    printf '%s\n%s' $credentials $debug > $dbconf
-fi
+credentials=$(head -n 1 gen3va/prod.conf)
+debug=$(tail -n +2 gen3va/prod.conf)
+printf '%s\n%s' $credentials $debug > $dbconf
 
 docker-machine start default
 eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/gen3va:latest'
-if [[ $3 = 'build' ]]; then
+if [[ $2 = 'build' ]]; then
     echo 'building container'
-    docker build -t $DOCKER_IMAGE .
+    docker build --no-cache -t $DOCKER_IMAGE .
 fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing
@@ -66,7 +59,7 @@ printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
 # =============================================================================
-if [[ $4 = 'push' ]]; then
+if [[ $3 = 'push' ]]; then
     printf '%s\n' 'Pushing to Docker repo'
     docker push $DOCKER_IMAGE
 else
