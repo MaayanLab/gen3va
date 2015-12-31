@@ -52,4 +52,4 @@ def link(base, row_title, col_title='Gene signatures'):
        '?preview=true' \
        '&row_label={1}' \
        '&col_label={2}' \
-       '&N_row_sum=100'.format(base, row_title, col_title)
+       '&N_row_sum=50'.format(base, row_title, col_title)
