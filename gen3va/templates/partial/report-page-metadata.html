@@ -6,7 +6,7 @@
         {% endif %}
     </h1>
     <p>
-        Detailed view: <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.gene_signatures|length }} processed gene signatures</a>
+        Detailed view: <a href="{{ tag.name|c_tag_url }}">{{ tag.gene_signatures|length }} processed gene signatures</a>
     </p>
     {% if report.tag.description %}
         <p>{{ report.tag.description }}</p>
