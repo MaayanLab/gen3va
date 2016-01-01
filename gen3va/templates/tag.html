@@ -52,11 +52,7 @@
                                         {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                                             <tr>
                                                 <td>{{ opt_meta.name|capitalize }}</td>
-                                                <td>
-                                                    <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
-                                                        {{ opt_meta.value }}
-                                                    </a>
-                                                </td>
+                                                <td>{{ opt_meta.value }}</td>
                                             </tr>
                                         {% endfor %}
                                         </table>
