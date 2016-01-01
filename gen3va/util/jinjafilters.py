@@ -21,12 +21,6 @@ def c_urlencode(context, value):
     return urllib.quote_plus(value)
 
 
-# @jinja2.contextfilter
-# @jinjafilters.app_template_filter('c_replace_underscores')
-# def c_replace_underscores(context, value):
-#     return value.replace('_', ' ')
-
-
 # Data filters
 # ----------------------------------------------------------------------------
 
@@ -71,25 +65,13 @@ def c_filter_empty(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_tag_url')
 def c_tag_url(context, value):
-    return '%s/%s' % (Config.REPORT_URL, value)
+    return '%s/%s' % (Config.TAG_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_results_url')
 def c_results_url(context, value):
     return '%s/%s' % (Config.RESULTS_URL, value)
-
-
-@jinja2.contextfilter
-@jinjafilters.app_template_filter('c_metadata_url')
-def c_metadata_url(context, value):
-    return '%s/%s' % (Config.METADATA_URL, value)
-
-
-@jinja2.contextfilter
-@jinjafilters.app_template_filter('c_metadata_value_url')
-def c_metadata_value_url(context, value, name):
-    return '%s/%s/%s' % (Config.METADATA_URL, name, value)
 
 
 @jinja2.contextfilter
@@ -104,3 +86,9 @@ def c_geo_url(context, value):
 @jinjafilters.app_template_filter('c_g2e_url')
 def c_g2e_url(context, value):
     return Config.G2E_URL
+
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_download_url')
+def c_download_url(context, value):
+    return '%s/%s' % (Config.DOWNLOAD_URL, value)
