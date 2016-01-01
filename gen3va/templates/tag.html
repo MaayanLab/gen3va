@@ -4,14 +4,33 @@
 
 {% block body %}
 
+    <link href="static/lib/datatables/datatables.bootstrap.css" rel='stylesheet'/>
+    <script src="static/lib/datatables/datatables.js"></script>
+    <script src="static/lib/datatables/datatables.bootstrap.js"></script>
+    <script src="static/js/custom-report-builder.js"></script>
+
     <div id="tag-page">
 
         <h1>{{ num_tags }} gene signatures for <strong>{{ tag.name }}</strong></h1>
-        <p class="report-tag-inter-link">
-            <a href="{{ report_url }}/{{ tag.name }}">View Report</a>
-        </p>
 
-        {% include 'partial/consensus.html' %}
+        <div id="custom-report-builder">
+            <div class="description">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="report-tag-inter-link">
+                            <a href="{{ report_url }}/{{ tag.name }}">View default report</a>
+                        </p>
+                        <h4>Build a custom report</h4>
+                        <ol>
+                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
+                            <li>You must select at least 3 signatures.</li>
+                            <li>Click <em>Build report</em></li>
+                        </ol>
+                        <button class="btn btn-default">Build report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="table-responsive">
             <table class="table data-table responsive">

@@ -10,8 +10,18 @@ from gen3va import Session
 from gen3va.db.utils import session_scope
 
 
-def fetch_all(klass, session=None):
-    """Fetches all entities of a specific class.
+def get(klass, id_):
+    """Gets entity by ID.
+    """
+    with session_scope() as session:
+        return session\
+            .query(klass)\
+            .filter(klass.id == id_)\
+            .first()
+
+
+def get_all(klass, session=None):
+    """Gets all entities of a specific class.
     """
     if not session:
         with session_scope() as session:
@@ -30,7 +40,7 @@ def save_gene_signature(gene_signature):
         return gene_signature.extraction_id
 
 
-def fetch_gene_signature(extraction_id):
+def get_gene_signature(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     with session_scope() as session:
@@ -38,6 +48,16 @@ def fetch_gene_signature(extraction_id):
             .query(GeneSignature)\
             .filter(GeneSignature.extraction_id == extraction_id)\
             .first()
+
+
+def fetch_gene_signatures(extraction_ids):
+    """Returns all gene signatures with matching extraction IDs.
+    """
+    with session_scope() as session:
+        return session\
+            .query(GeneSignature)\
+            .filter(GeneSignature.extraction_id.in_(extraction_ids))\
+            .all()
 
 
 def fetch_tag(tag_name):
@@ -119,7 +139,7 @@ def get_statistics():
         num_gene_lists = session.query(GeneList).count()
         num_tags = session.query(Tag).count()
         platforms = session.query(sa.func.distinct(GeoDataset.platform))
-        tags_dao = fetch_all(Tag)
+        tags_dao = get_all(Tag)
         tags = []
         for tag in tags_dao:
             if len(tag.reports) == 0:

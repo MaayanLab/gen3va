@@ -3,6 +3,7 @@
 
 from flask import Blueprint, Response
 
+from substrate import Report
 from gen3va.db import dataaccess
 from gen3va.config import Config
 
@@ -12,13 +13,18 @@ download_api = Blueprint('download_api',
                         url_prefix='%s/download' % Config.BASE_URL)
 
 
-@download_api.route('/<tag_name>', methods=['GET'])
-def download(tag_name):
-    """Downloads all gene signatures by tag.
+@download_api.route('/<int:report_id>/<tag_name>', methods=['GET'])
+def download_by_report_id(report_id):
+    """Downloads all gene signatures by report ID.
     """
+    report = dataaccess.get(Report, report_id)
+    print(report.id)
     result = 'accession\torganism\tplatform\ttitle\n'
-    tag = dataaccess.fetch_tag(tag_name)
-    for gene_signature in tag.gene_signatures:
+    if report.report_type == 'custom':
+        gene_signatures = report.gene_signatures
+    else:
+        gene_signatures = report.tag.gene_signatures
+    for gene_signature in gene_signatures:
         result += __build_row(gene_signature)
     response = Response(result, mimetype='x-text/plain')
     return response

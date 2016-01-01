@@ -15,7 +15,7 @@ index_page = Blueprint('index_page',
 
 @index_page.route('/')
 def index():
-    tags = dataaccess.fetch_all(Tag)
+    tags = dataaccess.get_all(Tag)
     return render_template('index.html',
                            report_url=Config.REPORT_URL,
                            tag_url=Config.TAG_URL,

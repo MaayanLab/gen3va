@@ -2,7 +2,7 @@
 """
 
 import requests
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, jsonify, request, render_template, redirect
 
 from gen3va.config import Config
 from gen3va.db import dataaccess
@@ -15,45 +15,42 @@ report_page = Blueprint('report_page',
 
 
 @report_page.route('/<tag_name>', methods=['GET'])
-def tag_report_endpoint(tag_name):
-    """If a report is ready, is in progress, or can be kicked off, the user is
-    redirected to the appropriate page.
+def default_report_endpoint(tag_name):
+    """Redirects user to appropriate page, creating default report if
+    necessary.
     """
     tag = dataaccess.fetch_tag(tag_name)
-    if tag is None:
+    if not tag:
         return render_template('pages/404.html')
     elif len(tag.reports) == 0:
         report_id = reportbuilder.build(tag)
         new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
         return redirect(new_url)
-
-    latest_report = __latest_ready_report(tag.reports)
-    if latest_report:
-        new_url = '%s/%s/%s' % (Config.REPORT_URL, latest_report.id, tag.name)
-        return redirect(new_url)
-
-    # No report is ready but there is a report. Redirect the user to the
-    # latest one.
     else:
-        report = tag.reports[-1]
-        new_url = '%s/%s/%s' % (Config.REPORT_URL, report.id, tag.name)
+        default_report = __default_report(tag.reports)
+        new_url = '%s/%s/%s' % (Config.REPORT_URL,
+                                default_report.id,
+                                tag.name)
         return redirect(new_url)
 
 
 @report_page.route('/<int:report_id>/<tag_name>', methods=['GET'])
-def tag_report_id_endpoint(report_id, tag_name):
+def default_report_by_id_endpoint(report_id, tag_name):
+    """Given an ID, returns correct report, handling report status as well.
+    """
     tag = dataaccess.fetch_tag(tag_name)
-    if tag is None:
+    if not tag:
         return render_template('pages/404.html')
-    report = __report_by_id(tag.reports, report_id)
 
+    report = __report_by_id(tag.reports, report_id)
     if not report:
-        # No report with this ID. Redirect to report-building URL.
+        # No report with this ID. Redirect to default-report-building URL.
         new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
         return redirect(new_url)
 
-    report_status = __report_ready(report)
-    if report_status == 1:
+    gene_signatures = report.get_gene_signatures()
+    report_status_code = __report_status_code(report)
+    if report_status_code == 1:
         pca_json = report.pca_visualization.data
         enrichr_links = [viz for viz in report.hier_clusts
                          if viz.viz_type == 'enrichr']
@@ -65,45 +62,74 @@ def tag_report_id_endpoint(report_id, tag_name):
             if viz.viz_type == 'l1000cds2':
                 l1000cds_hier_clust = viz
 
-        for link in enrichr_links:
-            print link.link
-
         return render_template('pages/report.html',
                                tag=tag,
-                               tag_url=Config.TAG_URL,
-                               download_url=Config.DOWNLOAD_URL,
                                report=report,
+                               gene_signatures=gene_signatures,
                                gene_hier_clust=gene_hier_clust,
                                enrichr_links=enrichr_links,
                                enrichr_libraries=Config.SUPPORTED_ENRICHR_LIBRARIES,
                                l1000cds_hier_clust=l1000cds_hier_clust,
                                pca_json=pca_json)
-    elif report_status == 0:
+
+    elif report_status_code == 0:
+        message = 'Report has been processed. ' \
+                  'Waiting for hierarchical clusterings.'
         return render_template('pages/report-processing.html',
                                tag=tag,
-                               tag_url=Config.TAG_URL,
                                report=report,
-                               message='Report has been processed. Waiting for hierarchical clusterings.')
+                               gene_signatures=gene_signatures,
+                               message=message)
     else:
+        message = 'Report is being processed. ' \
+                  'This may take a few hours. Please come back later.'
         return render_template('pages/report-processing.html',
                                tag=tag,
-                               tag_url=Config.TAG_URL,
                                report=report,
-                               message='Report is being processed. This may take a few hours. Please come back later.')
+                               gene_signatures=gene_signatures,
+                               message=message)
 
 
 @report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
 def rebuild_tag_report_id_endpoint(report_id, tag_name):
+    """Rebuilds an existing report.
+    """
     tag = dataaccess.fetch_tag(tag_name)
+    if not tag:
+        return render_template('pages/404.html')
     report = __report_by_id(tag.reports, report_id)
+    if not report:
+        return render_template('pages/404.html')
     reportbuilder.rebuild(report)
     new_url = '%s/%s' % (Config.REPORT_URL, tag.name)
     return redirect(new_url)
 
 
-def __report_ready(report):
-    """Returns 1 if report is ready on GEN3VA's end; 0 if it is ready but
-    waiting for Clustergrammer; and -1 if it is not ready.
+@report_page.route('/<tag_name>/custom', methods=['POST'])
+def build_custom_report(tag_name):
+    """Builds a custom report.
+    """
+    tag = dataaccess.fetch_tag(tag_name)
+    if not tag:
+        return render_template('pages/404.html')
+
+    extraction_ids = __get_extraction_ids(request)
+    gene_signatures = dataaccess.fetch_gene_signatures(extraction_ids)
+    report_id = reportbuilder.build_custom(tag, gene_signatures)
+
+    # This endpoint is hit via an AJAX request. JavaScript must perform the
+    # redirect.
+    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
+    return jsonify({
+        'new_url': new_url
+    })
+
+
+def __report_status_code(report):
+    """Returns
+    - 1 if report is ready on GEN3VA's end
+    - 0 if it is ready but waiting for Clustergrammer
+    - -1 if it is not ready.
     """
     if report.ready:
         ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
@@ -117,19 +143,25 @@ def __report_ready(report):
     return -1
 
 
-def __latest_ready_report(reports):
-    """Returns the most recent ready report if it exists.
+def __default_report(reports):
+    """Returns the default report rather than a custom report.
     """
     for report in reversed(reports):
-        if report.ready:
+        if report.report_type == 'default':
             return report
     return None
 
 
 def __report_by_id(reports, report_id):
-    """Reeturns report based on database/URL ID.
+    """Returns report based on database/URL ID.
     """
     for report in reports:
         if report.id == report_id:
             return report
     return None
+
+
+def __get_extraction_ids(request):
+    """Returns extraction IDs from JSON post.
+    """
+    return [gs['extractionId'] for gs in request.json['gene_signatures']]

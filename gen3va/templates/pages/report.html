@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for gene_signature in tag.gene_signatures %}
+                        {% for gene_signature in gene_signatures %}
                             {% set dataset = gene_signature.soft_file.dataset %}
                             <tr>
                                 <td class="index">{{ loop.index }}</td>

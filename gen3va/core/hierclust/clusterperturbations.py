@@ -22,10 +22,10 @@ def from_perturbations(extraction_ids=None, report=None, back_link=''):
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
-            gene_signature = dataaccess.fetch_gene_signature(extraction_id)
+            gene_signature = dataaccess.get_gene_signature(extraction_id)
             gene_signatures.append(gene_signature)
     else:
-        gene_signatures = report.tag.gene_signatures
+        gene_signatures = report.get_gene_signatures()
     return __from_perturbations(gene_signatures, back_link)
 
 

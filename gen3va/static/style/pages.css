@@ -97,19 +97,13 @@
 #statistics-page #platforms-bar-chart {
   height: 1000px;
 }
-#report-processing-page .notification {
-  color: #e74c3c;
-  font-weight: bold;
-  font-size: 14px;
-}
 #report-page h4 {
   border-bottom: 1px solid #eeeeee;
 }
-#report-page .report-metadata .label-highlight {
+#report-page .notification {
   color: #e74c3c;
   font-size: 14px;
   font-weight: bold;
-  padding-left: 8px;
 }
 #report-page iframe,
 #report-page #pca-container {
@@ -174,53 +168,53 @@
   font-weight: normal;
   margin-left: 15px;
 }
-#tag-page #consensus,
-#metadata-page #consensus {
+#tag-page #custom-report-builder,
+#metadata-page #custom-report-builder {
   margin-bottom: 20px;
 }
-#tag-page #consensus .description,
-#metadata-page #consensus .description {
+#tag-page #custom-report-builder .description,
+#metadata-page #custom-report-builder .description {
   background: #f9f9f9;
   margin-top: 20px;
   padding: 10px;
 }
-#tag-page #consensus .description h4,
-#metadata-page #consensus .description h4 {
+#tag-page #custom-report-builder .description h4,
+#metadata-page #custom-report-builder .description h4 {
   margin: 0;
 }
-#tag-page #consensus .options button,
-#metadata-page #consensus .options button {
+#tag-page #custom-report-builder .options button,
+#metadata-page #custom-report-builder .options button {
   display: block;
   margin-top: 5px;
 }
-#tag-page #consensus ol,
-#metadata-page #consensus ol {
+#tag-page #custom-report-builder ol,
+#metadata-page #custom-report-builder ol {
   margin-top: 10px;
   padding-left: 20px;
 }
-#tag-page #consensus #pca-container,
-#metadata-page #consensus #pca-container,
-#tag-page #consensus #clustergrammer-preview,
-#metadata-page #consensus #clustergrammer-preview,
-#tag-page #consensus #l1000cds2-preview,
-#metadata-page #consensus #l1000cds2-preview,
-#tag-page #consensus #enrichr-preview,
-#metadata-page #consensus #enrichr-preview {
+#tag-page #custom-report-builder #pca-container,
+#metadata-page #custom-report-builder #pca-container,
+#tag-page #custom-report-builder #clustergrammer-preview,
+#metadata-page #custom-report-builder #clustergrammer-preview,
+#tag-page #custom-report-builder #l1000cds2-preview,
+#metadata-page #custom-report-builder #l1000cds2-preview,
+#tag-page #custom-report-builder #enrichr-preview,
+#metadata-page #custom-report-builder #enrichr-preview {
   display: none;
 }
-#tag-page #consensus #clustergrammer-preview iframe,
-#metadata-page #consensus #clustergrammer-preview iframe,
-#tag-page #consensus #enrichr-preview iframe,
-#metadata-page #consensus #enrichr-preview iframe,
-#tag-page #consensus #l1000cds2-preview iframe,
-#metadata-page #consensus #l1000cds2-preview iframe {
+#tag-page #custom-report-builder #clustergrammer-preview iframe,
+#metadata-page #custom-report-builder #clustergrammer-preview iframe,
+#tag-page #custom-report-builder #enrichr-preview iframe,
+#metadata-page #custom-report-builder #enrichr-preview iframe,
+#tag-page #custom-report-builder #l1000cds2-preview iframe,
+#metadata-page #custom-report-builder #l1000cds2-preview iframe {
   border: 1px solid #eeeeee;
   height: 1000px;
   margin-top: 20px;
   width: 100%;
 }
-#tag-page #consensus #pca-container,
-#metadata-page #consensus #pca-container {
+#tag-page #custom-report-builder #pca-container,
+#metadata-page #custom-report-builder #pca-container {
   margin-top: 20px;
 }
 #metadata-page th,

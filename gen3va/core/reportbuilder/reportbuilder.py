@@ -12,12 +12,11 @@ from gen3va.core import hierclust
 from gen3va import Config
 
 
-def build(tag, is_custom=False):
+def build(tag):
     """Creates a new report and returns its ID. Builds the report's links in
     a separate thread.
     """
-    report_type = 'custom' if is_custom else 'default'
-    report = __save_report(Report(report_type, tag))
+    report = __save_report(Report('default', tag))
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
@@ -35,10 +34,14 @@ def rebuild(report):
     thread.start()
 
 
-def custom(tag, gene_signatures):
+def build_custom(tag, gene_signatures):
     """Builds a custom report.
     """
-    pass
+    report = __save_report(Report('custom', tag), gene_signatures)
+    thread = Thread(target=__build, args=(report.id,))
+    thread.daemon = True
+    thread.start()
+    return report.id
 
 
 def __build(report_id):
@@ -125,10 +128,12 @@ def __cluster_enriched_terms(report_id, back_link, library):
                            'enrichr', library=library)
 
 
-def __save_report(report):
+def __save_report(report, gene_signatures=None):
     """Saves Report to database.
     """
     with session_scope() as session:
+        if gene_signatures:
+            report.gene_signatures = gene_signatures
         session.add(report)
         session.commit()
         return report

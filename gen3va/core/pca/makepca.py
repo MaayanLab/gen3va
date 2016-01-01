@@ -9,15 +9,17 @@ from gen3va.db import dataaccess
 from gen3va.core.pca.utils import avg_dups
 
 
-
 def from_report(report):
-    return __from_gene_signatures(report.tag.gene_signatures)
+    if report.report_type == 'default':
+        return __from_gene_signatures(report.tag.gene_signatures)
+    elif report.report_type == 'custom':
+        return __from_gene_signatures(report.gene_signatures)
 
 
 def from_extraction_ids(extraction_ids):
     gene_signatures = []
     for extraction_id in extraction_ids:
-        gene_signature = dataaccess.fetch_gene_signature(extraction_id)
+        gene_signature = dataaccess.get_gene_signature(extraction_id)
         gene_signatures.append(gene_signature)
     return __from_gene_signatures(gene_signatures)
 
