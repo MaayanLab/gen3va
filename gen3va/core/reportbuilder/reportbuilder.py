@@ -12,11 +12,12 @@ from gen3va.core import hierclust
 from gen3va import Config
 
 
-def build(tag):
+def build(tag, is_custom=False):
     """Creates a new report and returns its ID. Builds the report's links in
     a separate thread.
     """
-    report = __save_report(Report('tag', tag))
+    report_type = 'custom' if is_custom else 'default'
+    report = __save_report(Report(report_type, tag))
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
@@ -32,6 +33,12 @@ def rebuild(report):
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
+
+
+def custom(tag, gene_signatures):
+    """Builds a custom report.
+    """
+    pass
 
 
 def __build(report_id):
