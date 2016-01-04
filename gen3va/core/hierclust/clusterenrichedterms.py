@@ -5,8 +5,6 @@ import json
 
 import requests
 
-from substrate import GeneSignature
-from gen3va import db
 from gen3va import Config
 from . import utils
 
@@ -14,21 +12,7 @@ CLUSTERGRAMMER_LOAD_LISTS = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER
 ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
 
 
-def from_enriched_terms(extraction_ids=None,
-                        background_type='ChEA_2015',
-                        report=None,
-                        back_link=''):
-    if extraction_ids:
-        gene_signatures = []
-        for extraction_id in extraction_ids:
-            gene_signature = db.get(GeneSignature, extraction_id, 'extraction_id')
-            gene_signatures.append(gene_signature)
-    else:
-        gene_signatures = report.get_gene_signatures()
-    return __from_enriched_terms(gene_signatures, background_type, back_link)
-
-
-def __from_enriched_terms(gene_signatures, background_type, back_link):
+def from_enriched_terms(gene_signatures):
     """Based on extraction IDs, gets enrichment vectors from Enrichr and then
     creates hierarchical clustering from Clustergrammer.
     """
@@ -64,20 +48,7 @@ def __from_enriched_terms(gene_signatures, background_type, back_link):
             'enr_id_dn': str(enrichr_id_down)
         })
 
-    payload = {
-        'back_link': back_link,
-        'signature_ids': signatures,
-        'background_type': background_type
-    }
-
-    resp = requests.post(CLUSTERGRAMMER_LOAD_LISTS,
-                         data=json.dumps(payload),
-                         headers=Config.JSON_HEADERS)
-    if resp.ok:
-        link_base = json.loads(resp.text)['link']
-        row_title = 'Enriched terms from %s' % background_type
-        return utils.link(link_base, row_title)
-    return None
+    return signatures
 
 
 def __enrich_gene_signature(gene_signature):

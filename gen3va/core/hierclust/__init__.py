@@ -1,3 +1,1 @@
-from clustergenes import from_gene_signatures
-from clusterenrichedterms import from_enriched_terms
-from clusterperturbations import from_perturbations
+from maker import cluster

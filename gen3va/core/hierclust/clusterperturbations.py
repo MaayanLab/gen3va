@@ -11,25 +11,10 @@ from gen3va import Config
 from . import utils
 
 
-CLUSTERGRAMMER_URL = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def from_perturbations(extraction_ids=None, report=None, back_link=''):
-    """Based on extraction IDs, a set of gene signatures to find perturbations
-    that reverse or mimic their expression pattern.
-    """
-    if extraction_ids:
-        gene_signatures = []
-        for extraction_id in extraction_ids:
-            gene_signature = dataaccess.get_gene_signature(extraction_id)
-            gene_signatures.append(gene_signature)
-    else:
-        gene_signatures = report.get_gene_signatures()
-    return __from_perturbations(gene_signatures, back_link)
-
-
-def __from_perturbations(gene_signatures, back_link):
+def from_perturbations(gene_signatures):
     columns = []
     for i, gene_signature in enumerate(gene_signatures):
         print(i, gene_signature.extraction_id)
@@ -61,20 +46,7 @@ def __from_perturbations(gene_signatures, back_link):
             'vector': combined
         })
 
-    payload = {
-        'link': back_link,
-        #'title': '', optional
-        'columns': columns
-    }
-
-    resp = requests.post(CLUSTERGRAMMER_URL,
-                         data=json.dumps(payload),
-                         headers=Config.JSON_HEADERS)
-
-    if resp.ok:
-        link_base = json.loads(resp.text)['link']
-        return utils.link(link_base, 'Perturbations from L1000CDS2')
-    return None
+    return columns
 
 
 def __mimic_or_reverse_gene_signature(gene_signature, mimic):

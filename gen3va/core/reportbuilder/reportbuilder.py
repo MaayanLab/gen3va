@@ -99,8 +99,9 @@ def __cluster_genes(report_id, back_link):
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link = hierclust.from_gene_signatures(report=report,
-                                              back_link=back_link)
+        link = hierclust.cluster('genes',
+                                 report=report,
+                                 back_link=back_link)
         __save_report_link(session, report, link, 'gen3va')
 
 
@@ -110,8 +111,9 @@ def __cluster_perturbations(report_id, back_link):
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link = hierclust.from_perturbations(report=report,
-                                            back_link=back_link)
+        link = hierclust.cluster('l1000cds2',
+                                 report=report,
+                                 back_link=back_link)
         __save_report_link(session, report, link, 'l1000cds2')
 
 
@@ -121,11 +123,15 @@ def __cluster_enriched_terms(report_id, back_link, library):
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link_temp = hierclust.from_enriched_terms(report=report,
-                                                  background_type=library,
-                                                  back_link=back_link)
-        __save_report_link(session, report, link_temp,
-                           'enrichr', library=library)
+        link_temp = hierclust.cluster('enrichr',
+                                      report=report,
+                                      background_type=library,
+                                      back_link=back_link)
+        __save_report_link(session,
+                           report,
+                           link_temp,
+                           'enrichr',
+                           library=library)
 
 
 def __save_report(report, gene_signatures=None):

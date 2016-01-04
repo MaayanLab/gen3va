@@ -13,20 +13,7 @@ from . import utils
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
-def from_gene_signatures(extraction_ids=None,
-                         report=None,
-                         back_link=''):
-    if extraction_ids:
-        gene_signatures = []
-        for extraction_id in extraction_ids:
-            gene_signature = db.dataaccess.fetch_gene_signature(extraction_id)
-            gene_signatures.append(gene_signature)
-    else:
-        gene_signatures = report.get_gene_signatures()
-    return __from_expression_data(gene_signatures, back_link)
-
-
-def __from_expression_data(gene_signatures, back_link):
+def from_expression_data(gene_signatures):
     columns = []
     raw_df = __get_raw_data(gene_signatures)
 
@@ -45,18 +32,7 @@ def __from_expression_data(gene_signatures, back_link):
             'vector': genes,
         })
 
-    payload = {
-        'link': back_link,
-        'columns': columns
-    }
-    resp = requests.post(CLUSTERGRAMMER_URL,
-                         data=json.dumps(payload),
-                         headers=Config.JSON_HEADERS)
-
-    if resp.ok:
-        link_base = json.loads(resp.text)['link']
-        return utils.link(link_base, 'Genes')
-    return None
+    return columns
 
 
 def __get_raw_data(gene_signatures):
