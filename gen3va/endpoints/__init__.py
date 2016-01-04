@@ -1,0 +1,9 @@
+from api.clusterapi import cluster_api
+from api.downloadapi import download_api
+from api.pcaapi import pca_api
+
+from pages.errorpage import error_page
+from pages.indexpage import index_page
+from pages.menupages import menu_pages
+from pages.reportpages import report_pages
+from pages.tagpages import tag_pages
