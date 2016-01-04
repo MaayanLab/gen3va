@@ -10,13 +10,20 @@ from substrate import GeneList, GeneSignature, GeoDataset, OptionalMetadata,\
 from gen3va.db.utils import session_scope
 
 
-def get(klass, id_):
-    """Gets entity by ID.
+def count(class_):
+    """Returns the number of rows in an class's associated table.
+    """
+    with session_scope() as session:
+        return session.query(class_).count()
+
+
+def get(class_, value, key='id'):
+    """Gets entity by comparing column to value.
     """
     with session_scope() as session:
         return session\
-            .query(klass)\
-            .filter(klass.id == id_)\
+            .query(class_)\
+            .filter(getattr(class_, key) == value)\
             .first()
 
 
@@ -30,27 +37,7 @@ def get_all(klass, session=None):
         return session.query(klass).all()
 
 
-def save_gene_signature(gene_signature):
-    """Saves the SoftFile and GeneList to the database and returns the ID from
-    the extraction table.
-    """
-    with session_scope() as session:
-        session.add(gene_signature)
-        session.commit()
-        return gene_signature.extraction_id
-
-
-def get_gene_signature(extraction_id):
-    """Single entry point for fetching extractions from database by ID.
-    """
-    with session_scope() as session:
-        return session\
-            .query(GeneSignature)\
-            .filter(GeneSignature.extraction_id == extraction_id)\
-            .first()
-
-
-def fetch_gene_signatures(extraction_ids):
+def get_signatures_by_ids(extraction_ids):
     """Returns all gene signatures with matching extraction IDs.
     """
     with session_scope() as session:
@@ -60,86 +47,11 @@ def fetch_gene_signatures(extraction_ids):
             .all()
 
 
-def fetch_tag(tag_name):
-    """Fetches tags based on name.
-    """
-    with session_scope() as session:
-        return session\
-            .query(Tag)\
-            .filter(Tag.name == tag_name)\
-            .first()
-
-
-def fetch_metadata(metadata_name):
-    """Fetches metadata based on name.
-    """
-    with session_scope() as session:
-        return session\
-            .query(OptionalMetadata)\
-            .filter(OptionalMetadata.name == metadata_name)\
-            .all()
-
-
-def fetch_metadata_by_value(metadata_name, metadata_value):
-    """Fetches metadata based on name and value.
-    """
-    with session_scope() as session:
-        return session\
-            .query(OptionalMetadata)\
-            .filter(OptionalMetadata.name == metadata_name)\
-            .filter(OptionalMetadata.value == metadata_value)\
-            .all()
-
-
-def get_dataset(accession):
-    with session_scope() as session:
-        instance = session.query(GeoDataset)\
-            .filter_by(accession=accession)\
-            .first()
-        return instance
-
-
-def get_suggestions(query):
-    suggestions = []
-    suggestions += _get_optional_metadata_suggestions(query) or []
-    return suggestions
-
-
-def _get_optional_metadata_suggestions(query):
-    with session_scope() as session:
-        query_results = []
-        query_results += session\
-            .execute('SELECT value FROM optional_metadata '
-                     'WHERE MATCH(value) AGAINST(:query IN BOOLEAN MODE)',
-                     {'query': query})\
-            .fetchall()
-        query_results += session\
-            .execute('SELECT value FROM optional_metadata '
-                     'WHERE value SOUNDS LIKE :query',
-                     {'query': query})\
-            .fetchall()
-        query_results += session\
-            .execute('SELECT value FROM optional_metadata '
-                     'WHERE value LIKE :query',
-                     {'query': query})\
-            .fetchall()
-
-        suggestions = [x[0] for x in query_results]
-        seen = set()
-        for x in suggestions:
-            seen.add(x)
-        return seen
-
-
 def get_statistics():
-    """Returns hash with DB statistics for about page.
+    """Returns object with DB statistics for about page.
     """
     with session_scope() as session:
-        num_gene_signatures = session.query(GeneSignature).count()
-        num_gene_lists = session.query(GeneList).count()
-        num_tags = session.query(Tag).count()
-        num_reports = session.query(Report).count()
-        platforms = session.query(sa.func.distinct(GeoDataset.platform))
+
         tags_dao = get_all(Tag)
         tags = []
         for tag in tags_dao:
@@ -155,6 +67,7 @@ def get_statistics():
                 'num_gene_signatures': len(tag.gene_signatures)
             })
 
+        platforms = session.query(sa.func.distinct(GeoDataset.platform))
         platform_counts = []
         for tpl in platforms:
             platform = tpl[0]
@@ -169,10 +82,10 @@ def get_statistics():
             })
 
         return {
-            'num_gene_signatures': num_gene_signatures,
-            'num_gene_lists': num_gene_lists,
-            'num_tags': num_tags,
-            'num_reports': num_reports,
+            'num_gene_signatures': count(GeneSignature),
+            'num_gene_lists': count(GeneList),
+            'num_tags': count(Tag),
+            'num_reports': count(Report),
             'num_platforms': len(platform_counts),
             'platform_counts': platform_counts,
             'tags': tags

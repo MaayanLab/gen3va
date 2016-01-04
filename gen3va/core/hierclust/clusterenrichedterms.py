@@ -5,7 +5,8 @@ import json
 
 import requests
 
-from gen3va.db import dataaccess
+from substrate import GeneSignature
+from gen3va import db
 from gen3va import Config
 from . import utils
 
@@ -20,7 +21,7 @@ def from_enriched_terms(extraction_ids=None,
     if extraction_ids:
         gene_signatures = []
         for extraction_id in extraction_ids:
-            gene_signature = dataaccess.get_gene_signature(extraction_id)
+            gene_signature = db.get(GeneSignature, extraction_id, 'extraction_id')
             gene_signatures.append(gene_signature)
     else:
         gene_signatures = report.get_gene_signatures()

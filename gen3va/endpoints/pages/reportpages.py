@@ -1,12 +1,12 @@
-"""Handles report pages.
+"""Renders report pages.
 """
 
 import requests
 from flask import Blueprint, jsonify, request, render_template, redirect
 
-from substrate import Report
+from substrate import Report, Tag
 from gen3va.config import Config
-from gen3va.db import dataaccess
+from gen3va import db
 from gen3va.core import reportbuilder
 
 
@@ -19,7 +19,7 @@ report_pages = Blueprint('report_pages',
 def view_all_reports():
     """Renders page to view all reports.
     """
-    reports = dataaccess.get_all(Report)
+    reports = db.get_all(Report)
     return render_template('pages/reports-all.html',
                            report_url=Config.REPORT_URL,
                            reports=reports)
@@ -30,7 +30,7 @@ def default_report_endpoint(tag_name):
     """Redirects user to appropriate page, creating default report if
     necessary.
     """
-    tag = dataaccess.fetch_tag(tag_name)
+    tag = db.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
     elif len(tag.reports) == 0:
@@ -49,7 +49,7 @@ def default_report_endpoint(tag_name):
 def default_report_by_id_endpoint(report_id, tag_name):
     """Given an ID, returns correct report, handling report status as well.
     """
-    tag = dataaccess.fetch_tag(tag_name)
+    tag = db.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
 
@@ -105,7 +105,7 @@ def default_report_by_id_endpoint(report_id, tag_name):
 def rebuild_tag_report_id_endpoint(report_id, tag_name):
     """Rebuilds an existing report.
     """
-    tag = dataaccess.fetch_tag(tag_name)
+    tag = db.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
     report = __report_by_id(tag.reports, report_id)
@@ -120,12 +120,12 @@ def rebuild_tag_report_id_endpoint(report_id, tag_name):
 def build_custom_report(tag_name):
     """Builds a custom report.
     """
-    tag = dataaccess.fetch_tag(tag_name)
+    tag = db.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
 
     extraction_ids = __get_extraction_ids(request)
-    gene_signatures = dataaccess.fetch_gene_signatures(extraction_ids)
+    gene_signatures = db.get_gene_signatures(extraction_ids)
     report_id = reportbuilder.build_custom(tag, gene_signatures)
 
     # This endpoint is hit via an AJAX request. JavaScript must perform the

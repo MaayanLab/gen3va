@@ -23,7 +23,7 @@ def view_all_tags():
 
 @tag_pages.route('/<tag_name>', methods=['GET'])
 def view_individual_tag(tag_name):
-    tag = dataaccess.fetch_tag(tag_name)
+    tag = dataaccess.get_tag(tag_name)
     if tag is None:
         message = 'No gene signatures with tag "%s" found' % tag_name
         return render_template('404.html', message=message)
