@@ -2,8 +2,7 @@
 
 # ARGUMENTS:
 # $1 skip       [optional - skip unit tests]
-# $2 build      [optional - use any other string to skip]
-# $3 push       [optional - use any other string to skip]
+# $2 no-cache   [optional - use --no-cache argument when building Docker container]
 
 # Any subsequent(*) commands which fail will cause the shell script to exit
 # immediately:
@@ -45,8 +44,10 @@ printf '%s\n%s' $credentials $debug > $dbconf
 docker-machine start default
 eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/gen3va:latest'
-if [[ $2 = 'build' ]]; then
-    echo 'building container'
+echo 'building container'
+if [[ $2 = 'no-cache' ]]; then
+    docker build --no-cache -t $DOCKER_IMAGE .
+else
     docker build -t $DOCKER_IMAGE .
 fi
 
@@ -59,9 +60,5 @@ printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
 # =============================================================================
-if [[ $3 = 'push' ]]; then
-    printf '%s\n' 'Pushing to Docker repo'
-    docker push $DOCKER_IMAGE
-else
-    printf '%s\n' 'Not pushing to Docker repo'
-fi
+printf '%s\n' 'Pushing to Docker repo'
+docker push $DOCKER_IMAGE
