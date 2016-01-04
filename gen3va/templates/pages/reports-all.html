@@ -1,0 +1,41 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block body %}
+
+    <div class="page" id="reports-all-page">
+        <h1>Reports <span class="note">{{ reports|length }} reports</span></h1>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Report</th>
+                        <th>Associated Tag</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>
+                                <a href="{{ report_url }}/{{ report.id }}/{{ report.tag.name }}">
+                                    <i class="fa fa-file-o"></i>
+                                </a>
+                            </td>
+                            <td>{{ report.tag.name }}</td>
+                            <td>{{ report.status }}</td>
+                            <td>{{ report.report_type }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $('table').DataTable();
+    </script>
+
+{% endblock %}

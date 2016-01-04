@@ -143,6 +143,14 @@
   border-color: #aaaaaa;
   background-color: #eeeeee;
 }
+#tag-page .note,
+#tags-all-page .note,
+#report-page .note,
+#reports-all-page .note {
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 15px;
+}
 #tag-page table td,
 #metadata-page table td {
   vertical-align: middle !important;
@@ -161,12 +169,6 @@
   font-weight: bold !important;
   padding-right: 10px;
   width: 30%;
-}
-#tag-page .note,
-#metadata-page .note {
-  font-size: 12px;
-  font-weight: normal;
-  margin-left: 15px;
 }
 #tag-page #custom-report-builder,
 #metadata-page #custom-report-builder {

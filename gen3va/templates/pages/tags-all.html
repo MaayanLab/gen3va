@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="tag-page">
+    <div class="page" id="tags-all-page">
         <h1>Tags <span class="note">{{ tags|length }} metadata tags</span></h1>
         <div class="table-responsive">
             <table class="table">
@@ -29,5 +29,9 @@
             </table>
         </div>
     </div>
+
+    <script>
+        $('table').DataTable();
+    </script>
 
 {% endblock %}

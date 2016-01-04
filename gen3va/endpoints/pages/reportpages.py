@@ -4,17 +4,28 @@
 import requests
 from flask import Blueprint, jsonify, request, render_template, redirect
 
+from substrate import Report
 from gen3va.config import Config
 from gen3va.db import dataaccess
 from gen3va.core import reportbuilder
 
 
-report_page = Blueprint('report_page',
-                        __name__,
-                        url_prefix=Config.REPORT_URL)
+report_pages = Blueprint('report_pages',
+                         __name__,
+                         url_prefix=Config.REPORT_URL)
 
 
-@report_page.route('/<tag_name>', methods=['GET'])
+@report_pages.route('', methods=['GET'])
+def view_all_reports():
+    """Renders page to view all reports.
+    """
+    reports = dataaccess.get_all(Report)
+    return render_template('pages/reports-all.html',
+                           report_url=Config.REPORT_URL,
+                           reports=reports)
+
+
+@report_pages.route('/<tag_name>', methods=['GET'])
 def default_report_endpoint(tag_name):
     """Redirects user to appropriate page, creating default report if
     necessary.
@@ -34,7 +45,7 @@ def default_report_endpoint(tag_name):
         return redirect(new_url)
 
 
-@report_page.route('/<int:report_id>/<tag_name>', methods=['GET'])
+@report_pages.route('/<int:report_id>/<tag_name>', methods=['GET'])
 def default_report_by_id_endpoint(report_id, tag_name):
     """Given an ID, returns correct report, handling report status as well.
     """
@@ -90,7 +101,7 @@ def default_report_by_id_endpoint(report_id, tag_name):
                                message=message)
 
 
-@report_page.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
+@report_pages.route('/<int:report_id>/<tag_name>/rebuild', methods=['GET'])
 def rebuild_tag_report_id_endpoint(report_id, tag_name):
     """Rebuilds an existing report.
     """
@@ -105,7 +116,7 @@ def rebuild_tag_report_id_endpoint(report_id, tag_name):
     return redirect(new_url)
 
 
-@report_page.route('/<tag_name>/custom', methods=['POST'])
+@report_pages.route('/<tag_name>/custom', methods=['POST'])
 def build_custom_report(tag_name):
     """Builds a custom report.
     """
