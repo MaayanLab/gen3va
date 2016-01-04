@@ -4,9 +4,9 @@ and their relationships and saves them accordingly.
 
 import sqlalchemy as sa
 
-from substrate import db, GeneList, GeneSignature, GeoDataset, SoftFile, Tag, OptionalMetadata
+from substrate import GeneList, GeneSignature, GeoDataset, OptionalMetadata,\
+    Report, SoftFile, Tag
 
-from gen3va import Session
 from gen3va.db.utils import session_scope
 
 
@@ -138,6 +138,7 @@ def get_statistics():
         num_gene_signatures = session.query(GeneSignature).count()
         num_gene_lists = session.query(GeneList).count()
         num_tags = session.query(Tag).count()
+        num_reports = session.query(Report).count()
         platforms = session.query(sa.func.distinct(GeoDataset.platform))
         tags_dao = get_all(Tag)
         tags = []
@@ -171,6 +172,7 @@ def get_statistics():
             'num_gene_signatures': num_gene_signatures,
             'num_gene_lists': num_gene_lists,
             'num_tags': num_tags,
+            'num_reports': num_reports,
             'num_platforms': len(platform_counts),
             'platform_counts': platform_counts,
             'tags': tags
