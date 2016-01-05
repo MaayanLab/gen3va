@@ -62,8 +62,6 @@ def default_report_by_id_endpoint(report_id, tag_name):
     gene_signatures = report.get_gene_signatures()
     report_status_code = __report_status_code(report)
 
-    #import pdb; pdb.set_trace()
-
     if report_status_code == 1:
         pca_json = report.pca_visualization.data
 
@@ -71,15 +69,22 @@ def default_report_by_id_endpoint(report_id, tag_name):
         for clust in report.hier_clusts:
             clust.link = clust.link.replace('&N_row_sum=100', '')
 
-        enrichr_links = [viz for viz in report.hier_clusts
-                         if viz.viz_type == 'enrichr']
+        enrichr_links = [{
+                             'link': viz.link.replace('&N_row_sum=100', ''),
+                             'library': viz.enrichr_library
+                         } for viz in report.hier_clusts if viz.viz_type == 'enrichr']
+
         gene_hier_clust = None
         l1000cds_hier_clust = None
         for viz in report.hier_clusts:
             if viz.viz_type == 'gen3va':
-                gene_hier_clust = viz
+                gene_hier_clust = {
+                    'link': viz.link.replace('&N_row_sum=100', '')
+                }
             if viz.viz_type == 'l1000cds2':
-                l1000cds_hier_clust = viz
+                l1000cds_hier_clust = {
+                    'link': viz.link.replace('&N_row_sum=100', '')
+                }
 
         return render_template('pages/report.html',
                                tag=tag,
