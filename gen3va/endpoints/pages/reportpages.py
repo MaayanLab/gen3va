@@ -61,10 +61,16 @@ def default_report_by_id_endpoint(report_id, tag_name):
 
     gene_signatures = report.get_gene_signatures()
     report_status_code = __report_status_code(report)
+
     if report_status_code == 1:
         pca_json = report.pca_visualization.data
-        enrichr_links = [viz for viz in report.hier_clusts
-                         if viz.viz_type == 'enrichr']
+
+        # Hot fix since this code does not work until the data is reprocessed.
+        for clust in report.hier_clusts:
+            clust.link = clust.link.replace('&N_row_sum=100', '').replace('&N_row_sum=50', '')
+
+        enrichr_links = [viz for viz in report.hier_clusts if viz.viz_type == 'enrichr']
+
         gene_hier_clust = None
         l1000cds_hier_clust = None
         for viz in report.hier_clusts:
