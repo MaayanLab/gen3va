@@ -61,8 +61,16 @@ def default_report_by_id_endpoint(report_id, tag_name):
 
     gene_signatures = report.get_gene_signatures()
     report_status_code = __report_status_code(report)
+
+    #import pdb; pdb.set_trace()
+
     if report_status_code == 1:
         pca_json = report.pca_visualization.data
+
+        # Hot fix since this code does not work until the data is reprocessed.
+        for clust in report.hier_clusts:
+            clust.link = clust.link.replace('&N_row_sum=100', '')
+
         enrichr_links = [viz for viz in report.hier_clusts
                          if viz.viz_type == 'enrichr']
         gene_hier_clust = None
