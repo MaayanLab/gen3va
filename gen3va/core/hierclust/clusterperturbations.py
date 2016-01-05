@@ -4,9 +4,9 @@ expression patterns of gene signatures.
 
 import json
 
+import pandas
 import requests
 
-from gen3va.db import dataaccess
 from gen3va import Config
 from . import utils
 
@@ -14,42 +14,65 @@ from . import utils
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def from_perturbations(gene_signatures):
+def from_perturbations(signatures):
     columns = []
-    for i, gene_signature in enumerate(gene_signatures):
-        print(i, gene_signature.extraction_id)
 
-        # First mimic
-        up_perts_to_scores = __mimic_or_reverse_gene_signature(
-            gene_signature,
-            True
-        )
+    df_m = __get_raw_data(signatures, True)
+    df_m = df_m.ix[df_m.mean(axis=1).nlargest(1000).index]
 
-        # Then reverse
-        down_perts_to_scores = __mimic_or_reverse_gene_signature(
-            gene_signature,
-            False
-        )
+    df_r = __get_raw_data(signatures, False)
+    df_r = df_r.ix[df_r.mean(axis=1).nlargest(1000).index]
 
-        up, down, combined = utils.build_vectors(up_perts_to_scores,
-                                                 down_perts_to_scores)
+    columns = []
+    for i in range(len(signatures)):
+        import pdb; pdb.set_trace()
 
-        columns.append({
-            'col_title': utils.column_title(i, gene_signature),
-            # 'link': '', optional
-            'vector_up': up,
-            'vector_dn': down,
 
-            # In principal, 'vector' could be processed differently.
-            # Clustergrammer clusters on 'vector' but then displays split
-            # tiles on 'vector_up' and 'vector_dn'.
-            'vector': combined
-        })
+    for col_title in df_m.columns:
+        column = df_m.ix[:, col_title].tolist()
+        column = [float(x) for x in column]
+        vector = zip(df_m.index, column)
+
+        # Clustergrammer expects a list of lists, rather than tuples.
+        mimic_vector = [[x, y] for x, y in vector]
+        # columns.append({
+        #     'col_title': col_title,
+        #     'vector': vector,
+        # })
+
+    df_r = __get_raw_data(signatures, False)
+    df_r = df_r.ix[df_r.mean(axis=1).nlargest(1000).index]
+
+
 
     return columns
 
 
-def __mimic_or_reverse_gene_signature(gene_signature, mimic):
+def __get_raw_data(signatures, mimic):
+    df = pandas.DataFrame(index=[])
+    for i, signature in enumerate(signatures):
+        print('%s - %s' % (i, signature.extraction_id))
+
+        perts, scores = __mimic_or_reverse_signature(signature, mimic)
+
+        col_title = utils.column_title(i, signature)
+        right = pandas.DataFrame(
+            index=[p for p in perts],
+            columns=[col_title],
+            data=[s for s in scores]
+        )
+
+        if type(right) is not pandas.DataFrame:
+            continue
+        df = df.join(right, how='outer')
+        if not df.index.is_unique:
+            df = df.groupby(df.index).mean()
+
+    df = df.fillna(0)
+    return df
+
+
+def __mimic_or_reverse_signature(gene_signature, mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
@@ -72,7 +95,8 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
 
-    perts_to_scores = {}
+    perts = []
+    scores = []
     top_meta = json.loads(resp.text)['topMeta']
     top_meta = top_meta[:25]
     for obj in top_meta:
@@ -86,6 +110,7 @@ def __mimic_or_reverse_gene_signature(gene_signature, mimic):
         # this score from 1, we get a negative value for reverse and a
         # positive value for mimic.
         score = 1 - obj['score']
-        perts_to_scores[pert] = score
+        perts.append(pert)
+        scores.append(score)
 
-    return perts_to_scores
+    return perts, scores
