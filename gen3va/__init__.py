@@ -38,6 +38,12 @@ if not Config.DEBUG:
 else:
     print 'Starting in DEBUG mode'
 
+if Config.DEBUG:
+    # Verify that the report builds for multiple libraries but not all of
+    # them.
+    Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
+                                          'ENCODE_TF_ChIP-seq_2015']
+
 # Import these after connecting to the DB.
 from gen3va import endpoints
 from gen3va.util.jinjafilters import jinjafilters

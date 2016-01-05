@@ -15,36 +15,30 @@ L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
 def from_perturbations(signatures):
-    columns = []
 
     df_m = __get_raw_data(signatures, True)
-    df_m = df_m.ix[df_m.mean(axis=1).nlargest(1000).index]
+    print('BEGIN num rows L1000CDS2 %s' % str(df_m.shape[0]))
+    df_m = df_m.ix[df_m.mean(axis=1).nlargest(500).index]
 
     df_r = __get_raw_data(signatures, False)
-    df_r = df_r.ix[df_r.mean(axis=1).nlargest(1000).index]
+    df_r = df_r.ix[df_r.mean(axis=1).nlargest(500).index]
 
     columns = []
     for i in range(len(signatures)):
-        import pdb; pdb.set_trace()
+        up_vec = df_m.ix[:,i]
+        up_vec = {x:up_vec[x] for x in up_vec.index}
+        down_vec = df_r.ix[:,i]
+        down_vec = {x:down_vec[x] for x in down_vec.index}
 
+        up, down, combined = utils.build_vectors(up_vec, down_vec)
+        columns.append({
+            'col_title': utils.column_title(i, signatures[i]),
+            'vector_up': up,
+            'vector_dn': down,
+            'vector': combined
+        })
 
-    for col_title in df_m.columns:
-        column = df_m.ix[:, col_title].tolist()
-        column = [float(x) for x in column]
-        vector = zip(df_m.index, column)
-
-        # Clustergrammer expects a list of lists, rather than tuples.
-        mimic_vector = [[x, y] for x, y in vector]
-        # columns.append({
-        #     'col_title': col_title,
-        #     'vector': vector,
-        # })
-
-    df_r = __get_raw_data(signatures, False)
-    df_r = df_r.ix[df_r.mean(axis=1).nlargest(1000).index]
-
-
-
+    print('END num rows L1000CDS2 %s' % str(len(columns[0]['vector'])))
     return columns
 
 

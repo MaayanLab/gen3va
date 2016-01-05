@@ -50,18 +50,18 @@ def __build(report_id):
     # Each function below executes with its own separate DB session. This
     # ensures the process does not time out.
 
-    # print('PCA visualization')
-    # __perform_pca(report_id)
-    #
+    print('PCA visualization')
+    __perform_pca(report_id)
+
     back_link = __get_back_link(report_id)
-    #
+
     # print('gene visualization')
     # __cluster_genes(report_id, back_link)
-
+    #
     # print('enrichr visualizations')
     # for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
     #     __cluster_enriched_terms(report_id, back_link, library)
-    #
+
     print('l1000cds2 visualization')
     __cluster_perturbations(report_id, back_link)
 
