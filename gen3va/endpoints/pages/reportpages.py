@@ -67,24 +67,17 @@ def default_report_by_id_endpoint(report_id, tag_name):
 
         # Hot fix since this code does not work until the data is reprocessed.
         for clust in report.hier_clusts:
-            clust.link = clust.link.replace('&N_row_sum=100', '')
+            clust.link = clust.link.replace('&N_row_sum=100', '').replace('&N_row_sum=50', '')
 
-        enrichr_links = [{
-                             'link': viz.link.replace('&N_row_sum=100', ''),
-                             'library': viz.enrichr_library
-                         } for viz in report.hier_clusts if viz.viz_type == 'enrichr']
+        enrichr_links = [viz for viz in report.hier_clusts if viz.viz_type == 'enrichr']
 
         gene_hier_clust = None
         l1000cds_hier_clust = None
         for viz in report.hier_clusts:
             if viz.viz_type == 'gen3va':
-                gene_hier_clust = {
-                    'link': viz.link.replace('&N_row_sum=100', '')
-                }
+                gene_hier_clust = viz
             if viz.viz_type == 'l1000cds2':
-                l1000cds_hier_clust = {
-                    'link': viz.link.replace('&N_row_sum=100', '')
-                }
+                l1000cds_hier_clust = viz
 
         return render_template('pages/report.html',
                                tag=tag,
