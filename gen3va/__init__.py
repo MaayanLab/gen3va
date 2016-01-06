@@ -46,7 +46,7 @@ if Config.DEBUG:
 
 # Import these after connecting to the DB.
 from gen3va import endpoints
-from gen3va.util.jinjafilters import jinjafilters
+from gen3va.utils.jinjafilters import jinjafilters
 
 app.register_blueprint(endpoints.index_page)
 app.register_blueprint(endpoints.error_page)
