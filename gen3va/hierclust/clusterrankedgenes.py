@@ -1,41 +1,40 @@
-"""Performs hierarchical clustering on raw expression data in SOFT file.
+"""Prepares ranked genes for hierarchical clustering.
 """
 
-import json
-
 import pandas
-import requests
 
-from gen3va import Config
-from gen3va import db
-from . import utils
+from gen3va.hierclust import utils
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
-def from_expression_data(gene_signatures):
+def prepare_ranked_genes(gene_signatures):
+    """Prepares ranked genes for hierarchical clustering.
+    """
     columns = []
-    raw_df = __get_raw_data(gene_signatures)
+    raw_df = _get_raw_data(gene_signatures)
 
     top_genes = raw_df.var(axis=1).nlargest(1000).index
     df = raw_df.ix[top_genes]
 
-    for col_title in df.columns:
-        column = df.ix[:, col_title].tolist()
+    for col_name in df.columns:
+        column = df.ix[:, col_name].tolist()
         column = [float(x) for x in column]
         genes = zip(df.index, column)
 
         # Clustergrammer expects a list of lists, rather than tuples.
-        genes = [[x, y] for x, y in genes]
+        data = [{'row_name': name, 'val': value} for name, value in genes]
         columns.append({
-            'col_title': col_title,
-            'vector': genes,
+            'col_name': col_name,
+            'data': data,
         })
 
     return columns
 
 
-def __get_raw_data(gene_signatures):
+def _get_raw_data(gene_signatures):
+    """Creates a matrix of genes (rows) and signatures (columns).
+    """
     df = pandas.DataFrame(index=[])
     for i, gene_signature in enumerate(gene_signatures):
         print('%s - %s' % (i, gene_signature.extraction_id))
@@ -50,20 +49,11 @@ def __get_raw_data(gene_signatures):
 
         if type(right) is not pandas.DataFrame:
             continue
+
         df = df.join(right, how='outer')
+
         if not df.index.is_unique:
             df = df.groupby(df.index).mean()
 
     df = df.fillna(0)
     return df
-
-
-def __genes_from_signature(gene_signature):
-    ranked_genes = gene_signature.gene_lists[0].ranked_genes
-    return [[rg.gene.name, rg.value] for rg in ranked_genes]
-
-
-def __get_clustergrammer_link(gene_signature):
-    for target_app_link in gene_signature.gene_list.target_app_links:
-        if target_app_link.target_app.name == 'clustergrammer':
-            return target_app_link

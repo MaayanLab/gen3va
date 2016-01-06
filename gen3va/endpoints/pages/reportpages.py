@@ -3,11 +3,10 @@
 
 import requests
 from flask import Blueprint, jsonify, request, render_template, redirect
-
 from substrate import Report, Tag
+
 from gen3va.config import Config
-from gen3va import db
-from gen3va.core import reportbuilder
+from gen3va import db, reportbuilder
 
 
 report_pages = Blueprint('report_pages',

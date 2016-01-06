@@ -1,24 +1,26 @@
+"""Returns link to hierarchical clustering.
 """
-"""
-
 
 import json
-import requests
 
+import requests
 from substrate import GeneSignature
+
 from gen3va import db
 from gen3va.config import Config
 from .clusterenrichedterms import from_enriched_terms
 from .clusterperturbations import from_perturbations
-from .clustergenes import from_expression_data
-from . import utils
+from .clusterrankedgenes import prepare_ranked_genes
+from gen3va.hierclust import utils
 
 
 CLUSTERGRAMMER_DEFAULT = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
 TYPES = ['genes', 'enrichr', 'l1000cds2']
 
 
-def cluster(type_, **kwargs):
+def get_link(type_, **kwargs):
+    """Returns link to hierarchical clustering.
+    """
     if type_ not in TYPES:
         raise ValueError('Invalid type_ argument. Must be in %s' % str(TYPES))
 
@@ -32,8 +34,9 @@ def cluster(type_, **kwargs):
         signatures = report.get_gene_signatures()
 
     payload = {
-        'link': kwargs.get('back_link', '')
-        # 'title' is an optional property
+        'title': 'gen3va',
+        'link': kwargs.get('back_link', ''),
+        'filter': 'N_row_sum',
     }
     if type_ == 'enrichr':
         background_type = kwargs.get('background_type', 'ChEA_2015')
@@ -41,15 +44,16 @@ def cluster(type_, **kwargs):
         payload['background_type'] = background_type
         row_title = 'Enriched terms from %s' % background_type
         url = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
-        resp = __post(payload, url)
+        resp = _post(payload, url)
     elif type_ == 'l1000cds2':
         payload['columns'] = from_perturbations(signatures)
         row_title = 'Perturbations from L1000CDS2'
-        resp = __post(payload)
+        resp = _post(payload)
     elif type_ == 'genes':
-        payload['columns'] = from_expression_data(signatures)
+        payload['columns'] = prepare_ranked_genes(signatures)
+        payload['is_up_down'] = False
         row_title = 'Genes'
-        resp = __post(payload)
+        resp = _post(payload)
 
     if resp.ok:
         link_base = json.loads(resp.text)['link']
@@ -57,7 +61,7 @@ def cluster(type_, **kwargs):
     return None
 
 
-def __post(payload, url=CLUSTERGRAMMER_DEFAULT):
+def _post(payload, url=CLUSTERGRAMMER_DEFAULT):
     """Utility method for jsonifying payload and POSTing with correct headers.
     """
     payload = json.dumps(payload)

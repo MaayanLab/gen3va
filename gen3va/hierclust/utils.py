@@ -46,6 +46,8 @@ def column_title(i, gene_signature):
 def link(base, row_title, col_title='Gene signatures'):
     """Utility method for building Clustergrammer link query strings.
     """
+    if base[-1] == '/':
+        base = base[:-1]
     row_title = urllib.quote(row_title)
     col_title = urllib.quote(col_title)
     return '{0}' \

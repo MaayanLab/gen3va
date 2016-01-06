@@ -6,10 +6,9 @@ import json
 from threading import Thread
 
 from substrate import PCAVisualization, Report, TargetApp, HierClustVisualization
+
 from gen3va.db.utils import session_scope, bare_session_scope, get_or_create_with_session
-from gen3va.core import pca
-from gen3va.core import hierclust
-from gen3va import Config
+from gen3va import Config, hierclust, pca
 
 
 def build(tag):
@@ -56,14 +55,14 @@ def __build(report_id):
     back_link = __get_back_link(report_id)
 
     # print('gene visualization')
-    # __cluster_genes(report_id, back_link)
+    __cluster_ranked_genes(report_id, back_link)
     #
     # print('enrichr visualizations')
     # for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
     #     __cluster_enriched_terms(report_id, back_link, library)
 
-    print('l1000cds2 visualization')
-    __cluster_perturbations(report_id, back_link)
+    # print('l1000cds2 visualization')
+    # __cluster_perturbations(report_id, back_link)
 
     print('build complete')
     __set_report_ready(report_id)
@@ -94,12 +93,12 @@ def __perform_pca(report_id):
         session.commit()
 
 
-def __cluster_genes(report_id, back_link):
+def __cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link = hierclust.cluster('genes',
+        link = hierclust.get_link('genes',
                                  report=report,
                                  back_link=back_link)
         __save_report_link(session, report, link, 'gen3va')
@@ -111,7 +110,7 @@ def __cluster_perturbations(report_id, back_link):
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link = hierclust.cluster('l1000cds2',
+        link = hierclust.get_link('l1000cds2',
                                  report=report,
                                  back_link=back_link)
         __save_report_link(session, report, link, 'l1000cds2')
@@ -123,7 +122,7 @@ def __cluster_enriched_terms(report_id, back_link, library):
     """
     with bare_session_scope() as session:
         report = session.query(Report).get(report_id)
-        link_temp = hierclust.cluster('enrichr',
+        link_temp = hierclust.get_link('enrichr',
                                       report=report,
                                       background_type=library,
                                       back_link=back_link)

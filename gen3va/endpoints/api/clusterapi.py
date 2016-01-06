@@ -4,8 +4,7 @@
 from flask import Blueprint, request, jsonify
 
 from gen3va.config import Config
-from gen3va.core import hierclust
-
+from gen3va import hierclust
 
 cluster_api = Blueprint('cluster_api',
                         __name__,

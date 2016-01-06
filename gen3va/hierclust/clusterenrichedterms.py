@@ -6,7 +6,7 @@ import json
 import requests
 
 from gen3va import Config
-from . import utils
+from gen3va.hierclust import utils
 
 CLUSTERGRAMMER_LOAD_LISTS = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
 ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL

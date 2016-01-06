@@ -1,6 +1,6 @@
 import unittest
 
-from gen3va.core.hierclust.utils import build_vectors
+from gen3va.hierclust.utils import build_vectors
 
 def _in(lst, tpl):
     for t in lst:

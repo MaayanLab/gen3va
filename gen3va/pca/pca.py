@@ -6,7 +6,6 @@ import numpy as np
 from sklearn import decomposition
 
 from gen3va.db import dataaccess
-from gen3va.core.pca.utils import avg_dups
 
 
 def from_report(report):
@@ -39,7 +38,7 @@ def __from_gene_signatures(gene_signatures):
         # but an earlier version of GEO2Enrichr accidentally did not average
         # duplicates. Thus, any extraction ID for which this is the case will
         # fail if this step is not performed.
-        indices, data = avg_dups(np.array(genes), np.array(values))
+        indices, data = average_duplicates(np.array(genes), np.array(values))
         new_df = pandas.DataFrame(
             index=indices,
             data=[x[0] for x in data]
@@ -91,3 +90,14 @@ def compute_pca(df, max_components=3):
     # return the coordinates of the transformed data, plus the % of variance
     # explainced by each component
     return pca_coords, variance_explained
+
+
+def average_duplicates(genes, values):
+    """Finds duplicate genes and averages their expression data.
+    """
+    # See http://codereview.stackexchange.com/a/82020/59381 for details.
+    folded, indices, counts = np.unique(genes, return_inverse=True, return_counts=True)
+    output = np.zeros((folded.shape[0], values.shape[1]))
+    np.add.at(output, indices, values)
+    output /= counts[:, np.newaxis]
+    return folded, output

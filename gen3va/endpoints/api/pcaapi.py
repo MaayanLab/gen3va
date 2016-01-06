@@ -1,10 +1,9 @@
 """Performs PCA on a list of gene signatures or a SOFT file.
 """
 
-
 from flask import Blueprint, request, jsonify
 
-from gen3va.core import pca
+from gen3va import pca
 from gen3va.config import Config
 
 

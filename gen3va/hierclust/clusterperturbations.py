@@ -8,7 +8,7 @@ import pandas
 import requests
 
 from gen3va import Config
-from . import utils
+from gen3va.hierclust import utils
 
 
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
@@ -32,7 +32,10 @@ def from_perturbations(signatures):
 
         up, down, combined = utils.build_vectors(up_vec, down_vec)
         columns.append({
-            'col_title': utils.column_title(i, signatures[i]),
+            'col_name': utils.column_title(i, signatures[i]),
+            'data': [
+
+            ],
             'vector_up': up,
             'vector_dn': down,
             'vector': combined
