@@ -101,31 +101,37 @@ class TestBuildColumns(unittest.TestCase):
 
     def test_with_doubles(self):
         mimic = pandas.Series(index=['A', 'B', 'C'], data=[0.5, 0.7, 0.85])
-        reverse = pandas.Series(index=['C' 'D', 'E'], data=[-0.41, -1, -0.3])
+        reverse = pandas.Series(index=['C', 'D', 'E'], data=[-0.41, -1, -0.3])
         answer = [
             {
                 'row_name': 'A',
-                'val': 1,
-                'val_up': 1,
+                'val': 0.5,
+                'val_up': 0.5,
                 'val_dn': 0
             },
             {
                 'row_name': 'B',
-                'val': 1,
-                'val_up': 1,
+                'val': 0.7,
+                'val_up': 0.7,
                 'val_dn': 0
             },
             {
-                'row_name': 'E',
+                'row_name': 'C',
+                'val': 0.44,
+                'val_up': 0.85,
+                'val_dn': -0.41
+            },
+            {
+                'row_name': 'D',
                 'val': -1,
                 'val_up': 0,
                 'val_dn': -1
             },
             {
-                'row_name': 'F',
-                'val': -1,
+                'row_name': 'E',
+                'val': -0.3,
                 'val_up': 0,
-                'val_dn': -1
+                'val_dn': -0.3
             }
         ]
         column_data = _build_columns(mimic, reverse)
