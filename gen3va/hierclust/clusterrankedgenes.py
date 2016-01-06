@@ -4,6 +4,7 @@
 import pandas
 
 from gen3va.hierclust import utils
+from gen3va.hierclust import config
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
@@ -12,10 +13,8 @@ def prepare_ranked_genes(gene_signatures):
     """Prepares ranked genes for hierarchical clustering.
     """
     columns = []
-    raw_df = _get_raw_data(gene_signatures)
-
-    top_genes = raw_df.var(axis=1).nlargest(1000).index
-    df = raw_df.ix[top_genes]
+    df = _get_raw_data(gene_signatures)
+    df = _filter_rows(df, config.MAX_NUM_ROWS)
 
     for col_name in df.columns:
         column = df.ix[:, col_name].tolist()
@@ -30,6 +29,13 @@ def prepare_ranked_genes(gene_signatures):
         })
 
     return columns
+
+
+def _filter_rows(df, max_num_rows):
+    """Removes all rows less than a threshold, ordered by mean.
+    """
+    top_genes = df.mean(axis=1).nlargest(max_num_rows).index
+    return df.ix[top_genes]
 
 
 def _get_raw_data(gene_signatures):

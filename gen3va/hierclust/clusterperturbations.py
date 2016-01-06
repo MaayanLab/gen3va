@@ -8,16 +8,19 @@ import pandas
 import requests
 
 from gen3va import Config
-from gen3va.hierclust import utils
-
+from gen3va.hierclust import config, utils
 
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
 def prepare_perturbations(signatures):
+    """Prepares perturbations to mimic and reverse expression pattern for
+    hierarchical clustering.
     """
-    """
-    max_num_rows = 500
+    # Since this visualization contains both mimic and reverse values, the
+    # combined matrix will, in the worst case scenario or no overlap, be
+    # the max size.
+    max_num_rows = config.MAX_NUM_ROWS / 2
 
     df_m = _get_raw_data(signatures, True)
     df_m = _filter_rows_until(df_m, max_num_rows)
