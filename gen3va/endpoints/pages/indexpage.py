@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 
 from substrate import Tag
 from gen3va.config import Config
-from gen3va.db import dataaccess
+from gen3va.db import db
 
 
 index_page = Blueprint('index_page',
@@ -15,7 +15,7 @@ index_page = Blueprint('index_page',
 
 @index_page.route('/')
 def index():
-    tags = dataaccess.get_all(Tag)
+    tags = db.get_all(Tag)
     return render_template('index.html',
                            report_url=Config.REPORT_URL,
                            tag_url=Config.TAG_URL,

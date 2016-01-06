@@ -9,7 +9,7 @@ from substrate import GeneSignature
 from gen3va import db
 from gen3va.config import Config
 from .clusterenrichedterms import from_enriched_terms
-from .clusterperturbations import from_perturbations
+from .clusterperturbations import prepare_perturbations
 from .clusterrankedgenes import prepare_ranked_genes
 from gen3va.hierclust import utils
 
@@ -40,13 +40,15 @@ def get_link(type_, **kwargs):
     }
     if type_ == 'enrichr':
         background_type = kwargs.get('background_type', 'ChEA_2015')
+        payload['is_up_down'] = True
         payload['signature_ids'] = from_enriched_terms(signatures)
         payload['background_type'] = background_type
         row_title = 'Enriched terms from %s' % background_type
         url = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
         resp = _post(payload, url)
     elif type_ == 'l1000cds2':
-        payload['columns'] = from_perturbations(signatures)
+        payload['columns'] = prepare_perturbations(signatures)
+        payload['is_up_down'] = True
         row_title = 'Perturbations from L1000CDS2'
         resp = _post(payload)
     elif type_ == 'genes':

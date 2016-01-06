@@ -63,11 +63,6 @@ def default_report_by_id_endpoint(report_id, tag_name):
 
     if report_status_code == 1:
         pca_json = report.pca_visualization.data
-
-        # Hot fix since this code does not work until the data is reprocessed.
-        for clust in report.hier_clusts:
-            clust.link = clust.link.replace('&N_row_sum=100', '').replace('&N_row_sum=50', '')
-
         enrichr_links = [viz for viz in report.hier_clusts if viz.viz_type == 'enrichr']
 
         gene_hier_clust = None
@@ -150,6 +145,7 @@ def __report_status_code(report):
     if report.ready:
         ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
         for viz in report.hier_clusts:
+            print(viz.link)
             clustergrammer_id = viz.link.split('/')[-2:-1][0]
             url = ENDPOINT + str(clustergrammer_id)
             resp = requests.get(url)

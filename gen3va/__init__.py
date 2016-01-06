@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from gen3va.config import Config
-from substrate import db
+from substrate import db as substrate_db
 
 
 app = Flask(__name__,
@@ -24,7 +24,7 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 # and will be set to False by default in a future release of Flask-SQLAlchemy.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+substrate_db.init_app(app)
 cors = CORS(app)
 
 # Create a standalone session factory for non Flask-SQLAlchemy transactions.

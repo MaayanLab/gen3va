@@ -5,7 +5,7 @@ import json
 
 from flask import Blueprint, render_template
 
-from gen3va.db import dataaccess
+from gen3va.db import db
 from gen3va.config import Config
 
 
@@ -21,7 +21,7 @@ def documentation():
 
 @menu_pages.route('/statistics')
 def statistics():
-    stats = dataaccess.get_statistics()
+    stats = db.get_statistics()
     stats_json = json.dumps(stats)
     return render_template('pages/statistics.html',
                            stats=stats,
