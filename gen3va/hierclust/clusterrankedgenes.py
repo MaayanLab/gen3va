@@ -9,11 +9,11 @@ from gen3va.hierclust import config
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
-def prepare_ranked_genes(gene_signatures):
+def prepare_ranked_genes(signatures):
     """Prepares ranked genes for hierarchical clustering.
     """
     columns = []
-    df = _get_raw_data(gene_signatures)
+    df = _get_raw_data(signatures)
     df = _filter_rows(df, config.MAX_NUM_ROWS)
 
     for col_name in df.columns:
@@ -38,15 +38,15 @@ def _filter_rows(df, max_num_rows):
     return df.ix[top_genes]
 
 
-def _get_raw_data(gene_signatures):
+def _get_raw_data(signatures):
     """Creates a matrix of genes (rows) and signatures (columns).
     """
     df = pandas.DataFrame(index=[])
-    for i, gene_signature in enumerate(gene_signatures):
-        print('%s - %s' % (i, gene_signature.extraction_id))
+    for i, signature in enumerate(signatures):
+        print('%s - %s' % (i, signature.extraction_id))
 
-        ranked_genes = gene_signature.gene_lists[2].ranked_genes
-        col_title = utils.column_title(i, gene_signature)
+        ranked_genes = signature.gene_lists[2].ranked_genes
+        col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
             index=[rg.gene.name for rg in ranked_genes],
             columns=[col_title],

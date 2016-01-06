@@ -66,11 +66,11 @@ def _get_raw_data(signatures, use_mimic):
     return df
 
 
-def _mimic_or_reverse_signature(gene_signature, use_mimic):
+def _mimic_or_reverse_signature(signature, use_mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
-    ranked_genes = gene_signature.gene_lists[2].ranked_genes
+    ranked_genes = signature.gene_lists[2].ranked_genes
     payload = {
         'data': {
             'genes': [rg.gene.name for rg in ranked_genes],
