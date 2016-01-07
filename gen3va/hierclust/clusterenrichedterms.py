@@ -6,6 +6,7 @@ import time
 
 import pandas
 import requests
+from requests.exceptions import RequestException
 
 from gen3va import Config
 from gen3va.hierclust import utils
@@ -48,7 +49,11 @@ def _get_raw_data(signatures, library, use_up):
             genes = [g for g in ranked_genes if g.value > 0]
         else:
             genes = [g for g in ranked_genes if g.value < 0]
-        terms, scores = _enrich_gene_signature(genes, library)
+
+        try:
+            terms, scores = _enrich_gene_signature(genes, library)
+        except RequestException:
+            continue
 
         col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
@@ -74,7 +79,8 @@ def _enrich_gene_signature(genes, library):
     """
     user_list_id = _post_to_enrichr(genes)
     if not user_list_id:
-        raise Exception('Could not add gene list to Enrichr')
+        message = 'Could not add gene list to Enrichr'
+        raise RequestException(message)
     enrichr_url = '%s/enrich' % Config.ENRICHR_URL
     url = '%s?userListId=%s&backgroundType=%s' % (enrichr_url,
                                                   user_list_id,
@@ -84,7 +90,8 @@ def _enrich_gene_signature(genes, library):
     time.sleep(1)
     resp = requests.get(url)
     if not resp.ok:
-        raise Exception('Could not fetch user list id from Enrichr')
+        message = 'Could not fetch user list id from Enrichr'
+        raise RequestException(message)
     return _parse_enrichr_response(resp, library)
 
 
