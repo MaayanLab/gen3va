@@ -4,7 +4,7 @@
 import pandas
 
 from gen3va.hierclust import utils
-from gen3va.hierclust import config
+
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
@@ -14,7 +14,7 @@ def prepare_ranked_genes(signatures):
     """
     columns = []
     df = _get_raw_data(signatures)
-    df = _filter_rows(df, config.MAX_NUM_ROWS)
+    df = _filter_rows(df, utils.MAX_NUM_ROWS)
 
     for col_name in df.columns:
         column = df.ix[:, col_name].tolist()

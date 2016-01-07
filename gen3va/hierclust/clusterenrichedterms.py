@@ -2,80 +2,120 @@
 """
 
 import json
+import time
 
+import pandas
 import requests
 
 from gen3va import Config
 from gen3va.hierclust import utils
 
-CLUSTERGRAMMER_LOAD_LISTS = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
-ENRICHR_ADD_LIST = '%s/addList' % Config.ENRICHR_URL
 
-
-def from_enriched_terms(gene_signatures):
-    """Based on extraction IDs, gets enrichment vectors from Enrichr and then
-    creates hierarchical clustering from Clustergrammer.
+def prepare_enriched_terms(signatures, library):
+    """Prepares enriched terms for hierarchical clustering.
     """
-    signatures = []
-    for i, gene_signature in enumerate(gene_signatures):
-        extraction_id = gene_signature.extraction_id
-        print(i, extraction_id)
-        ranked_genes = gene_signature.gene_lists[2].ranked_genes
+    max_num_rows = utils.MAX_NUM_ROWS / 2
 
-        if len(ranked_genes) == 0:
-            print('Skipping %s' % extraction_id)
-            continue
+    df_up = _get_raw_data(signatures, library, True)
+    df_up = utils.filter_rows_until(df_up, max_num_rows)
 
-        enrichr_id_up, enrichr_id_down = __enrich_gene_signature(
-            gene_signature
-        )
+    df_down = _get_raw_data(signatures, library, False)
+    df_down = utils.filter_rows_until(df_down, max_num_rows)
 
-        if enrichr_id_up is None or enrichr_id_down is None:
-            print('Skipping %s' % extraction_id)
-            continue
+    columns = []
+    for i in range(len(signatures)):
+        mimic_vec = df_up.ix[:,i]
+        reverse_vec = df_down.ix[:,i]
 
-        cell_or_tissue = ''
-        for c_key in ['cell', 'cell_type', 'tissue']:
-            c = gene_signature.get_optional_metadata(c_key)
-            if c != '':
-                cell_or_tissue = c
-
-        signatures.append({
-            'col_title': utils.column_title(i, gene_signature),
-            'organism': gene_signature.soft_file.dataset.organism,
-            'cell_or_tissue': cell_or_tissue,
-            'enr_id_up': str(enrichr_id_up),
-            'enr_id_dn': str(enrichr_id_down)
+        column_data = utils.build_columns(mimic_vec, reverse_vec)
+        columns.append({
+            'col_name': utils.column_title(i, signatures[i]),
+            'data': column_data
         })
 
-    return signatures
+    return columns
 
 
-def __enrich_gene_signature(gene_signature):
+def _get_raw_data(signatures, library, use_up):
+    """Creates a matrix of genes (rows) and signatures (columns).
+    """
+    df = pandas.DataFrame(index=[])
+    for i, signature in enumerate(signatures):
+        print('%s - %s' % (i, signature.extraction_id))
+
+        ranked_genes = signature.gene_lists[2].ranked_genes
+        if use_up:
+            genes = [g for g in ranked_genes if g.value > 0]
+        else:
+            genes = [g for g in ranked_genes if g.value < 0]
+        terms, scores = _enrich_gene_signature(genes, library)
+
+        col_title = utils.column_title(i, signature)
+        right = pandas.DataFrame(
+            index=[t for t in terms],
+            columns=[col_title],
+            data=[s for s in scores]
+        )
+
+        if type(right) is not pandas.DataFrame:
+            continue
+
+        df = df.join(right, how='outer')
+
+        if not df.index.is_unique:
+            df = df.groupby(df.index).mean()
+
+    df = df.fillna(0)
+    return df
+
+
+def _enrich_gene_signature(genes, library):
     """Gets enrichment vector from Enrichr.
     """
-    ranked_genes = gene_signature.gene_lists[2].ranked_genes
+    user_list_id = _post_to_enrichr(genes)
+    if not user_list_id:
+        raise Exception('Could not add gene list to Enrichr')
+    enrichr_url = '%s/enrich' % Config.ENRICHR_URL
+    url = '%s?userListId=%s&backgroundType=%s' % (enrichr_url,
+                                                  user_list_id,
+                                                  library)
+    # Enrichr's API does not work without this delay. I think this is because
+    # the ID is returned before the list is saved in the database.
+    time.sleep(1)
+    resp = requests.get(url)
+    if not resp.ok:
+        raise Exception('Could not fetch user list id from Enrichr')
+    return _parse_enrichr_response(resp, library)
 
-    if len(ranked_genes) == 0:
-        print('Skipping because no ranked genes')
-        return
 
-    up_genes = [g for g in ranked_genes if g.value > 0]
-    down_genes = [g for g in ranked_genes if g.value < 0]
-
-    enrichr_id_up = __post_to_enrichr(up_genes)
-    enrichr_id_down = __post_to_enrichr(down_genes)
-
-    return enrichr_id_up, enrichr_id_down
-
-
-def __post_to_enrichr(ranked_genes):
+def _post_to_enrichr(ranked_genes):
+    """Returns userListId after adding gene list to Enrichr.
+    """
     gene_list_str = '\n'.join([rg.gene.name for rg in ranked_genes])
     payload = {
         'list': gene_list_str,
         'description': ''
     }
-    resp = requests.post(ENRICHR_ADD_LIST, files=payload)
+    resp = requests.post('%s/addList' % Config.ENRICHR_URL, files=payload)
     if resp.ok:
         return json.loads(resp.text)['userListId']
     return None
+
+
+def _parse_enrichr_response(resp, library):
+    """Returns terms and scores from Enrichr HTTP response.
+    """
+    # p-value, adjusted pvalue, z-score, combined score, genes
+    # 1: Term
+    # 2: P-value
+    # 3: Z-score
+    # 4: Combined Score
+    # 5: Genes
+    # 6: pval_bh
+    data = json.loads(resp.text)[library]
+    terms = []
+    scores = []
+    for obj in data:
+        terms.append(obj[1])
+        scores.append(obj[4])
+    return terms, scores

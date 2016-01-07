@@ -8,19 +8,16 @@ from substrate import GeneSignature
 
 from gen3va import db
 from gen3va.config import Config
-from .clusterenrichedterms import from_enriched_terms
+from .clusterenrichedterms import prepare_enriched_terms
 from .clusterperturbations import prepare_perturbations
 from .clusterrankedgenes import prepare_ranked_genes
 from gen3va.hierclust import utils
 
 
-CLUSTERGRAMMER_DEFAULT = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
-TYPES = ['genes', 'enrichr', 'l1000cds2']
-
-
 def get_link(type_, **kwargs):
     """Returns link to hierarchical clustering.
     """
+    TYPES = ['genes', 'enrichr', 'l1000cds2']
     if type_ not in TYPES:
         raise ValueError('Invalid type_ argument. Must be in %s' % str(TYPES))
 
@@ -39,13 +36,11 @@ def get_link(type_, **kwargs):
         'filter': 'N_row_sum',
     }
     if type_ == 'enrichr':
-        background_type = kwargs.get('background_type', 'ChEA_2015')
+        library = kwargs.get('library', 'ChEA_2015')
         payload['is_up_down'] = True
-        payload['signature_ids'] = from_enriched_terms(signatures)
-        payload['background_type'] = background_type
-        row_title = 'Enriched terms from %s' % background_type
-        url = '%s/load_Enrichr_gene_lists' % Config.CLUSTERGRAMMER_URL
-        resp = _post(payload, url)
+        payload['columns'] = prepare_enriched_terms(signatures, library)
+        row_title = 'Enriched terms from %s' % library
+        resp = _post(payload)
     elif type_ == 'l1000cds2':
         payload['columns'] = prepare_perturbations(signatures)
         payload['is_up_down'] = True
@@ -63,9 +58,10 @@ def get_link(type_, **kwargs):
     return None
 
 
-def _post(payload, url=CLUSTERGRAMMER_DEFAULT):
+def _post(payload):
     """Utility method for jsonifying payload and POSTing with correct headers.
     """
+    url = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
     payload = json.dumps(payload)
     headers = {'content-type': 'application/json'}
     return requests.post(url, data=payload, headers=headers)

@@ -54,15 +54,15 @@ def __build(report_id):
 
     back_link = __get_back_link(report_id)
 
-    # print('gene visualization')
+    print('gene visualization')
     __cluster_ranked_genes(report_id, back_link)
-    #
-    # print('enrichr visualizations')
-    # for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-    #     __cluster_enriched_terms(report_id, back_link, library)
 
-    # print('l1000cds2 visualization')
-    #__cluster_perturbations(report_id, back_link)
+    print('enrichr visualizations')
+    for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+        __cluster_enriched_terms(report_id, back_link, library)
+
+    print('l1000cds2 visualization')
+    __cluster_perturbations(report_id, back_link)
 
     print('build complete')
     __set_report_ready(report_id)
@@ -124,7 +124,7 @@ def __cluster_enriched_terms(report_id, back_link, library):
         report = session.query(Report).get(report_id)
         link_temp = hierclust.get_link('enrichr',
                                       report=report,
-                                      background_type=library,
+                                      library=library,
                                       back_link=back_link)
         __save_report_link(session,
                            report,
