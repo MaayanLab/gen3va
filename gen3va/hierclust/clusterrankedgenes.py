@@ -1,6 +1,7 @@
 """Prepares ranked genes for hierarchical clustering.
 """
 
+import numpy
 import pandas
 
 from gen3va.hierclust import utils
@@ -14,7 +15,7 @@ def prepare_ranked_genes(signatures):
     """
     columns = []
     df = _get_raw_data(signatures)
-    df = _filter_rows(df, utils.MAX_NUM_ROWS)
+    df = _filter_highest_abs_val_mean_rows(df, utils.MAX_NUM_ROWS)
 
     for col_name in df.columns:
         column = df.ix[:, col_name].tolist()
@@ -31,11 +32,11 @@ def prepare_ranked_genes(signatures):
     return columns
 
 
-def _filter_rows(df, max_num_rows):
+def _filter_highest_abs_val_mean_rows(df, max_num_rows):
     """Removes all rows less than a threshold, ordered by mean.
     """
-    top_genes = df.mean(axis=1).nlargest(max_num_rows).index
-    return df.ix[top_genes]
+    top_rows = numpy.abs(df.mean(axis=1)).nlargest(max_num_rows)
+    return df.ix[top_rows.index]
 
 
 def _get_raw_data(signatures):
