@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.hierclust.clusterperturbations import _build_columns
+from gen3va.hierclust.utils import build_columns
 
 def _in(lst, tpl):
     for t in lst:
@@ -64,7 +64,7 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -1
             }
         ]
-        column_data = _build_columns(mimic, reverse)
+        column_data = build_columns(mimic, reverse)
         self.assertTrue(column_data == answer)
 
     def test_no_sets_with_no_overlap(self):
@@ -96,7 +96,7 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -1
             }
         ]
-        column_data = _build_columns(mimic, reverse)
+        column_data = build_columns(mimic, reverse)
         self.assertTrue(column_data == answer)
 
     def test_with_doubles(self):
@@ -134,5 +134,5 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -0.3
             }
         ]
-        column_data = _build_columns(mimic, reverse)
+        column_data = build_columns(mimic, reverse)
         self.assertTrue(column_data == answer)

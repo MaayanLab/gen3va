@@ -62,26 +62,26 @@ def filter_rows(df, threshold=1):
     return df[enough_non_zeros]
 
 
-def build_columns(mimic, reverse):
+def build_columns(up_vec, down_vec):
     """Builds the column array for Clustergrammer API.
     """
     column_data = []
-    for p in mimic.index.union(reverse.index):
-        if p in mimic.index:
-            mimic_score_temp = mimic[p]
+    for p in up_vec.index.union(down_vec.index):
+        if p in up_vec.index:
+            up_score_temp = up_vec[p]
         else:
-            mimic_score_temp = 0
+            up_score_temp = 0
 
-        if p in reverse.index:
-            reverse_score_temp = reverse[p]
+        if p in down_vec.index:
+            down_score_temp = down_vec[p]
         else:
-            reverse_score_temp = 0
+            down_score_temp = 0
 
         column_data.append({
             'row_name': p,
-            'val': mimic_score_temp + reverse_score_temp,
-            'val_up': mimic_score_temp,
-            'val_dn': reverse_score_temp
+            'val': up_score_temp + down_score_temp,
+            'val_up': up_score_temp,
+            'val_dn': down_score_temp
         })
 
     return column_data

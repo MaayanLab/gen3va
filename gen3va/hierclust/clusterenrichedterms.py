@@ -24,10 +24,10 @@ def prepare_enriched_terms(signatures, library):
 
     columns = []
     for i in range(len(signatures)):
-        mimic_vec = df_up.ix[:,i]
-        reverse_vec = df_down.ix[:,i]
+        up_vec = df_up.ix[:,i]
+        down_vec = df_down.ix[:,i]
 
-        column_data = utils.build_columns(mimic_vec, reverse_vec)
+        column_data = utils.build_columns(up_vec, down_vec)
         columns.append({
             'col_name': utils.column_title(i, signatures[i]),
             'data': column_data
