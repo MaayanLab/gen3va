@@ -41,6 +41,6 @@ class Config(object):
     SUPPORTED_ENRICHR_LIBRARIES = [
         'ChEA_2015', 'ENCODE_TF_ChIP-seq_2015',
         'Epigenomics_Roadmap_HM_ChIP-seq', 'KEGG_2015', 'PPI_Hub_Proteins',
-        'GO_Biological_Process', 'MGI_Mammalian_Phenotype_Level_4',
+        'GO_Biological_Process_2015', 'MGI_Mammalian_Phenotype_Level_4',
         'Single_Gene_Perturbations_from_GEO_up'
     ]
