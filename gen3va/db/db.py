@@ -60,7 +60,6 @@ def get_statistics():
 
             tags.append({
                 'name': tag.name,
-                'is_curated': tag.is_curated,
                 'report_status': report_status,
                 'num_gene_signatures': len(tag.gene_signatures)
             })
