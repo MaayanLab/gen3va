@@ -92,3 +92,12 @@ def c_g2e_url(context, value):
 @jinjafilters.app_template_filter('c_download_url')
 def c_download_url(context, value):
     return '%s/%s' % (Config.DOWNLOAD_URL, value)
+
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_curator_class')
+def c_download_url(context, value):
+    return value\
+        .replace(' ', '-')\
+        .replace('\'', '')\
+        .lower()

@@ -7,9 +7,9 @@
 
     <div class="page" id="index-page">
         <div id="intoduction">
-            <h3><strong>Collections of labeled gene expression signatures extracted from the <a
+            <h3>Collections of labeled gene expression signatures extracted from the <a
                     href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">Gene Expression Omnibus</a> (GEO) and other
-                resources.</strong></h3>
+                resources.</h3>
 
             <p><strong>GEN3VA:</strong> the <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
                 <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures
@@ -19,34 +19,31 @@
                 analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
         </div>
 
-        <div id="legend">
-            <div class="legend-box processed">
-                <div></div>
-                <p><em>Processed</em> - Reports can take a few hours to build. Processed reports are ready for
-                    exploration.</p>
-            </div>
-            <div class="clear"></div>
-            <div class="legend-box curated">
-                <div></div>
-                <p><em>Curated</em> - Gene signatures in curated reports have been quality controlled by the Ma'ayan
-                    Lab.</p>
-            </div>
-            <div class="clear"></div>
-        </div>
-
-        <div id="filters" class="button-group">
-            <button class="btn btn-default is-checked" data-filter="*">All</button>
-            <button class="btn btn-default" data-filter=".ready">Processed</button>
-            <button class="btn btn-default" data-filter=".curated">Curated</button>
-        </div>
+        <ul id="filters" class="list-inline">
+            <button class="btn btn-default is-check ed" data-filter="*">All</button>
+            {% for curator in curators %}
+            <li>
+                {% set curator_class = curator.name|c_curator_class %}
+                <button class="btn btn-default {{ curator_class }}" data-filter=".{{ curator_class }}">
+                    {{ curator.name }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
 
         <div id="isotope">
             {% for tag in tags %}
                 {% if tag.gene_signatures|length > 2 %}
-                    {% set curated_status = 'curated' if tag.is_curated else 'uncurated' %}
-                    {% set tag_status = tag.reports[-1].status if tag.reports|length > 0 else 'unprocessed' %}
-                    <div class="tag-box {{ curated_status }} {{ tag_status }}">
-                        <h5 class="tag-name"><strong>{{ tag.name }}</strong></h5>
+
+                    {% if tag.curator %}
+                        {% set curator_class = tag.curator.name|c_curator_class %}
+                    {% else %}
+                        {% set curator_class = "uncurated" %}
+                    {% endif %}
+
+                    {% set tag_status = tag.get_default_report().status if tag.reports|length > 0 else 'unprocessed' %}
+                    <div class="tag-box {{ curator_class }}">
+                        <h5 class="tag-name">{{ tag.name }}</h5>
 
                         <p class="signature-count">
                             <span>{{ tag.gene_signatures|length }}</span> signatures

@@ -37,7 +37,7 @@ def default_report_endpoint(tag_name):
         new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
         return redirect(new_url)
     else:
-        default_report = __default_report(tag.reports)
+        default_report = tag.get_default_report()
         new_url = '%s/%s/%s' % (Config.REPORT_URL,
                                 default_report.id,
                                 tag.name)
@@ -125,7 +125,7 @@ def build_custom_report(tag_name):
         return render_template('pages/404.html')
 
     extraction_ids = __get_extraction_ids(request)
-    gene_signatures = db.get_gene_signatures(extraction_ids)
+    gene_signatures = db.get_signatures_by_ids(extraction_ids)
     report_id = reportbuilder.build_custom(tag, gene_signatures)
 
     # This endpoint is hit via an AJAX request. JavaScript must perform the
@@ -145,7 +145,6 @@ def __report_status_code(report):
     if report.ready:
         ENDPOINT = 'http://amp.pharm.mssm.edu/clustergrammer/status_check/'
         for viz in report.hier_clusts:
-            print(viz.link)
             clustergrammer_id = viz.link.split('/')[-2:-1][0]
             url = ENDPOINT + str(clustergrammer_id)
             resp = requests.get(url)
@@ -153,15 +152,6 @@ def __report_status_code(report):
                 return 0
         return 1
     return -1
-
-
-def __default_report(reports):
-    """Returns the default report rather than a custom report.
-    """
-    for report in reversed(reports):
-        if report.report_type == 'default':
-            return report
-    return None
 
 
 def __report_by_id(reports, report_id):

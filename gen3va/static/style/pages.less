@@ -24,34 +24,13 @@
       padding-top: 20px;
     }
   }
-  #legend {
-    margin-bottom: 10px;
-    .legend-box {
-      div {
-        height: 19px;
-        width: 50px;
-        float: left;
+  #filters {
+    button {
+      &.bd2k-lincs-dcic-coursera {
+        background-color: @color-palette-yellow;
       }
-      p {
-        float: left;
-        margin-left: 10px;
-        margin-bottom: 5px;
-        font-family: @font-family-accent;
-        font-size: 14px;
-        em {
-          font-weight: bold;
-        }
-      }
-      &.processed {
-        div {
-          background-color: @color-palette-yellow;
-        }
-
-      }
-      &.curated {
-        div {
-          background-color: @color-palette-red;
-        }
+      &.maayan-lab {
+        background-color: @color-palette-red;
       }
     }
   }
@@ -60,12 +39,9 @@
     .tag-box {
       box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
       background-color: @color-gray-very-light;
-      border: 2px solid @color-gray-light;
       padding: 10px;
       margin-right: 10px;
       margin-bottom: 10px;
-      //float: left;
-      //height: 125px;
       p {
         margin: 0;
       }
@@ -83,13 +59,11 @@
       .description {
         max-width: 400px;
       }
-      &.ready {
+      &.bd2k-lincs-dcic-coursera {
         background-color: @color-palette-yellow;
-        border: 2px solid @color-palette-dark-yellow;
       }
-      &.curated {
+      &.maayan-lab {
         background-color: @color-palette-red;
-        border: 2px solid @color-palette-dark-red;
         color: white;
         h5 {
           color: white;

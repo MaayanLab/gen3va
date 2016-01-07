@@ -23,29 +23,11 @@
   margin-top: 15px;
   padding-top: 20px;
 }
-#index-page #legend {
-  margin-bottom: 10px;
-}
-#index-page #legend .legend-box div {
-  height: 19px;
-  width: 50px;
-  float: left;
-}
-#index-page #legend .legend-box p {
-  float: left;
-  margin-left: 10px;
-  margin-bottom: 5px;
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 14px;
-}
-#index-page #legend .legend-box p em {
-  font-weight: bold;
-}
-#index-page #legend .legend-box.processed div {
+#index-page #filters button.bd2k-lincs-dcic-coursera {
   background-color: #ffd34e;
 }
-#index-page #legend .legend-box.curated div {
-  background-color: #e74c3c;
+#index-page #filters button.maayan-lab {
+  background-color: #f15a5a;
 }
 #index-page #isotope {
   margin-top: 10px;
@@ -53,7 +35,6 @@
 #index-page #isotope .tag-box {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.26);
   background-color: #f9f9f9;
-  border: 2px solid #eeeeee;
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -75,23 +56,21 @@
 #index-page #isotope .tag-box .description {
   max-width: 400px;
 }
-#index-page #isotope .tag-box.ready {
+#index-page #isotope .tag-box.bd2k-lincs-dcic-coursera {
   background-color: #ffd34e;
-  border: 2px solid #cd9a00;
 }
-#index-page #isotope .tag-box.curated {
-  background-color: #e74c3c;
-  border: 2px solid #bf2718;
+#index-page #isotope .tag-box.maayan-lab {
+  background-color: #f15a5a;
   color: white;
 }
-#index-page #isotope .tag-box.curated h5 {
+#index-page #isotope .tag-box.maayan-lab h5 {
   color: white;
 }
-#index-page #isotope .tag-box.curated a {
+#index-page #isotope .tag-box.maayan-lab a {
   /* Light blue, lighter than @color-palette-baby-blue. */
   color: #a7e2fd;
 }
-#index-page #isotope .tag-box.curated a:hover {
+#index-page #isotope .tag-box.maayan-lab a:hover {
   color: #75d2fc;
 }
 #statistics-page #platforms-bar-chart {
@@ -101,7 +80,7 @@
   border-bottom: 1px solid #eeeeee;
 }
 #report-page .notification {
-  color: #e74c3c;
+  color: #f15a5a;
   font-size: 14px;
   font-weight: bold;
 }
