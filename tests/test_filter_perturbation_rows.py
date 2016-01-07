@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.hierclust.utils import filter_rows
+from gen3va.hierclust.filters import filter_rows_by_non_empty
 
 
 class TestFilterRows(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestFilterRows(unittest.TestCase):
             data=[[1, 0, 1],
                   [1, 1, 1]]
         )
-        df_filter = filter_rows(df, 1)
+        df_filter = filter_rows_by_non_empty(df, 1)
         self.assertTrue((answer == df_filter).all().all())
 
     def test_threshold_2(self):
@@ -36,7 +36,7 @@ class TestFilterRows(unittest.TestCase):
 
         answer = pandas.DataFrame(index=['d'],
                                   data=[[1, 1, 1]])
-        df_filter = filter_rows(df, 2)
+        df_filter = filter_rows_by_non_empty(df, 2)
         self.assertTrue((answer == df_filter).all().all())
 
     def test_negatives_real_numbers_etc(self):
@@ -54,5 +54,5 @@ class TestFilterRows(unittest.TestCase):
                   [5,    0, 1],
                   [9,    9, 9]]
         )
-        df_filter = filter_rows(df)
+        df_filter = filter_rows_by_non_empty(df)
         self.assertTrue((answer == df_filter).all().all())

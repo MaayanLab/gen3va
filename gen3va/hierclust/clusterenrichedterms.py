@@ -9,19 +9,19 @@ import requests
 from requests.exceptions import RequestException
 
 from gen3va import Config
-from gen3va.hierclust import utils
+from gen3va.hierclust import filters, utils
 
 
 def prepare_enriched_terms(signatures, library):
     """Prepares enriched terms for hierarchical clustering.
     """
-    max_num_rows = utils.MAX_NUM_ROWS / 2
+    max_num_rows = filters.MAX_NUM_ROWS / 2
 
     df_up = _get_raw_data(signatures, library, True)
-    df_up = utils.filter_rows_until(df_up, max_num_rows)
+    df_up = filters.filter_rows_by_highest_abs_val_mean(df_up, max_num_rows)
 
     df_down = _get_raw_data(signatures, library, False)
-    df_down = utils.filter_rows_until(df_down, max_num_rows)
+    df_down = filters.filter_rows_by_highest_abs_val_mean(df_down, max_num_rows)
 
     columns = []
     for i in range(len(signatures)):
@@ -52,8 +52,15 @@ def _get_raw_data(signatures, library, use_up):
 
         try:
             terms, scores = _enrich_gene_signature(genes, library)
-        except RequestException:
-            continue
+        except RequestException as e:
+            print(e)
+            terms, scores = [], []
+
+        # We eliminate negative combined scores when collecting the data, but
+        # visually--and in clustering--we want to think of combined scores as
+        # negative if they come from the down list.
+        if not use_up:
+            scores = [-s for s in scores]
 
         col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
@@ -111,18 +118,27 @@ def _post_to_enrichr(ranked_genes):
 
 def _parse_enrichr_response(resp, library):
     """Returns terms and scores from Enrichr HTTP response.
-    """
-    # p-value, adjusted pvalue, z-score, combined score, genes
+
+    Enrichr's response object should contain the following:
+    # 0: Index
     # 1: Term
     # 2: P-value
     # 3: Z-score
     # 4: Combined Score
     # 5: Genes
     # 6: pval_bh
-    data = json.loads(resp.text)[library]
+    """
+    results = json.loads(resp.text)[library]
     terms = []
     scores = []
-    for obj in data:
-        terms.append(obj[1])
-        scores.append(obj[4])
-    return terms, scores
+    for r in results:
+        term = r[1]
+        p_value = r[2]
+        combined_score = r[4]
+        if p_value > 0.05:
+            continue
+        if combined_score < 0:
+            continue
+        terms.append(term)
+        scores.append(combined_score)
+    return terms[:50], scores[:50]

@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.hierclust.clusterrankedgenes import _filter_highest_abs_val_mean_rows
+from gen3va.hierclust.filters import filter_rows_by_highest_abs_val_mean
 
 
 class TestFilterRows(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestFilterRows(unittest.TestCase):
             data=[[1, 2, 1],
                   [0, -4, 1]]
         )
-        df_filter = _filter_highest_abs_val_mean_rows(df, 2)
+        df_filter = filter_rows_by_highest_abs_val_mean(df, 2)
         self.assertTrue((answer == df_filter).all().all())
 
     def test_mean_not_variance(self):
@@ -38,5 +38,5 @@ class TestFilterRows(unittest.TestCase):
             index=['b'],
             data=[[34, 34, 34]]
         )
-        df_filter = _filter_highest_abs_val_mean_rows(df, 1)
+        df_filter = filter_rows_by_highest_abs_val_mean(df, 1)
         self.assertTrue((answer == df_filter).all().all())

@@ -4,9 +4,6 @@
 import urllib
 
 
-MAX_NUM_ROWS = 1000
-
-
 def column_title(i, gene_signature):
     """Utility method for normalizing how column names are built across
     hierarchical clusterings.
@@ -30,36 +27,6 @@ def link(base, row_title, col_title='Gene signatures'):
        '&row_label={1}' \
        '&col_label={2}' \
        '&N_row_sum=100'.format(base, row_title, col_title)
-
-
-def filter_rows_until(df, max_num_rows):
-    """Removes all rows with mostly zeros until the number of rows reaches a
-    provided max number.
-    """
-    print('Starting shape: %s' % str(df.shape))
-    threshold = 1
-    while df.shape[0] > max_num_rows:
-        df = filter_rows(df, threshold=threshold)
-        print('Thresholded to shape: %s' % str(df.shape))
-        threshold += 1
-    print('Ending shape: %s' % str(df.shape))
-    return df
-
-
-def filter_rows(df, threshold=1):
-    """Removes all rows with mostly zeros, "mostly" defined by threshold.
-    """
-    # Boolean DataFrame where `True` means the cell value is non-zero.
-    non_zeros = df.applymap(lambda cell: cell != 0)
-
-    # Boolean Series where `True` means the row has enough non-zeros.
-    enough_non_zeros = non_zeros.apply(
-        # Check that the row contains `True`, meaning it has a non-zero.
-        # check that the row has enough non-zeros, i.e. more than the threshold.
-        lambda row: True in row.value_counts() and row.value_counts()[True] > threshold,
-        axis=1
-    )
-    return df[enough_non_zeros]
 
 
 def build_columns(up_vec, down_vec):

@@ -8,7 +8,7 @@ import pandas
 import requests
 
 from gen3va import Config
-from gen3va.hierclust import utils
+from gen3va.hierclust import filters, utils
 
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
@@ -20,13 +20,13 @@ def prepare_perturbations(signatures):
     # Since this visualization contains both mimic and reverse values, the
     # combined matrix will, in the worst case scenario or no overlap, be
     # the max size.
-    max_num_rows = utils.MAX_NUM_ROWS / 2
+    max_num_rows = filters.MAX_NUM_ROWS / 2
 
     df_m = _get_raw_data(signatures, True)
-    df_m = utils.filter_rows_until(df_m, max_num_rows)
+    df_m = filters.filter_rows_by_non_empty_until(df_m, max_num_rows)
 
     df_r = _get_raw_data(signatures, False)
-    df_r = utils.filter_rows_until(df_r, max_num_rows)
+    df_r = filters.filter_rows_by_non_empty_until(df_r, max_num_rows)
 
     columns = []
     for i in range(len(signatures)):
@@ -92,7 +92,6 @@ def _mimic_or_reverse_signature(signature, use_mimic):
     perts = []
     scores = []
     top_meta = json.loads(resp.text)['topMeta']
-    top_meta = top_meta[:25]
     for obj in top_meta:
         desc_temp = obj['pert_desc']
         if desc_temp == '-666':
