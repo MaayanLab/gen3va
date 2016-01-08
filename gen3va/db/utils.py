@@ -38,7 +38,7 @@ def bare_session_scope():
         yield threaded_session
         threaded_session.commit()
     except:
-        threaded_session.rollback()
+        Session.rollback()
         raise
     finally:
         Session.remove()
