@@ -40,18 +40,16 @@ def get_link(type_, **kwargs):
         payload['is_up_down'] = True
         payload['columns'] = prepare_enriched_terms(signatures, library)
         row_title = 'Enriched terms from %s' % library
-        resp = _post(payload)
     elif type_ == 'l1000cds2':
         payload['columns'] = prepare_perturbations(signatures)
         payload['is_up_down'] = True
         row_title = 'Perturbations from L1000CDS2'
-        resp = _post(payload)
     elif type_ == 'genes':
         payload['columns'] = prepare_ranked_genes(signatures)
         payload['is_up_down'] = False
         row_title = 'Genes'
-        resp = _post(payload)
 
+    resp = _post(payload)
     if resp.ok:
         link_base = json.loads(resp.text)['link']
         return utils.link(link_base, row_title)
