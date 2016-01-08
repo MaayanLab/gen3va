@@ -4,10 +4,8 @@
 
 from contextlib import contextmanager
 
-from sqlalchemy.orm import scoped_session
-
 from substrate import db as substrate_db
-from gen3va import session_factory
+from gen3va import Session
 
 
 @contextmanager
@@ -26,20 +24,20 @@ def session_scope():
 
 
 @contextmanager
-def bare_session_scope():
+def thread_local_session_scope():
     """Provide a transactional scope around a series of operations.
     Context is local to current thread.
     """
     # See this StackOverflow answer for details:
     # http://stackoverflow.com/a/18265238/1830334
-    Session = scoped_session(session_factory)
     threaded_session = Session()
     try:
         yield threaded_session
         threaded_session.commit()
-    except:
+    except Exception as e:
         Session.rollback()
-        raise
+        print('Exception in thread-local session:')
+        print(e)
     finally:
         Session.remove()
 
