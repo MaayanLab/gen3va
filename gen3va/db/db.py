@@ -4,8 +4,8 @@ and their relationships and saves them accordingly.
 
 import sqlalchemy as sa
 
-from substrate import GeneList, GeneSignature, GeoDataset, Report, SoftFile,\
-    Tag
+from substrate import Curator, GeneList, GeneSignature, GeoDataset, Report,\
+    SoftFile, Tag
 
 from gen3va.db.utils import session_scope
 
@@ -44,6 +44,17 @@ def get_signatures_by_ids(extraction_ids):
         return session\
             .query(GeneSignature)\
             .filter(GeneSignature.extraction_id.in_(extraction_ids))\
+            .all()
+
+
+def get_tags_by_curator(curator):
+    """Returns all tags by a particular curator
+    """
+    with session_scope() as session:
+        return session\
+            .query(Tag)\
+            .filter(Tag.curator_fk == Curator.id)\
+            .filter(Curator.name == curator)\
             .all()
 
 

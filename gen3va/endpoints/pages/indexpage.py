@@ -1,7 +1,7 @@
 """Serves home page.
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 from substrate import Curator, Tag
 from gen3va.config import Config
@@ -15,8 +15,13 @@ index_page = Blueprint('index_page',
 
 @index_page.route('/')
 def index():
-    tags = db.get_all(Tag)
-    curators = db.get_all(Curator)
+    curator = request.args.get('curator')
+    if curator:
+        tags = db.get_tags_by_curator(curator)
+        curators = None
+    else:
+        tags = db.get_all(Tag)
+        curators = db.get_all(Curator)
     return render_template('index.html',
                            tags=tags,
                            curators=curators,

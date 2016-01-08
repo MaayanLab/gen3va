@@ -19,17 +19,19 @@
                 analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
         </div>
 
-        <ul id="filters" class="list-inline">
-            <button class="btn btn-default is-check ed" data-filter="*">All</button>
-            {% for curator in curators %}
-            <li>
-                {% set curator_class = curator.name|c_curator_class %}
-                <button class="btn btn-default {{ curator_class }}" data-filter=".{{ curator_class }}">
-                    {{ curator.name }}
-                </button>
-            </li>
-            {% endfor %}
-        </ul>
+        {% if curators %}
+            <ul id="filters" class="list-inline">
+                <button class="btn btn-default is-check ed" data-filter="*">All</button>
+                {% for curator in curators %}
+                <li>
+                    {% set curator_class = curator.name|c_curator_class %}
+                    <button class="btn btn-default {{ curator_class }}" data-filter=".{{ curator_class }}">
+                        {{ curator.name }}
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <div id="isotope">
             {% for tag in tags %}
