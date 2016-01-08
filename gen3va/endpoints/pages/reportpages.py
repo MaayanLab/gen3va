@@ -64,6 +64,7 @@ def default_report_by_id_endpoint(report_id, tag_name):
     if report_status_code == 1:
         pca_json = report.pca_visualization.data
         enrichr_links = [viz for viz in report.hier_clusts if viz.viz_type == 'enrichr']
+        enrichr_libraries = [viz.enrichr_library for viz in enrichr_links]
 
         gene_hier_clust = None
         l1000cds_hier_clust = None
@@ -79,7 +80,7 @@ def default_report_by_id_endpoint(report_id, tag_name):
                                gene_signatures=gene_signatures,
                                gene_hier_clust=gene_hier_clust,
                                enrichr_links=enrichr_links,
-                               enrichr_libraries=Config.SUPPORTED_ENRICHR_LIBRARIES,
+                               enrichr_libraries=enrichr_libraries,
                                l1000cds_hier_clust=l1000cds_hier_clust,
                                pca_json=pca_json)
 
