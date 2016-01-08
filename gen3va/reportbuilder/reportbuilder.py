@@ -60,7 +60,6 @@ def __build(report_id):
     print('enrichr visualizations')
     for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
         __cluster_enriched_terms(report_id, back_link, library)
-    __cluster_enriched_terms(report_id, back_link, 'ChEA_2015')
 
     print('l1000cds2 visualization')
     __cluster_perturbations(report_id, back_link)
