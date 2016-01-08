@@ -28,6 +28,7 @@ def rebuild(report):
     with session_scope() as session:
         report.reset()
         session.merge(report)
+    print('rebuild report for %s' % report.tag.name)
     thread = Thread(target=__build, args=(report.id,))
     thread.daemon = True
     thread.start()
@@ -157,7 +158,6 @@ def __save_report_link(session, report, link, viz_type, library=None):
     """Utility method for saving link based on report ID.
     """
     # title, description, link, viz_type, target_app
-    title = ''
     target_app = get_or_create_with_session(session,
                                             TargetApp,
                                             name='clustergrammer')
@@ -165,7 +165,10 @@ def __save_report_link(session, report, link, viz_type, library=None):
                                         viz_type,
                                         target_app,
                                         enrichr_library=library)
-    print(hier_clust.viz_type)
+    message = hier_clust.viz_type
+    if library:
+        message += ' - %s' % library
+    print(message)
     report.set_hier_clust(hier_clust)
     session.merge(report)
     session.commit()
