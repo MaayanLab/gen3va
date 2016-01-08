@@ -27,8 +27,7 @@ def get_link(type_, **kwargs):
             signature = db.get(GeneSignature, extraction_id, 'extraction_id')
             signatures.append(signature)
     else:
-        report = kwargs.get('report')
-        signatures = report.get_gene_signatures()
+        signatures = kwargs.get('signatures')
 
     payload = {
         'title': 'gen3va',
