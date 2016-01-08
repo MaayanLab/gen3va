@@ -4,9 +4,10 @@
 
 from contextlib import contextmanager
 
-from substrate import db
+from sqlalchemy.orm import scoped_session
 
-from gen3va import Session
+from substrate import db as substrate_db
+from gen3va import session_factory
 
 
 @contextmanager
@@ -15,12 +16,12 @@ def session_scope():
     Context is HTTP request thread using Flask-SQLAlchemy.
     """
     try:
-        yield db.session
-        db.session.commit()
+        yield substrate_db.session
+        substrate_db.session.commit()
     except Exception as e:
         print 'Rolling back database'
         print e
-        db.session.rollback()
+        substrate_db.session.rollback()
     # Flask-SQLAlchemy handles closing the session after the HTTP request.
 
 
@@ -29,25 +30,28 @@ def bare_session_scope():
     """Provide a transactional scope around a series of operations.
     Context is local to current thread.
     """
-    session = Session()
+    # See this StackOverflow answer for details:
+    # http://stackoverflow.com/a/18265238/1830334
+    Session = scoped_session(session_factory)
+    threaded_session = Session()
     try:
-        yield session
-        session.commit()
+        yield threaded_session
+        threaded_session.commit()
     except:
-        session.rollback()
+        threaded_session.rollback()
         raise
     finally:
-        session.close()
+        Session.remove()
 
 
 def get_or_create(model, **kwargs):
-    instance = db.session.query(model).filter_by(**kwargs).first()
+    instance = substrate_db.session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
     else:
         instance = model(**kwargs)
-        db.session.add(instance)
-        db.session.commit()
+        substrate_db.session.add(instance)
+        substrate_db.session.commit()
         return instance
 
 

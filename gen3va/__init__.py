@@ -30,7 +30,7 @@ cors = CORS(app)
 # Create a standalone session factory for non Flask-SQLAlchemy transactions.
 # See reportbuilder.py.
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
-Session = sessionmaker(bind=engine)
+session_factory = sessionmaker(bind=engine)
 
 if not Config.DEBUG:
     # Configure Apache logging.
