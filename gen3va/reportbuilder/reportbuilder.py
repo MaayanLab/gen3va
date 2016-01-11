@@ -120,7 +120,8 @@ def _cluster(report_id, back_link, type_):
         link = hierclust.get_link(type_,
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    _save_report_link(report_id, link, type_)
+    if link:
+        _save_report_link(report_id, link, type_)
 
 
 def _cluster_ranked_genes(report_id, back_link):
@@ -132,7 +133,8 @@ def _cluster_ranked_genes(report_id, back_link):
         link = hierclust.get_link('genes',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    _save_report_link(report_id, link, 'gen3va')
+    if link:
+        _save_report_link(report_id, link, 'gen3va')
 
 
 def _cluster_perturbations(report_id, back_link):
@@ -145,7 +147,8 @@ def _cluster_perturbations(report_id, back_link):
         link = hierclust.get_link('l1000cds2',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    _save_report_link(report_id, link, 'l1000cds2')
+    if link:
+        _save_report_link(report_id, link, 'l1000cds2')
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):
@@ -169,7 +172,8 @@ def _cluster_enriched_terms(report_id, back_link, library):
                                   signatures=report.gene_signatures,
                                   library=library,
                                   back_link=back_link)
-    _save_report_link(report_id, link, 'enrichr', library=library)
+    if link:
+        _save_report_link(report_id, link, 'enrichr', library=library)
 
 
 def _save_report(report, gene_signatures=None):
