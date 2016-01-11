@@ -20,11 +20,7 @@ def download_by_report_id(report_id):
     report = db.get(Report, report_id)
     print(report.id)
     result = 'accession\torganism\tplatform\ttitle\n'
-    if report.report_type == 'custom':
-        gene_signatures = report.gene_signatures
-    else:
-        gene_signatures = report.tag.gene_signatures
-    for gene_signature in gene_signatures:
+    for gene_signature in report.gene_signatures:
         result += _build_row(gene_signature)
     response = Response(result, mimetype='x-text/plain')
     return response
