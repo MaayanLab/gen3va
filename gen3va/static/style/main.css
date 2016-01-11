@@ -33,7 +33,7 @@ input {
   font-size: 13px;
 }
 a {
-  color: #428bca;
+  color: #1689e5;
   text-decoration: none;
 }
 a:hover {
@@ -105,6 +105,7 @@ select {
   padding-right: 1.5em !important;
   border-radius: 0 !important;
   line-height: inherit !important;
+  border-color: #7fb800;
 }
 pre,
 .code {
@@ -229,7 +230,7 @@ caption {
   display: block;
 }
 .label {
-  background-color: #428bca;
+  background-color: #1689e5;
   border-radius: 0;
   font-size: 12px;
 }
@@ -249,7 +250,7 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-  background-color: #004561;
+  background-color: #17406b;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
@@ -259,8 +260,9 @@ caption {
   color: white;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
-  font-weight: 200;
+  font-weight: 300;
   text-decoration: none;
+  text-transform: uppercase;
 }
 #header a:hover {
   cursor: pointer;
@@ -272,15 +274,16 @@ caption {
 #header .nav.navbar-nav.navbar-right a:hover,
 #header .nav.navbar-nav.navbar-right a:focus {
   opacity: .8;
-  background-color: #004561;
+  background-color: #17406b;
 }
-#header ul.nav li {
-  border-right: 1px solid white;
+#header ul.nav {
+  position: relative;
+  top: 10px;
 }
 #header ul.nav li a {
   line-height: inherit;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 0;
 }
 #header ul.nav li a:hover {
   transition: background-color 0.25s ease-in-out;
@@ -304,7 +307,8 @@ caption {
   padding-bottom: 50px;
 }
 #footer {
-  border-top: 1px solid #aaaaaa;
+  background-color: #f9f9f9;
+  border-top: 1px solid #eee;
 }
 #footer a,
 #footer p {
@@ -321,6 +325,56 @@ caption {
 }
 /* Library Overrides
  * ----------------- */
+.btn {
+  padding: 2px 6px;
+  border-radius: 0;
+  border: none;
+  font-size: 13px;
+}
+.btn.btn-default {
+  border: 1px solid #eee;
+}
+.btn.btn-primary {
+  background-color: #1689e5;
+}
+.btn.btn-primary:hover {
+  background-color: #126db6;
+  -webkit-transition: background-color 200ms linear;
+  -moz-transition: background-color 200ms linear;
+  -o-transition: background-color 200ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+}
+.btn.btn-info {
+  background-color: #7fb800;
+}
+.btn.btn-info:hover {
+  background-color: #4C6E00;
+  -webkit-transition: background-color 200ms linear;
+  -moz-transition: background-color 200ms linear;
+  -o-transition: background-color 200ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+}
+div.dataTables_wrapper .pagination,
+div.dataTables_wrapper .pagination li a,
+div.dataTables_wrapper input {
+  border-radius: 0;
+}
+div.dataTables_wrapper .pagination > li > a,
+div.dataTables_wrapper .pagination > li > span {
+  color: black;
+}
+div.dataTables_wrapper .pagination > .active > a,
+div.dataTables_wrapper .pagination > .active > a:focus,
+div.dataTables_wrapper .pagination > .active > a:hover,
+div.dataTables_wrapper .pagination > .active > span,
+div.dataTables_wrapper .pagination > .active > span:focus,
+div.dataTables_wrapper .pagination > .active > span:hover {
+  border-color: #7fb800;
+  background-color: #7fb800;
+  color: white;
+}
 .ui-widget {
   font-family: arial, sans-serif;
   font-size: 13px;

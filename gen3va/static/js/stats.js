@@ -1,7 +1,7 @@
 function buildStats(stats) {
 
     Highcharts.setOptions({
-        colors: ['#428bca', '#005f99'],
+        colors: ['#1689E5'],
         chart: {
             style: {
                 fontFamily: 'Roboto'

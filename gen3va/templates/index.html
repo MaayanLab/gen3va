@@ -21,7 +21,7 @@
 
         {% if curators %}
             <ul id="filters" class="list-inline">
-                <button class="btn btn-default is-check ed" data-filter="*">All</button>
+                <button class="btn btn-default is-checked" data-filter="*">All</button>
                 {% for curator in curators %}
                 <li>
                     {% set curator_class = curator.name|c_curator_class %}

@@ -13,7 +13,6 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Results</th>
                         <th>Title</th>
                         <th>Organism</th>
                         <th>Platform</th>
@@ -25,13 +24,13 @@
                         {% set dataset = gene_signature.soft_file.dataset %}
                         <tr>
                             <td class="index">{{ loop.index }}</td>
-                            <td class="results" >
-                                <a href="{{ gene_signature.extraction_id|c_results_url }}">
-                                    <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
-                                </a>
-                            </td>
                             <td class="title">
-                                {{ dataset.title|c_filter_empty }}
+                                {% set title = dataset.title if dataset.title else 'Link to results page' %}
+                                <a data-toggle="tooltip"
+                                   title="Results page for the processed gene signature."
+                                   href="{{ gene_signature.extraction_id|c_results_url }}">
+                                     {{ title }}
+                                </a>
                             </td>
                             <td class="organism">
                                 {{ dataset.organism|c_filter_empty }}

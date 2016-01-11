@@ -27,7 +27,7 @@ $(function() {
     window.plotPCA = function plotPCA(pcaObj, container, tooltipFormatter) {
 
         Highcharts.setOptions({
-            colors: ['#428bca', '#004561']
+            colors: ['#1689E5']
         });
 
         container = container || 'pca-container';

@@ -78,8 +78,9 @@
 #statistics-page #platforms-bar-chart {
   height: 1000px;
 }
-#report-page h4 {
+#report-page h2 {
   border-bottom: 1px solid #eeeeee;
+  font-weight: 400;
 }
 #report-page .notification {
   color: #f15a5a;
@@ -90,7 +91,10 @@
 #report-page #pca-container {
   border: 1px solid #eeeeee;
 }
-#report-page #enrichr-hier-clusts .description {
+#report-page .description {
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 #report-page #gene-signatures-table .download-link {
@@ -102,27 +106,6 @@
 }
 #report-page .section {
   padding-top: 20px;
-}
-#report-page .section h4 {
-  font-weight: bold;
-}
-#report-page .pagination,
-#report-page .pagination li a,
-#report-page input {
-  border-radius: 0;
-}
-#report-page .pagination > li > a,
-#report-page .pagination > li > span {
-  color: #004561;
-}
-#report-page .pagination > .active > a,
-#report-page .pagination > .active > a:focus,
-#report-page .pagination > .active > a:hover,
-#report-page .pagination > .active > span,
-#report-page .pagination > .active > span:focus,
-#report-page .pagination > .active > span:hover {
-  border-color: #aaaaaa;
-  background-color: #eeeeee;
 }
 #tag-page .note,
 #tags-all-page .note,

@@ -25,12 +25,10 @@
 
         <!-- Gene signatures -->
         <div id="gene-signatures-table" class="section">
-            <h4>Gene signatures</h4>
+            <h2>Gene signatures</h2>
             <p>
-                <a href="{{ tag.name|c_tag_url }}">{{ report.gene_signatures|length }} processed gene signatures</a>
-            </p>
-            <p class="download-link">
-                <a href="{{ report.id|c_download_url }}" target="_blank">Download genes signatures as TSV</a>
+                <a class="btn btn-primary" href="{{ tag.name|c_tag_url }}">{{ report.gene_signatures|length }} processed gene signatures</a>
+                <a class="btn btn-info" href="{{ report.id|c_download_url }}" target="_blank">Download genes signatures as TSV</a>
             </p>
             <div class="table-responsive">
                 <table class="table data-table responsive">
@@ -70,8 +68,10 @@
         <!-- Principal Component Analysis -->
         {% if pca_json %}
             <div class="section">
-                <h4>PCA</h4>
-                <p>Interactive 3D principal component analysis of gene signatures. You can rotate the visualization and mouse over the data points.</p>
+                <h2>PCA</h2>
+                <div class="description">
+                    <p>Interactive 3D principal component analysis of gene signatures. You can rotate the visualization and mouse over the data points.</p>
+                </div>
                 <div id="pca-container"></div>
             </div>
             <script>
@@ -84,8 +84,10 @@
         <!-- Genes hierarchical clusterings -->
         {% if report.genes_hier_clust %}
             <div class="section">
-                <h4>Genes</h4>
-                <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
+                <h2>Genes</h2>
+                <div class="description">
+                    <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
+                </div>
                 <iframe src="{{ report.genes_hier_clust.link }}"></iframe>
             </div>
         {% endif %}
@@ -93,14 +95,15 @@
         <!-- Enrichr hierarchical clusterings -->
         {% if report.enrichr_hier_clusts|length > 0 %}
             <div id="enrichr-hier-clusts" class="section">
-                <h4>Enrichr</h4>
+                <h2>Enrichr</h2>
                 <div class="description">
-                    <span>Hierarchical clustering of enriched terms from</span>
+                    <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is a web tool that performs gene set enrichment analysis.  To generate the hierarchical clusterings below, GEN3VA enriched each gene signature using Enrichr and then clustered the terms. Use the <strong>select</strong> button to change Enrichr's background library.</p>
+                    <p>Hierarchical clustering of enriched terms from
                     <select>
                         {% for library in enrichr_libraries %}
                             <option>{{ library }}</option>
                         {% endfor %}
-                    </select>
+                    </select></p>
                 </div>
                 {% for clust in report.enrichr_hier_clusts %}
                     <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
@@ -111,8 +114,10 @@
         <!-- L1000CD2 hierarchical clusterings -->
         {% if report.l1000cds2_hier_clust %}
             <div class="section">
-                <h4>L1000CDS2</h4>
-                <p>Hierarchical clustering of perturbations that mimic (red) and reverse (blue) expression</p>
+                <h2>L1000CDS2</h2>
+                <div class="description">
+                    <p><a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">L1000CDS2</a> is a web tool that queries the LINCS L1000 dataset to identify small molecules that can reverse or mimic the observed input expression pattern. To generate the hierarchical clustering below, GEN3VA enriched each gene signature using L1000CDS2 to generate a list of perturbations that mimic (red) and reverse (blue) expressionh.</p>
+                </div>
                 <iframe src="{{ report.l1000cds2_hier_clust.link }}"></iframe>
             </div>
         {% endif %}

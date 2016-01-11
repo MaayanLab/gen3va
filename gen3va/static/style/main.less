@@ -121,6 +121,7 @@ select {
   padding-right: 1.5em !important;
   border-radius: 0 !important;
   line-height: inherit !important;
+  border-color: @color-green;
 }
 
 pre,
@@ -275,7 +276,7 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-  background-color: @color-palette-blue;
+  background-color: @color-palette-navy;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
@@ -284,8 +285,9 @@ caption {
     color: white;
     font-family: @font-family-accent;
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 300;
     text-decoration: none;
+    text-transform: uppercase;
     &:hover {
       cursor: pointer;
       color: @color-gray-very-light;
@@ -297,17 +299,18 @@ caption {
       &:hover,
       &:focus {
         opacity: .8;
-        background-color: @color-palette-blue;
+        background-color: @color-palette-navy;
       }
     }
   }
   ul.nav {
+    position: relative;
+    top: 10px;
     li {
-      border-right: 1px solid white;
       a {
         line-height: inherit;
         padding-top: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 0;
         &:hover {
           transition: background-color .25s ease-in-out;
           -moz-transition: background-color .25s ease-in-out;
@@ -336,7 +339,8 @@ caption {
 }
 
 #footer {
-  border-top: 1px solid @color-gray;
+  background-color: #f9f9f9;
+  border-top: 1px solid #eee;
   a,
   p {
     font-size: 12px;
@@ -354,6 +358,60 @@ caption {
 
 /* Library Overrides
  * ----------------- */
+.btn {
+  padding: 2px 6px;
+  border-radius: 0;
+  border: none;
+  font-size: 13px;
+  &.btn-default {
+    border: 1px solid #eee;
+  }
+  &.btn-primary {
+    background-color: @color-blue;
+    &:hover {
+      background-color: #126db6;
+      -webkit-transition: @background-transition;
+      -moz-transition: @background-transition;
+      -o-transition: @background-transition;
+      -ms-transition: @background-transition;
+      transition: @background-transition;
+    }
+  }
+  &.btn-info {
+    background-color: @color-green;
+    &:hover {
+      background-color: #4C6E00;
+      -webkit-transition: @background-transition;
+      -moz-transition: @background-transition;
+      -o-transition: @background-transition;
+      -ms-transition: @background-transition;
+      transition: @background-transition;
+    }
+  }
+}
+
+div.dataTables_wrapper {
+  .pagination,
+  .pagination li a,
+  input {
+    border-radius: 0;
+  }
+  .pagination > li > a,
+  .pagination > li > span {
+    color: black;
+  }
+  .pagination > .active > a,
+  .pagination > .active > a:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > span,
+  .pagination > .active > span:focus,
+  .pagination > .active > span:hover {
+    border-color: @color-green;
+    background-color: @color-green;
+    color: white;
+  }
+}
+
 .ui-widget {
   font-family: @font-family-base;
   font-size: 13px;

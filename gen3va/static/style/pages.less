@@ -94,8 +94,9 @@
 }
 
 #report-page {
-  h4 {
+  h2 {
     border-bottom: 1px solid @color-gray-light;
+    font-weight: 400;
   }
   .notification {
     color: @color-palette-red;
@@ -106,10 +107,11 @@
   #pca-container {
     border: 1px solid @color-gray-light;
   }
-  #enrichr-hier-clusts {
-    .description {
-      margin-bottom: 10px;
-    }
+  .description {
+    font-family: @font-family-accent;
+    font-weight: 300;
+    font-size: 16px;
+    margin-bottom: 10px;
   }
   #gene-signatures-table {
     .download-link {
@@ -122,35 +124,13 @@
   }
   .section {
     padding-top: 20px;
-    h4 {
-      font-weight: bold;
-    }
-  }
-  .pagination,
-  .pagination li a,
-  input {
-    border-radius: 0;
-  }
-  .pagination > li > a,
-  .pagination > li > span {
-    color: @color-palette-blue;
-  }
-  .pagination > .active > a,
-  .pagination > .active > a:focus,
-  .pagination > .active > a:hover,
-  .pagination > .active > span,
-  .pagination > .active > span:focus,
-  .pagination > .active > span:hover {
-    border-color: @color-gray;
-    background-color: @color-gray-light;
   }
 }
 
 #tag-page,
 #tags-all-page,
 #report-page,
-#reports-all-page
- {
+#reports-all-page {
   .note {
     font-size: 12px;
     font-weight: normal;
