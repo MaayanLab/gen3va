@@ -4,30 +4,9 @@
 
 {% block body %}
 
-    <script src="static/js/custom-report-builder.js"></script>
-
     <div class="page" id="tag-page">
 
         <h1>{{ num_tags }} gene signatures for <strong>{{ tag.name }}</strong></h1>
-
-        <div id="custom-report-builder">
-            <div class="description">
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="report-tag-inter-link">
-                            <a href="{{ report_url }}/{{ tag.name }}">View default report</a>
-                        </p>
-                        <h4>Build a custom report</h4>
-                        <ol>
-                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
-                            <li>You must select at least 3 signatures.</li>
-                            <li>Click <em>Build report</em></li>
-                        </ol>
-                        <button class="btn btn-default">Build report</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="table-responsive">
             <table class="table data-table responsive">
@@ -39,9 +18,6 @@
                         <th>Organism</th>
                         <th>Platform</th>
                         <th>Optional Metadata</th>
-                        <th>
-                            <input type="checkbox" id="select-all"/>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,9 +50,6 @@
                                         </table>
                                     </div>
                                 {% endif %}
-                            </td>
-                            <td class="select-box">
-                                <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
                             </td>
                         </tr>
                     {% endfor %}

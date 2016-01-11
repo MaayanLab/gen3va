@@ -5,9 +5,10 @@ handle separate database sessions.
 import json
 from threading import Thread
 
-from substrate import PCAVisualization, Report, TargetApp, HierClustVisualization
-
-from gen3va.db.utils import session_scope, thread_local_session_scope, get_or_create_with_session
+from substrate import PCAVisualization, Report, TargetApp, \
+    HierClustVisualization
+from gen3va.db.utils import session_scope, thread_local_session_scope, \
+    get_or_create_with_session
 from gen3va import Config, hierclust, pca
 
 
@@ -15,27 +16,50 @@ def build(tag):
     """Creates a new report and returns its ID. Builds the report's links in
     a separate thread.
     """
-    report = _save_report(Report('default', tag))
+    if tag.report:
+        report = tag.report
+        print('Reseting report.')
+        with session_scope() as session:
+            report.reset()
+            session.merge(report)
+            report.reset()
+    else:
+        print('Creating new report.')
+        with session_scope() as session:
+            report = Report(tag)
+            session.add(report)
+            report.reset()
     _build(report.id)
-    return report.id
 
 
-def rebuild(report):
-    """Rebuilds an existing report, overwriting old links.
+def update(tag):
+    """updates an existing report.
     """
-    with session_scope() as session:
-        report.reset()
-        session.merge(report)
-    print('rebuild report for %s' % report.tag.name)
-    _build(report.id)
+    report = tag.report
+    print('Updating report for %s.' % tag.name)
+    if not hasattr(report, 'pca_visualization'):
+        t = Thread(target=_perform_pca, args=(report.id,))
+        t.daemon = True
+        t.start()
 
+    back_link = _get_back_link(report.id)
+    if not report.genes_hier_clust:
+        t = Thread(target=_cluster_ranked_genes, args=(report.id, back_link))
+        t.daemon = True
+        t.start()
 
-def build_custom(tag, gene_signatures):
-    """Builds a custom report.
-    """
-    report = _save_report(Report('custom', tag), gene_signatures)
-    _build(report.id)
-    return report.id
+    if len(report.enrichr_hier_clusts) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
+        completed = [v.enrichr_library for v in report.enrichr_hier_clusts]
+        missing = []
+        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+            if library not in completed:
+                missing.append(library)
+        _enrichr_visualizations(report.id, missing, back_link)
+
+    if not report.l1000cds2_hier_clust:
+        t = Thread(target=_cluster_perturbations, args=(report.id, back_link))
+        t.daemon = True
+        t.start()
 
 
 def _build(report_id):
@@ -53,11 +77,28 @@ def _build(report_id):
     t.start()
 
     # Creates its own thread for each visualization.
-    _enrichr_visualizations(report_id, back_link)
+    _enrichr_visualizations(report_id,
+                            Config.SUPPORTED_ENRICHR_LIBRARIES,
+                            back_link)
 
     t = Thread(target=_cluster_perturbations, args=(report_id, back_link))
     t.daemon = True
     t.start()
+
+
+def _perform_pca(report_id):
+    """Performs principal component analysis on gene signatures from report.
+    """
+    with thread_local_session_scope() as threaded_session:
+        print('BEGIN\tPCA visualization.')
+        report = threaded_session.query(Report).get(report_id)
+        pca_data = pca.from_report(report.gene_signatures)
+        pca_data = json.dumps(pca_data)
+        report.pca_visualization = PCAVisualization(pca_data)
+        print(report.id)
+        threaded_session.merge(report)
+        threaded_session.commit()
+        print('COMPLETE\tPCA visualization.')
 
 
 def _get_back_link(report_id):
@@ -72,26 +113,12 @@ def _get_back_link(report_id):
                                        report.tag.name)
 
 
-def _perform_pca(report_id):
-    """Performs principal component analysis on gene signatures from report.
-    """
-    print('PCA visualization')
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
-        pca_data = pca.from_report(report)
-        pca_data = json.dumps(pca_data)
-        pca_visualization = PCAVisualization(pca_data)
-        report.set_pca_visualization(pca_visualization)
-        session.merge(report)
-        session.commit()
-
-
 def _cluster(report_id, back_link, type_):
     print('%s visualization' % type_)
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link(type_,
-                                  signatures=report.get_gene_signatures(),
+                                  signatures=report.gene_signatures,
                                   back_link=back_link)
     _save_report_link(report_id, link, type_)
 
@@ -103,7 +130,7 @@ def _cluster_ranked_genes(report_id, back_link):
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('genes',
-                                  signatures=report.get_gene_signatures(),
+                                  signatures=report.gene_signatures,
                                   back_link=back_link)
     _save_report_link(report_id, link, 'gen3va')
 
@@ -116,16 +143,16 @@ def _cluster_perturbations(report_id, back_link):
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('l1000cds2',
-                                  signatures=report.get_gene_signatures(),
+                                  signatures=report.gene_signatures,
                                   back_link=back_link)
     _save_report_link(report_id, link, 'l1000cds2')
 
 
-def _enrichr_visualizations(report_id, back_link):
+def _enrichr_visualizations(report_id, libraries, back_link):
     """Builds Enrichr visualizations for all libraries.
     """
     print('enrichr visualizations')
-    for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+    for library in libraries:
         t = Thread(target=_cluster_enriched_terms,
                    args=(report_id, back_link, library))
         t.daemon = True
@@ -139,7 +166,7 @@ def _cluster_enriched_terms(report_id, back_link, library):
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('enrichr',
-                                  signatures=report.get_gene_signatures(),
+                                  signatures=report.gene_signatures,
                                   library=library,
                                   back_link=back_link)
     _save_report_link(report_id, link, 'enrichr', library=library)
@@ -174,25 +201,7 @@ def _save_report_link(report_id, link, viz_type, library=None):
         if library:
             message += ' - %s' % library
         print(message)
-        report.set_hier_clust(hier_clust)
+        report.add_hier_clust(hier_clust)
 
         session.merge(report)
         session.commit()
-
-        if _report_is_ready(report):
-            print('build complete')
-            report.status = 'ready'
-            session.merge(report)
-            session.commit()
-
-
-def _report_is_ready(report):
-    print('Checking if report is ready')
-    if not report.pca_visualization:
-        print('PCA visualization is not ready')
-        return False
-    num_vizs = 2 + len(Config.SUPPORTED_ENRICHR_LIBRARIES)
-    if len(report.hier_clusts) != num_vizs:
-        print('Not all visualizations are ready')
-        return False
-    return True

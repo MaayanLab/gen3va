@@ -1,0 +1,23 @@
+{% extends 'wrapper.html' %}
+
+{% block body %}
+
+    <div class="page" id="index-page-admin">
+        <h3>Admin Page</h3>
+        <ul class="list-unstyled">
+            {% for tag in tags %}
+                {% if tag.gene_signatures|length > 3 %}
+                    <li>
+                        <ul class="list-unstyled">
+                            <li><strong>{{ tag.name }}</strong></li>
+                            <li><span>{{ tag.gene_signatures|length }}</span> signatures</li>
+                            <li><a href="{{ report_url }}/{{ tag.name }}/build">Build</a></li>
+                            <li><a href="{{ report_url }}/{{ tag.name }}/update">Update</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

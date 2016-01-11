@@ -3,5 +3,4 @@
 
 from gen3va.reportbuilder.reportbuilder import \
     build,\
-    rebuild,\
-    build_custom
+    update

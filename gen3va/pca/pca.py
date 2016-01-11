@@ -8,22 +8,7 @@ from sklearn import decomposition
 from gen3va.db import db
 
 
-def from_report(report):
-    if report.report_type == 'default':
-        return __from_gene_signatures(report.tag.gene_signatures)
-    elif report.report_type == 'custom':
-        return __from_gene_signatures(report.gene_signatures)
-
-
-def from_extraction_ids(extraction_ids):
-    gene_signatures = []
-    for extraction_id in extraction_ids:
-        gene_signature = db.get_gene_signature(extraction_id)
-        gene_signatures.append(gene_signature)
-    return __from_gene_signatures(gene_signatures)
-
-
-def __from_gene_signatures(gene_signatures):
+def from_report(gene_signatures):
     data_frames = []
     for gene_signature in gene_signatures:
 

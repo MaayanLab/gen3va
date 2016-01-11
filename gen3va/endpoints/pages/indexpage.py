@@ -22,8 +22,18 @@ def index():
     else:
         tags = db.get_all(Tag)
         curators = db.get_all(Curator)
+    tags_ready = [t for t in tags if (t.report and t.report.ready)]
     return render_template('index.html',
-                           tags=tags,
+                           tags=tags_ready,
                            curators=curators,
                            report_url=Config.REPORT_URL,
                            tag_url=Config.TAG_URL)
+
+
+@index_page.route('/admin')
+def index_admin():
+    tags = db.get_all(Tag)
+    tags_waiting = [t for t in tags if (not t.report or not t.report.ready)]
+    return render_template('index-admin.html',
+                           tags=tags_waiting,
+                           report_url=Config.REPORT_URL)

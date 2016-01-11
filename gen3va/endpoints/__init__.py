@@ -1,6 +1,7 @@
-from api.clusterapi import cluster_api
+"""Interface for endpoints module.
+"""
+
 from api.downloadapi import download_api
-from api.pcaapi import pca_api
 
 from pages.errorpage import error_page
 from pages.indexpage import index_page

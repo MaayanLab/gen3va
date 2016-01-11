@@ -43,15 +43,14 @@
                         {% set curator_class = "uncurated" %}
                     {% endif %}
 
-                    {% set tag_status = tag.get_default_report().status if tag.reports|length > 0 else 'unprocessed' %}
                     <div class="tag-box {{ curator_class }}">
                         <h5 class="tag-name">{{ tag.name }}</h5>
-
                         <p class="signature-count">
                             <span>{{ tag.gene_signatures|length }}</span> signatures
                         </p>
-                        <p><a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a>
-                            ({{ tag_status }})</p>
+                        <p>
+                            <a href="{{ report_url }}/{{ tag.name }}" class="report-link">Report</a>
+                        </p>
                     </div>
                 {% endif %}
             {% endfor %}
