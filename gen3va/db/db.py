@@ -64,14 +64,8 @@ def get_statistics():
     with session_scope() as session:
         tags = []
         for tag in get_all(Tag):
-            if len(tag.reports) == 0:
-                report_status = 'inactive'
-            else:
-                report_status = tag.reports[-1].status
-
             tags.append({
                 'name': tag.name,
-                'report_status': report_status,
                 'num_gene_signatures': len(tag.gene_signatures)
             })
 
