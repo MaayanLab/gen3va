@@ -8,7 +8,7 @@ from threading import Thread
 from substrate import PCAVisualization, Report, TargetApp, HierClustVisualization
 
 from gen3va.db.utils import session_scope, thread_local_session_scope, get_or_create_with_session
-from gen3va import Config, hierclust, pca, Session
+from gen3va import Config, hierclust, pca
 
 
 def build(tag):

@@ -3,9 +3,10 @@
 
 
 from contextlib import contextmanager
+from sqlalchemy.orm import scoped_session
 
 from substrate import db as substrate_db
-from gen3va import Session
+from gen3va import session_factory
 
 
 @contextmanager
@@ -30,6 +31,7 @@ def thread_local_session_scope():
     """
     # See this StackOverflow answer for details:
     # http://stackoverflow.com/a/18265238/1830334
+    Session = scoped_session(session_factory)
     threaded_session = Session()
     try:
         yield threaded_session

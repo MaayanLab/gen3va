@@ -7,7 +7,7 @@ import sys
 from flask import Flask
 from flask.ext.cors import CORS
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 from gen3va.config import Config
 from substrate import db as substrate_db
@@ -43,8 +43,6 @@ if Config.DEBUG:
     # them.
     Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
                                           'ENCODE_TF_ChIP-seq_2015']
-
-Session = scoped_session(session_factory)
 
 # Import these after connecting to the DB.
 from gen3va import endpoints
