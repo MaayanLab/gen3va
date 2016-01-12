@@ -28,7 +28,7 @@ def build(tag):
         with session_scope() as session:
             report = Report(tag)
             session.add(report)
-            report.reset()
+            session.flush()
     _build(report.id)
 
 
@@ -89,15 +89,15 @@ def _build(report_id):
 def _perform_pca(report_id):
     """Performs principal component analysis on gene signatures from report.
     """
-    with thread_local_session_scope() as threaded_session:
+    with thread_local_session_scope() as session:
         print('BEGIN\tPCA visualization.')
-        report = threaded_session.query(Report).get(report_id)
+        report = session.query(Report).get(report_id)
         pca_data = pca.from_report(report.gene_signatures)
         pca_data = json.dumps(pca_data)
         report.pca_visualization = PCAVisualization(pca_data)
         print(report.id)
-        threaded_session.merge(report)
-        threaded_session.commit()
+        session.merge(report)
+        session.commit()
         print('COMPLETE\tPCA visualization.')
 
 
@@ -127,6 +127,7 @@ def _cluster(report_id, back_link, type_):
 def _cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
+    import pdb; pdb.set_trace()
     print('gene visualization')
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
