@@ -35,7 +35,6 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Results</th>
                             <th>Title</th>
                             <th>Organism</th>
                             <th>Platform</th>
@@ -46,13 +45,13 @@
                             {% set dataset = gene_signature.soft_file.dataset %}
                             <tr>
                                 <td class="index">{{ loop.index }}</td>
-                                <td class="results" >
-                                    <a href="{{ gene_signature.extraction_id|c_results_url }}" target="_blank">
-                                        <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
-                                    </a>
-                                </td>
                                 <td class="title">
-                                    {{ dataset.title|c_filter_empty|truncate(150) }}
+                                    {% set title = dataset.title if dataset.title else 'Link to results page' %}
+                                    <a data-toggle="tooltip"
+                                       title="Results page for the processed gene signature"
+                                       href="{{ gene_signature.extraction_id|c_results_url }}">
+                                         {{ title }}
+                                    </a>
                                 </td>
                                 <td class="organism">
                                     {{ dataset.organism|c_filter_empty }}
@@ -116,7 +115,7 @@
             <div class="section">
                 <h2>L1000CDS2</h2>
                 <div class="description">
-                    <p><a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">L1000CDS2</a> is a web tool that queries the LINCS L1000 dataset to identify small molecules that can reverse or mimic the observed input expression pattern. To generate the hierarchical clustering below, GEN3VA enriched each gene signature using L1000CDS2 to generate a list of perturbations that mimic (red) and reverse (blue) expressionh.</p>
+                    <p><a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">L1000CDS2</a> is a web tool that queries the LINCS L1000 dataset to identify small molecules that can reverse or mimic the observed input expression pattern. To generate the hierarchical clustering below, GEN3VA enriched each gene signature using L1000CDS2 to generate a list of perturbations that mimic (red) and reverse (blue) expression.</p>
                 </div>
                 <iframe src="{{ report.l1000cds2_hier_clust.link }}"></iframe>
             </div>

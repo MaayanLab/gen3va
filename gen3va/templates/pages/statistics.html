@@ -5,7 +5,7 @@
 {% block body %}
 
     <script src="static/lib/highcharts/highcharts.js"></script>
-    <script src="static/js/stats.js"></script>
+    <script src="static/js/statistics.js"></script>
     <script>
         $(function() {
             buildStats({{ stats_json|safe }});
@@ -17,35 +17,35 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>Gene signatures by platform</h4>
-                <p class="instruction">Log10 scale</p>
+                <p>Log10 scale</p>
                 <div id="platforms-bar-chart"></div>
             </div>
             <div class="col-md-6">
-                <h4>Stats</h4>
+                <h4>Counts</h4>
                 <table class="table">
                     <tr>
-                        <td class="col-md-3">Gene signatures</td>
-                        <td class="col-md-9">{{ stats.num_gene_signatures }}</td>
+                        <td>Gene signatures</td>
+                        <td>{{ stats.num_gene_signatures }}</td>
                     </tr>
                     <tr>
-                        <td class="col-md-3">Gene lists</td>
-                        <td class="col-md-9">{{ stats.num_gene_lists }}</td>
+                        <td>Gene lists</td>
+                        <td>{{ stats.num_gene_lists }}</td>
                     </tr>
                     <tr>
-                        <td class="col-md-3">Tags</td>
-                        <td class="col-md-9">
+                        <td>Tags</td>
+                        <td>
                             <a class="btn btn-info" href="tag">{{ stats.num_tags }}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td class="col-md-3">Reports</td>
-                        <td class="col-md-9">
+                        <td>Reports</td>
+                        <td>
                             <a class="btn btn-info" href="report">{{ stats.num_reports }}</a>
                         </td>
                     </tr>
                     <tr class="last">
-                        <td class="col-md-3">Platforms</td>
-                        <td class="col-md-9">{{ stats.num_platforms }}</td>
+                        <td>Platforms</td>
+                        <td>{{ stats.num_platforms }}</td>
                     </tr>
                 </table>
             </div>

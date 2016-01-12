@@ -79,7 +79,17 @@ $(function() {
             series: pcaObj.series,
             tooltip: {
                 formatter: tooltipFormatter,
-                useHTML: true
+                useHTML: true,
+                backgroundColor: '#7FB800', // green
+                borderColor: '#7FB800',
+                borderRadius: 0,
+                shadow: false,
+                style: {
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                    padding: 6
+                }
             }
         });
 

@@ -12,14 +12,14 @@ html {
   min-height: 100%;
 }
 body {
-  margin-bottom: 125px;
+  margin-bottom: 200px;
   /* bottom = footer height */
 }
 #footer {
   position: absolute;
   left: 0;
   bottom: 0;
-  height: 125px;
+  height: 200px;
   width: 100%;
 }
 /* Class and tag selectors.
@@ -134,30 +134,6 @@ pre {
 .fa:hover {
   color: #aaaaaa;
 }
-.loader {
-  background-color: rgba(255, 255, 255, 0.75);
-  cursor: wait;
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9999;
-}
-.loader .modal {
-  background: #fffac7;
-  border: 1px solid #fff169;
-  color: #444444;
-  font-size: 12px;
-  font-weight: bold;
-  margin: 0 auto;
-  position: absolute;
-  left: 0;
-  text-align: center;
-  right: 0;
-  top: 200px;
-  width: 75px;
-}
 .mono {
   font-family: monospace;
 }
@@ -181,9 +157,9 @@ caption {
   /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
 }
 .tooltip .tooltip-inner {
-  background: #fffac7;
-  border: 1px solid #fff169;
-  color: #444444;
+  background: #7fb800;
+  border: 1px solid #7fb800;
+  color: white;
   font-weight: bold;
   border-radius: 0;
   text-align: left;
@@ -192,16 +168,16 @@ caption {
   max-width: 400px;
 }
 .tooltip.top .tooltip-arrow {
-  border-top-color: #fff169 !important;
+  border-top-color: #7fb800 !important;
 }
 .tooltip.right .tooltip-arrow {
-  border-right-color: #fff169 !important;
+  border-right-color: #7fb800 !important;
 }
 .tooltip.bottom .tooltip-arrow {
-  border-bottom-color: #fff169 !important;
+  border-bottom-color: #7fb800 !important;
 }
 .tooltip.left .tooltip-arrow {
-  border-left-color: #fff169 !important;
+  border-left-color: #7fb800 !important;
 }
 .instruction {
   font-size: 13px;
@@ -307,14 +283,21 @@ caption {
   padding-bottom: 50px;
 }
 #footer {
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
+  background-color: #103359;
 }
 #footer a,
+#footer li,
 #footer p {
-  font-size: 12px;
+  color: white;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+#footer h3 {
+  color: white;
 }
 #footer a {
+  color: #90caf9;
   text-decoration: none;
 }
 #footer a:hover {
@@ -330,6 +313,8 @@ caption {
   border-radius: 0;
   border: none;
   font-size: 13px;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 300;
 }
 .btn.btn-default {
   border: 1px solid #eee;
@@ -386,10 +371,6 @@ div.dataTables_wrapper .pagination > .active > span:hover {
 }
 .hljs {
   background-color: #f9f9f9 !important;
-}
-.btn-default {
-  border-radius: 0;
-  padding: 4px 8px;
 }
 /* See: http://stackoverflow.com/a/33809511/1830334 */
 .table-responsive {

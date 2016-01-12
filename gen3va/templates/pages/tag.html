@@ -7,6 +7,7 @@
     <div class="page" id="tag-page">
 
         <h1>{{ num_tags }} gene signatures for <strong>{{ tag.name }}</strong></h1>
+        <a class="btn btn-primary" href="{{ report_url }}/{{ tag.name }}">Back to report</a>
 
         <div class="table-responsive">
             <table class="table data-table responsive">
@@ -27,7 +28,7 @@
                             <td class="title">
                                 {% set title = dataset.title if dataset.title else 'Link to results page' %}
                                 <a data-toggle="tooltip"
-                                   title="Results page for the processed gene signature."
+                                   title="Results page for the processed gene signature"
                                    href="{{ gene_signature.extraction_id|c_results_url }}">
                                      {{ title }}
                                 </a>

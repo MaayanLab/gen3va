@@ -13,20 +13,20 @@
   background-color: #f9f9f9;
 }
 #index-page #intoduction {
-  font-size: 16px;
-  line-height: 1.3em;
+  line-height: 1.8em;
   margin-bottom: 30px;
 }
 #index-page #intoduction p {
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 300;
+  font-size: 18px;
   border-top: 1px solid #aaaaaa;
   margin-top: 15px;
   padding-top: 20px;
 }
 #index-page #filters button.bd2k-lincs-dcic-coursera {
-  background-color: #ffd34e;
-}
-#index-page #filters button.maayan-lab {
-  background-color: #f15a5a;
+  background-color: #9351e5;
+  color: white;
 }
 #index-page #isotope {
   margin-top: 10px;
@@ -39,6 +39,9 @@
   margin-bottom: 10px;
 }
 #index-page #isotope .tag-box p {
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
   margin: 0;
 }
 #index-page #isotope .tag-box .tag-name {
@@ -56,27 +59,33 @@
   max-width: 400px;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera {
-  background-color: #ffd34e;
+  background-color: #9351e5;
+  color: white;
+}
+#index-page #isotope .tag-box.bd2k-lincs-dcic-coursera h5 {
+  color: white;
+}
+#index-page #isotope .tag-box.bd2k-lincs-dcic-coursera a {
+  /* Light blue, lighter than @color-palette-baby-blue. */
+  color: #a7e2fd;
+}
+#index-page #isotope .tag-box.bd2k-lincs-dcic-coursera a:hover {
+  color: #90caf9;
 }
 #index-page #isotope .tag-box.maayan-lab {
   background-color: #f15a5a;
   color: white;
-}
-#index-page #isotope .tag-box.maayan-lab h5 {
-  color: white;
-}
-#index-page #isotope .tag-box.maayan-lab a {
-  /* Light blue, lighter than @color-palette-baby-blue. */
-  color: #a7e2fd;
-}
-#index-page #isotope .tag-box.maayan-lab a:hover {
-  color: #75d2fc;
 }
 #index-page-admin ul ul {
   margin-bottom: 20px;
 }
 #statistics-page #platforms-bar-chart {
   height: 1000px;
+}
+#statistics-page table {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
 }
 #report-page h2 {
   border-bottom: 1px solid #eeeeee;
@@ -105,7 +114,7 @@
   width: 100%;
 }
 #report-page .section {
-  padding-top: 20px;
+  margin-bottom: 30px;
 }
 #tag-page .note,
 #tags-all-page .note,
@@ -115,76 +124,25 @@
   font-weight: normal;
   margin-left: 15px;
 }
-#tag-page table td,
-#metadata-page table td {
+#tag-page table {
+  margin-top: 30px;
+}
+#tag-page table th {
+  border-bottom: 2px solid #eeeeee;
+  text-align: left;
+}
+#tag-page table td {
   vertical-align: middle !important;
 }
-#tag-page table .optional-metadata-content,
-#metadata-page table .optional-metadata-content {
+#tag-page table .optional-metadata-content {
   background-color: #f9f9f9;
   padding: 10px;
 }
-#tag-page table .optional-metadata-content table,
-#metadata-page table .optional-metadata-content table {
+#tag-page table .optional-metadata-content table {
   width: 100%;
 }
-#tag-page table .optional-metadata-content table td:first-child,
-#metadata-page table .optional-metadata-content table td:first-child {
+#tag-page table .optional-metadata-content table td:first-child {
   font-weight: bold !important;
   padding-right: 10px;
   width: 30%;
-}
-#tag-page #custom-report-builder,
-#metadata-page #custom-report-builder {
-  margin-bottom: 20px;
-}
-#tag-page #custom-report-builder .description,
-#metadata-page #custom-report-builder .description {
-  background: #f9f9f9;
-  margin-top: 20px;
-  padding: 10px;
-}
-#tag-page #custom-report-builder .description h4,
-#metadata-page #custom-report-builder .description h4 {
-  margin: 0;
-}
-#tag-page #custom-report-builder .options button,
-#metadata-page #custom-report-builder .options button {
-  display: block;
-  margin-top: 5px;
-}
-#tag-page #custom-report-builder ol,
-#metadata-page #custom-report-builder ol {
-  margin-top: 10px;
-  padding-left: 20px;
-}
-#tag-page #custom-report-builder #pca-container,
-#metadata-page #custom-report-builder #pca-container,
-#tag-page #custom-report-builder #clustergrammer-preview,
-#metadata-page #custom-report-builder #clustergrammer-preview,
-#tag-page #custom-report-builder #l1000cds2-preview,
-#metadata-page #custom-report-builder #l1000cds2-preview,
-#tag-page #custom-report-builder #enrichr-preview,
-#metadata-page #custom-report-builder #enrichr-preview {
-  display: none;
-}
-#tag-page #custom-report-builder #clustergrammer-preview iframe,
-#metadata-page #custom-report-builder #clustergrammer-preview iframe,
-#tag-page #custom-report-builder #enrichr-preview iframe,
-#metadata-page #custom-report-builder #enrichr-preview iframe,
-#tag-page #custom-report-builder #l1000cds2-preview iframe,
-#metadata-page #custom-report-builder #l1000cds2-preview iframe {
-  border: 1px solid #eeeeee;
-  height: 1000px;
-  margin-top: 20px;
-  width: 100%;
-}
-#tag-page #custom-report-builder #pca-container,
-#metadata-page #custom-report-builder #pca-container {
-  margin-top: 20px;
-}
-#metadata-page th,
-#tag-page th {
-  border-bottom: 2px solid #eeeeee;
-  text-align: left;
 }

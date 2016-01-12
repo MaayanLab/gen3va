@@ -149,31 +149,6 @@ pre {
   }
 }
 
-.loader {
-  background-color: rgba(255, 255, 255, 0.75);
-  cursor: wait;
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9999;
-  .modal {
-    background: @color-yellow-light;
-    border: 1px solid @color-yellow;
-    color: @color-black-almost;
-    font-size: 12px;
-    font-weight: bold;
-    margin: 0 auto;
-    position: absolute;
-    left: 0;
-    text-align: center;
-    right: 0;
-    top: 200px;
-    width: 75px;
-  }
-}
-
 .mono {
   font-family: monospace;
 }
@@ -200,9 +175,9 @@ caption {
 .tooltip {
   opacity: 1 !important;
   .tooltip-inner {
-    background: @color-yellow-light;
-    border: 1px solid @color-yellow;
-    color: @color-black-almost;
+    background: @color-green;
+    border: 1px solid @color-green;
+    color: white;
     font-weight: bold;
     border-radius: 0;
     text-align: left;
@@ -212,16 +187,16 @@ caption {
   }
   /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
   &.top .tooltip-arrow {
-    border-top-color: @color-yellow !important;
+    border-top-color: @color-green !important;
   }
   &.right .tooltip-arrow {
-    border-right-color: @color-yellow !important;
+    border-right-color: @color-green !important;
   }
   &.bottom .tooltip-arrow {
-    border-bottom-color: @color-yellow !important;
+    border-bottom-color: @color-green !important;
   }
   &.left .tooltip-arrow {
-    border-left-color: @color-yellow !important;
+    border-left-color: @color-green !important;
   }
 }
 
@@ -339,13 +314,20 @@ caption {
 }
 
 #footer {
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
+  background-color: @color-footer-background;
   a,
+  li,
   p {
-    font-size: 12px;
+    color: white;
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 300;
+  }
+  h3 {
+    color: white;
   }
   a {
+    color: @color-palette-baby-blue;
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -363,6 +345,8 @@ caption {
   border-radius: 0;
   border: none;
   font-size: 13px;
+  font-family: @font-family-accent;
+  font-weight: 300;
   &.btn-default {
     border: 1px solid #eee;
   }
@@ -425,11 +409,6 @@ div.dataTables_wrapper {
 
 .hljs {
   background-color: @color-gray-very-light !important;
-}
-
-.btn-default {
-  border-radius: 0;
-  padding: 4px 8px;
 }
 
 /* See: http://stackoverflow.com/a/33809511/1830334 */

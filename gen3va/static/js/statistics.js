@@ -58,7 +58,16 @@ function buildStats(stats) {
                     '<p style="margin:0;">' + Math.round(Math.pow(10, this.y)) + '</p>';
             },
             useHTML: true,
-            crosshairs: true
+            backgroundColor: '#7FB800', // green
+            borderColor: '#7FB800',
+            borderRadius: 0,
+            shadow: false,
+            style: {
+                color: 'white',
+                fontFamily: 'Roboto',
+                fontWeight: 'bold',
+                padding: 6
+            }
         },
         series: series
     });
