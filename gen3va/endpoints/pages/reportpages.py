@@ -44,6 +44,15 @@ def view_report(tag_name):
                            pca_json=pca_json)
 
 
+@report_pages.route('/<int:report_id>/<tag_name>', methods=['GET'])
+def view_report_hot_fix(report_id, tag_name):
+    """We reference the report page by report ID in our abstract proposal.
+    This view can be deleted one the paper has been accepted or rejected by
+    Nucleic Acids Research.
+    """
+    return redirect(url_for('report_pages.view_report', tag_name=tag_name))
+
+
 # Admin utility methods
 # ----------------------------------------------------------------------------
 
