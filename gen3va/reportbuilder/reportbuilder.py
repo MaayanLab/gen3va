@@ -127,7 +127,6 @@ def _cluster(report_id, back_link, type_):
 def _cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
-    import pdb; pdb.set_trace()
     print('gene visualization')
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
