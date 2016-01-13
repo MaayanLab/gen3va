@@ -11,6 +11,9 @@ alembic.ini
 # Generated SOFT files
 gen3va/static/softfile/
 
+# Scripts and data for the database
+scripts/
+
 # Chrome Extension zip file
 *.zip
 
