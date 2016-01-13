@@ -48,7 +48,11 @@ def get_link(type_, **kwargs):
         payload['is_up_down'] = False
         row_title = 'Genes'
 
+    # with open('clustergrammer_payload', 'w+') as out:
+    #     out.write(json.dumps(payload))
+
     resp = _post(payload)
+
     if resp.ok:
         link_base = json.loads(resp.text)['link']
         return utils.link(link_base, row_title)

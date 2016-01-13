@@ -22,7 +22,6 @@ def build(tag):
         with session_scope() as session:
             report.reset()
             session.merge(report)
-            report.reset()
     else:
         print('Creating new report.')
         with session_scope() as session:
@@ -67,6 +66,7 @@ def _build(report_id):
     """
     # Each function below executes with its own separate DB session. This
     # ensures the process does not time out.
+
     t = Thread(target=_perform_pca, args=(report_id,))
     t.daemon = True
     t.start()
@@ -101,18 +101,6 @@ def _perform_pca(report_id):
         print('COMPLETE\tPCA visualization.')
 
 
-def _get_back_link(report_id):
-    """Generates a back link for Clustergrammer based on tag name.
-    """
-    with thread_local_session_scope() as session:
-        print('starting report build %s' % report_id)
-        report = session.query(Report).get(report_id)
-        return '{0}{1}/{2}/{3}'.format(Config.SERVER,
-                                       Config.REPORT_URL,
-                                       report.id,
-                                       report.tag.name)
-
-
 def _cluster(report_id, back_link, type_):
     print('%s visualization' % type_)
     with thread_local_session_scope() as session:
@@ -128,6 +116,9 @@ def _cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
     print('gene visualization')
+    # Prevent "UnboundLocalError: local variable 'link' referenced before
+    # assignment" error if an exception is thrown in with statement.
+    link = None
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('genes',
@@ -142,6 +133,9 @@ def _cluster_perturbations(report_id, back_link):
     hierarchical clustering.
     """
     print('l1000cds2 visualization')
+    # Prevent "UnboundLocalError: local variable 'link' referenced before
+    # assignment" error if an exception is thrown in with statement.
+    link = None
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('l1000cds2',
@@ -149,6 +143,23 @@ def _cluster_perturbations(report_id, back_link):
                                   back_link=back_link)
     if link:
         _save_report_link(report_id, link, 'l1000cds2')
+
+
+def _cluster_enriched_terms(report_id, back_link, library):
+    """Get enriched terms based on Enrichr library and then perform
+    hierarchical clustering.
+    """
+    # Prevent "UnboundLocalError: local variable 'link' referenced before
+    # assignment" error if an exception is thrown in with statement.
+    link = None
+    with thread_local_session_scope() as session:
+        report = session.query(Report).get(report_id)
+        link = hierclust.get_link('enrichr',
+                                  signatures=report.gene_signatures,
+                                  library=library,
+                                  back_link=back_link)
+    if link:
+        _save_report_link(report_id, link, 'enrichr', library=library)
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):
@@ -162,18 +173,15 @@ def _enrichr_visualizations(report_id, libraries, back_link):
         t.start()
 
 
-def _cluster_enriched_terms(report_id, back_link, library):
-    """Get enriched terms based on Enrichr library and then perform
-    hierarchical clustering.
+def _get_back_link(report_id):
+    """Generates a back link for Clustergrammer based on tag name.
     """
     with thread_local_session_scope() as session:
+        print('starting report build %s' % report_id)
         report = session.query(Report).get(report_id)
-        link = hierclust.get_link('enrichr',
-                                  signatures=report.gene_signatures,
-                                  library=library,
-                                  back_link=back_link)
-    if link:
-        _save_report_link(report_id, link, 'enrichr', library=library)
+        return '{0}{1}/{3}'.format(Config.SERVER,
+                                   Config.REPORT_URL,
+                                   report.tag.name)
 
 
 def _save_report(report, gene_signatures=None):

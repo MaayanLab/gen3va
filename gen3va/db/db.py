@@ -5,7 +5,7 @@ and their relationships and saves them accordingly.
 import sqlalchemy as sa
 
 from substrate import Curator, GeneList, GeneSignature, GeoDataset, Report,\
-    SoftFile, Tag
+    Resource, SoftFile, Tag
 
 from gen3va.db.utils import session_scope
 

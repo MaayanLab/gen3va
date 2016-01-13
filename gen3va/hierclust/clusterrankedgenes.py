@@ -21,7 +21,6 @@ def prepare_ranked_genes(signatures):
         column = [float(x) for x in column]
         genes = zip(df.index, column)
 
-        # Clustergrammer expects a list of lists, rather than tuples.
         data = [{'row_name': name, 'val': value} for name, value in genes]
         columns.append({
             'col_name': col_name,
@@ -38,7 +37,7 @@ def _get_raw_data(signatures):
     for i, signature in enumerate(signatures):
         print('%s - %s' % (i, signature.extraction_id))
 
-        ranked_genes = signature.gene_lists[2].ranked_genes
+        ranked_genes = signature.combined_genes
         col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
             index=[rg.gene.name for rg in ranked_genes],

@@ -6,6 +6,7 @@ import json
 
 import pandas
 import requests
+from requests.exceptions import RequestException
 
 from gen3va import Config
 from gen3va.hierclust import filters, utils
@@ -47,7 +48,11 @@ def _get_raw_data(signatures, use_mimic):
     for i, signature in enumerate(signatures):
         print('%s - %s' % (i, signature.extraction_id))
 
-        perts, scores = _mimic_or_reverse_signature(signature, use_mimic)
+        try:
+            perts, scores = _mimic_or_reverse_signature(signature, use_mimic)
+        except Exception as e:
+            print(e)
+            perts, scores = [], []
 
         col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
@@ -70,7 +75,7 @@ def _mimic_or_reverse_signature(signature, use_mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
-    ranked_genes = signature.gene_lists[2].ranked_genes
+    ranked_genes = signature.combined_genes
     payload = {
         'data': {
             'genes': [rg.gene.name for rg in ranked_genes],
@@ -89,9 +94,11 @@ def _mimic_or_reverse_signature(signature, use_mimic):
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
 
+    data = json.loads(resp.text)
+
     perts = []
     scores = []
-    top_meta = json.loads(resp.text)['topMeta']
+    top_meta = data['topMeta']
     for obj in top_meta:
         desc_temp = obj['pert_desc']
         if desc_temp == '-666':

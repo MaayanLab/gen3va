@@ -15,7 +15,7 @@ def from_report(gene_signatures):
         # TODO: Fetch all gene signatures with a single DB query.
         genes = []
         values = []
-        for rg in gene_signature.gene_lists[2].ranked_genes:
+        for rg in gene_signature.combined_gene_list:
             genes.append(rg.gene.name)
             values.append([rg.value])
 

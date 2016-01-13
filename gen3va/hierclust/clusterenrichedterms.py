@@ -44,11 +44,10 @@ def _get_raw_data(signatures, library, use_up):
     for i, signature in enumerate(signatures):
         print('%s - %s' % (i, signature.extraction_id))
 
-        ranked_genes = signature.gene_lists[2].ranked_genes
         if use_up:
-            genes = [g for g in ranked_genes if g.value > 0]
+            genes = signature.up_genes
         else:
-            genes = [g for g in ranked_genes if g.value < 0]
+            genes = signature.down_genes
 
         try:
             terms, scores = _enrich_gene_signature(genes, library)
