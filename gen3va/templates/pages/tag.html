@@ -27,11 +27,16 @@
                             <td class="index">{{ loop.index }}</td>
                             <td class="title">
                                 {% set title = dataset.title if dataset.title else 'Link to results page' %}
-                                <a data-toggle="tooltip"
-                                   title="Results page for the processed gene signature"
-                                   href="{{ gene_signature.extraction_id|c_results_url }}">
-                                     {{ title }}
-                                </a>
+
+                                {% if gene_signature.resource.name == 'geo' %}
+                                    <a data-toggle="tooltip"
+                                       title="Results page for the processed gene signature"
+                                       href="{{ gene_signature.extraction_id|c_results_url }}">
+                                         {{ title }}
+                                    </a>
+                                {% else %}
+                                    {{ title }}
+                                {% endif %}
                             </td>
                             <td class="organism">
                                 {{ dataset.organism|c_filter_empty }}
