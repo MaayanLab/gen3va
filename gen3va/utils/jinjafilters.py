@@ -96,7 +96,7 @@ def c_download_url(context, value):
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_curator_class')
-def c_download_url(context, value):
+def c_curator_class(context, value):
     return value\
         .replace(' ', '-')\
         .replace('\'', '')\
