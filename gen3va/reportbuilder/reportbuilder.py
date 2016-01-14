@@ -4,6 +4,7 @@ handle separate database sessions.
 
 import json
 from threading import Thread
+import thread
 
 from substrate import PCAVisualization, Report, TargetApp, \
     HierClustVisualization
@@ -66,6 +67,11 @@ def _build(report_id):
     """
     # Each function below executes with its own separate DB session. This
     # ensures the process does not time out.
+
+    # # According to the mod_wsgi documentation, it is preferable that threads
+    # # override the default stack size:
+    # # https://code.google.com/p/modwsgi/wiki/ApplicationIssues#Python_Simplified_GIL_State_API
+    # thread.stack_size(524288)
 
     t = Thread(target=_perform_pca, args=(report_id,))
     t.daemon = True
