@@ -32,6 +32,9 @@ def view_report(tag_name):
         return render_template('pages/404.html')
 
     report = tag.report
+    if not report:
+        return render_template('pages/report-not-ready.html',
+                               tag=tag)
     if report.pca_visualization:
         pca_json = report.pca_visualization.data
     else:

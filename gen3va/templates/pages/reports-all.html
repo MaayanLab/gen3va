@@ -11,7 +11,6 @@
                 <thead>
                     <tr>
                         <th>Report</th>
-                        <th>Associated Tag</th>
                         <th>Status</th>
                         <th>Type</th>
                     </tr>
@@ -21,10 +20,9 @@
                         <tr>
                             <td>
                                 <a href="{{ report_url }}/{{ report.tag.name }}">
-                                    <i class="fa fa-file-o"></i>
+                                    {{ report.tag.name }}
                                 </a>
                             </td>
-                            <td>{{ report.tag.name }}</td>
                             <td>{{ report.status }}</td>
                             <td>{{ report.report_type }}</td>
                         </tr>
@@ -35,7 +33,9 @@
     </div>
 
     <script>
-        $('table').DataTable();
+        $('table').DataTable({
+            pageLength: 25
+        });
     </script>
 
 {% endblock %}

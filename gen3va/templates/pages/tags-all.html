@@ -31,7 +31,9 @@
     </div>
 
     <script>
-        $('table').DataTable();
+        $('table').DataTable({
+            pageLength: 25
+        });
     </script>
 
 {% endblock %}
