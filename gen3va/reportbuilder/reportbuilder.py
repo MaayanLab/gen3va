@@ -54,7 +54,7 @@ def update(tag):
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             if library not in completed:
                 missing.append(library)
-        _enrichr_visualizations(report.id, missing, back_link)
+        _enrichr_visualizations(report.id, missing[:2], back_link)
 
     if not report.l1000cds2_hier_clust:
         t = Thread(target=_cluster_perturbations, args=(report.id, back_link))
