@@ -60,12 +60,12 @@ def get_or_create(model, **kwargs):
         return instance
 
 
-def get_or_create_with_session(session, model, **kwargs):
-    instance = session.query(model).filter_by(**kwargs).first()
+def get_or_create_with_session(Session, model, **kwargs):
+    instance = Session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
     else:
         instance = model(**kwargs)
-        session.add(instance)
-        session.commit()
+        Session.add(instance)
+        Session.commit()
         return instance

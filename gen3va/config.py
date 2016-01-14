@@ -21,7 +21,6 @@ class Config(object):
     METADATA_URL = BASE_URL + '/metadata'
     DOWNLOAD_URL = BASE_URL + '/download'
 
-    SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
 
     # Downstream applications

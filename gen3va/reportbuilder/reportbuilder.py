@@ -3,8 +3,11 @@ handle separate database sessions.
 """
 
 import json
-from threading import Thread
-import thread
+import multiprocessing
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.pool import NullPool
 
 from substrate import PCAVisualization, Report, TargetApp, \
     HierClustVisualization
@@ -38,15 +41,13 @@ def update(tag):
     report = tag.report
     print('Updating report for %s.' % tag.name)
     if not hasattr(report, 'pca_visualization'):
-        t = Thread(target=_perform_pca, args=(report.id,))
-        t.daemon = True
-        t.start()
+        p = multiprocessing.Process(target=_perform_pca, args=(report.id,))
+        p.start()
 
     back_link = _get_back_link(report.id)
     if not report.genes_hier_clust:
-        t = Thread(target=_cluster_ranked_genes, args=(report.id, back_link))
-        t.daemon = True
-        t.start()
+        p = multiprocessing.Process(target=_cluster_ranked_genes, args=(report.id, back_link))
+        p.start()
 
     if len(report.enrichr_hier_clusts) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
         completed = [v.enrichr_library for v in report.enrichr_hier_clusts]
@@ -57,9 +58,8 @@ def update(tag):
         _enrichr_visualizations(report.id, missing[:2], back_link)
 
     if not report.l1000cds2_hier_clust:
-        t = Thread(target=_cluster_perturbations, args=(report.id, back_link))
-        t.daemon = True
-        t.start()
+        p = multiprocessing.Process(target=_cluster_perturbations, args=(report.id, back_link))
+        p.start()
 
 
 def _build(report_id):
@@ -73,21 +73,13 @@ def _build(report_id):
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
 
-    # The default thread size is too large. When we create too many threads,
-    # the application's total resources reach their max, and we throw an
-    # error.
-    #
-    # https://code.google.com/p/modwsgi/wiki/ApplicationIssues#Memory_Constrained_VPS_Systems
-    thread.stack_size(524288)
-
-    t = Thread(target=_perform_pca, args=(report_id,))
-    t.daemon = True
-    t.start()
-
     back_link = _get_back_link(report_id)
-    t = Thread(target=_cluster_ranked_genes, args=(report_id, back_link))
-    t.daemon = True
-    t.start()
+
+    p = multiprocessing.Process(target=_perform_pca, args=(report_id,))
+    p.start()
+
+    p = multiprocessing.Process(target=_cluster_ranked_genes, args=(report_id, back_link))
+    p.start()
 
     # We don't want to spin up too many threads at once. Just process two
     # Enrichr libraries on build, and we can add more later using the update
@@ -96,48 +88,54 @@ def _build(report_id):
     # Creates its own thread for each visualization.
     _enrichr_visualizations(report_id, two_enrichr_libraries, back_link)
 
-    t = Thread(target=_cluster_perturbations, args=(report_id, back_link))
-    t.daemon = True
-    t.start()
+    p = multiprocessing.Process(target=_cluster_perturbations, args=(report_id, back_link))
+    p.start()
 
 
 def _perform_pca(report_id):
     """Performs principal component analysis on gene signatures from report.
     """
-    with thread_local_session_scope() as session:
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
+    session_factory = sessionmaker(bind=engine)
+    Session = scoped_session(session_factory)
+
+    try:
         print('BEGIN\tPCA visualization.')
-        report = session.query(Report).get(report_id)
+        report = Session.query(Report).get(report_id)
         pca_data = pca.from_report(report.gene_signatures)
         pca_data = json.dumps(pca_data)
         report.pca_visualization = PCAVisualization(pca_data)
         print(report.id)
-        session.merge(report)
-        session.commit()
+        Session.merge(report)
+        Session.commit()
         print('COMPLETE\tPCA visualization.')
-
-
-def _cluster(report_id, back_link, type_):
-    print('%s visualization' % type_)
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
-        link = hierclust.get_link(type_,
-                                  signatures=report.gene_signatures,
-                                  back_link=back_link)
-        if link:
-            _save_report_link(session, report, link, type_)
+    except:
+        Session.rollback()
+    finally:
+        Session.remove()
 
 
 def _cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
     print('gene visualization')
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
+
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
+    session_factory = sessionmaker(bind=engine)
+    Session = scoped_session(session_factory)
+
+    try:
+        report = Session.query(Report).get(report_id)
         link = hierclust.get_link('genes',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
         if link:
-            _save_report_link(session, report, link, 'gen3va')
+            _save_report_link(Session, report, link, 'gen3va')
+        Session.commit()
+    except:
+        Session.rollback()
+    finally:
+        Session.remove()
 
 
 def _cluster_perturbations(report_id, back_link):
@@ -145,27 +143,46 @@ def _cluster_perturbations(report_id, back_link):
     hierarchical clustering.
     """
     print('l1000cds2 visualization')
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
+
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
+    session_factory = sessionmaker(bind=engine)
+    Session = scoped_session(session_factory)
+
+    try:
+        report = Session.query(Report).get(report_id)
         link = hierclust.get_link('l1000cds2',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
         if link:
-            _save_report_link(session, report, link, 'l1000cds2')
+            _save_report_link(Session, report, link, 'l1000cds2')
+        Session.commit()
+    except:
+        Session.rollback()
+    finally:
+        Session.remove()
 
 
 def _cluster_enriched_terms(report_id, back_link, library):
     """Get enriched terms based on Enrichr library and then perform
     hierarchical clustering.
     """
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
+    session_factory = sessionmaker(bind=engine)
+    Session = scoped_session(session_factory)
+
+    try:
+        report = Session.query(Report).get(report_id)
         link = hierclust.get_link('enrichr',
                                   signatures=report.gene_signatures,
                                   library=library,
                                   back_link=back_link)
         if link:
-            _save_report_link(session, report, link, 'enrichr', library=library)
+            _save_report_link(Session, report, link, 'enrichr', library=library)
+        Session.commit()
+    except:
+        Session.rollback()
+    finally:
+        Session.remove()
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):
@@ -173,16 +190,15 @@ def _enrichr_visualizations(report_id, libraries, back_link):
     """
     print('enrichr visualizations')
     for library in libraries:
-        t = Thread(target=_cluster_enriched_terms,
-                   args=(report_id, back_link, library))
-        t.daemon = True
-        t.start()
+        p = multiprocessing.Process(target=_cluster_enriched_terms,
+                                    args=(report_id, back_link, library))
+        p.start()
 
 
 def _get_back_link(report_id):
     """Generates a back link for Clustergrammer based on tag name.
     """
-    with thread_local_session_scope() as session:
+    with session_scope() as session:
         print('starting report build %s' % report_id)
         report = session.query(Report).get(report_id)
         return '{0}{1}/{3}'.format(Config.SERVER,
@@ -190,22 +206,11 @@ def _get_back_link(report_id):
                                    report.tag.name)
 
 
-def _save_report(report, gene_signatures=None):
-    """Saves Report to database.
-    """
-    with session_scope() as session:
-        if gene_signatures:
-            report.gene_signatures = gene_signatures
-        session.add(report)
-        session.commit()
-        return report
-
-
-def _save_report_link(session, report, link, viz_type, library=None):
+def _save_report_link(Session, report, link, viz_type, library=None):
     """Utility method for saving link based on report ID.
     """
     # title, description, link, viz_type, target_app
-    target_app = get_or_create_with_session(session,
+    target_app = get_or_create_with_session(Session,
                                             TargetApp,
                                             name='clustergrammer')
     hier_clust = HierClustVisualization(link,
@@ -218,5 +223,5 @@ def _save_report_link(session, report, link, viz_type, library=None):
     print(message)
     report.add_hier_clust(hier_clust)
 
-    session.merge(report)
-    session.commit()
+    Session.merge(report)
+    Session.commit()
