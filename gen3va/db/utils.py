@@ -21,7 +21,11 @@ def session_scope():
         print 'Rolling back database'
         print e
         substrate_db.session.rollback()
-    # Flask-SQLAlchemy handles closing the session after the HTTP request.
+    finally:
+        # Flask-SQLAlchemy documentation:
+        # "You have to commit the session, but you don't have to remove it at
+        # the end of the request, Flask-SQLAlchemy does that for you."
+        pass
 
 
 @contextmanager
@@ -32,10 +36,11 @@ def thread_local_session_scope():
     # See this StackOverflow answer for details:
     # http://stackoverflow.com/a/18265238/1830334
     Session = scoped_session(session_factory)
-    threaded_session = Session()
     try:
-        yield threaded_session
-        threaded_session.commit()
+        # The Session registry is a proxy for the current session, i.e. we
+        # can call it directly to access the underlying current session.
+        yield Session
+        Session.commit()
     except Exception as e:
         Session.rollback()
         print('Exception in thread-local session:')

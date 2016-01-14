@@ -68,10 +68,17 @@ def _build(report_id):
     # Each function below executes with its own separate DB session. This
     # ensures the process does not time out.
 
-    # # According to the mod_wsgi documentation, it is preferable that threads
-    # # override the default stack size:
-    # # https://code.google.com/p/modwsgi/wiki/ApplicationIssues#Python_Simplified_GIL_State_API
-    # thread.stack_size(524288)
+    # Each thread should be completely responsible for its own DB connection.
+    # It should wrap the entire process in a try/except/finally and close the
+    # DB session in the finally statement. If an uncaught exception is thrown
+    # in the thread, a dangling session will be left open.
+
+    # The default thread size is too large. When we create too many threads,
+    # the application's total resources reach their max, and we throw an
+    # error.
+    #
+    # https://code.google.com/p/modwsgi/wiki/ApplicationIssues#Memory_Constrained_VPS_Systems
+    thread.stack_size(524288)
 
     t = Thread(target=_perform_pca, args=(report_id,))
     t.daemon = True
@@ -82,10 +89,12 @@ def _build(report_id):
     t.daemon = True
     t.start()
 
+    # We don't want to spin up too many threads at once. Just process two
+    # Enrichr libraries on build, and we can add more later using the update
+    # function.
+    two_enrichr_libraries = Config.SUPPORTED_ENRICHR_LIBRARIES[:2]
     # Creates its own thread for each visualization.
-    _enrichr_visualizations(report_id,
-                            Config.SUPPORTED_ENRICHR_LIBRARIES,
-                            back_link)
+    _enrichr_visualizations(report_id, two_enrichr_libraries, back_link)
 
     t = Thread(target=_cluster_perturbations, args=(report_id, back_link))
     t.daemon = True
@@ -114,24 +123,21 @@ def _cluster(report_id, back_link, type_):
         link = hierclust.get_link(type_,
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    if link:
-        _save_report_link(report_id, link, type_)
+        if link:
+            _save_report_link(session, report, link, type_)
 
 
 def _cluster_ranked_genes(report_id, back_link):
     """Performs hierarchical clustering on genes.
     """
     print('gene visualization')
-    # Prevent "UnboundLocalError: local variable 'link' referenced before
-    # assignment" error if an exception is thrown in with statement.
-    link = None
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('genes',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    if link:
-        _save_report_link(report_id, link, 'gen3va')
+        if link:
+            _save_report_link(session, report, link, 'gen3va')
 
 
 def _cluster_perturbations(report_id, back_link):
@@ -139,33 +145,27 @@ def _cluster_perturbations(report_id, back_link):
     hierarchical clustering.
     """
     print('l1000cds2 visualization')
-    # Prevent "UnboundLocalError: local variable 'link' referenced before
-    # assignment" error if an exception is thrown in with statement.
-    link = None
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('l1000cds2',
                                   signatures=report.gene_signatures,
                                   back_link=back_link)
-    if link:
-        _save_report_link(report_id, link, 'l1000cds2')
+        if link:
+            _save_report_link(session, report, link, 'l1000cds2')
 
 
 def _cluster_enriched_terms(report_id, back_link, library):
     """Get enriched terms based on Enrichr library and then perform
     hierarchical clustering.
     """
-    # Prevent "UnboundLocalError: local variable 'link' referenced before
-    # assignment" error if an exception is thrown in with statement.
-    link = None
     with thread_local_session_scope() as session:
         report = session.query(Report).get(report_id)
         link = hierclust.get_link('enrichr',
                                   signatures=report.gene_signatures,
                                   library=library,
                                   back_link=back_link)
-    if link:
-        _save_report_link(report_id, link, 'enrichr', library=library)
+        if link:
+            _save_report_link(session, report, link, 'enrichr', library=library)
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):
@@ -201,25 +201,22 @@ def _save_report(report, gene_signatures=None):
         return report
 
 
-def _save_report_link(report_id, link, viz_type, library=None):
+def _save_report_link(session, report, link, viz_type, library=None):
     """Utility method for saving link based on report ID.
     """
-    with thread_local_session_scope() as session:
-        report = session.query(Report).get(report_id)
+    # title, description, link, viz_type, target_app
+    target_app = get_or_create_with_session(session,
+                                            TargetApp,
+                                            name='clustergrammer')
+    hier_clust = HierClustVisualization(link,
+                                        viz_type,
+                                        target_app,
+                                        enrichr_library=library)
+    message = hier_clust.viz_type
+    if library:
+        message += ' - %s' % library
+    print(message)
+    report.add_hier_clust(hier_clust)
 
-        # title, description, link, viz_type, target_app
-        target_app = get_or_create_with_session(session,
-                                                TargetApp,
-                                                name='clustergrammer')
-        hier_clust = HierClustVisualization(link,
-                                            viz_type,
-                                            target_app,
-                                            enrichr_library=library)
-        message = hier_clust.viz_type
-        if library:
-            message += ' - %s' % library
-        print(message)
-        report.add_hier_clust(hier_clust)
-
-        session.merge(report)
-        session.commit()
+    session.merge(report)
+    session.commit()
