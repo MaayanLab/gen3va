@@ -1,20 +1,22 @@
 $(function() {
 
-    hierClusts();
+    heatmaps();
     dataTables();
 
-    function hierClusts() {
-        var $enrichr = $('#enrichr-hier-clusts'),
-        $clusts = $enrichr.find('iframe');
-
-        // Hide all but the first library's hierarchical clustering.
-        $clusts.not($clusts.first()).hide();
+    function heatmaps() {
+        var $enrichr = $('#enrichr-hier-clusts');
 
         // When the user selects a new library, toggle the visible library.
         $enrichr.find('select').change(function(evt) {
-            var new_enrichr_library = $(evt.target).val();
-            $clusts.hide();
-            $enrichr.find('iframe[data-enrichr-library=' + new_enrichr_library+ ']').show();
+            var newEnrichrLibrary = $(evt.target).val(),
+
+                // globalHeatmaps is placed on the results page by the server.
+                // It's hacky, but I want this rolled out today for a conference.
+                // Maybe improve using API?
+                newLink = globalHeatmaps[newEnrichrLibrary];
+
+            $enrichr.find('iframe').remove();
+            $enrichr.append('<iframe src="' + newLink + '"></iframe>');
         });
     }
 

@@ -1,6 +1,8 @@
 """Renders report pages.
 """
 
+import json
+
 from flask import Blueprint, redirect, render_template, url_for
 
 from substrate import Report, Tag
@@ -39,11 +41,17 @@ def view_report(tag_name):
         pca_json = report.pca_visualization.data
     else:
         pca_json = None
-    enrichr_libraries = [viz.enrichr_library for viz in report.enrichr_hier_clusts]
+
+    # TODO: This should be a utility method call serialize on
+    # HierClustVisualization class. But I don't want to rebuild the Docker
+    # container (20 min) because it's a Saturday.
+    enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
+                                        for x in report.enrichr_hier_clusts})
+
     return render_template('pages/report.html',
                            tag=tag,
                            report=report,
-                           enrichr_libraries=enrichr_libraries,
+                           enrichr_heatmaps_json=enrichr_heatmaps_json,
                            pca_json=pca_json)
 
 

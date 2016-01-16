@@ -13,6 +13,9 @@
     <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 
     <script src="static/js/report.js"></script>
+    <script>
+        window.globalHeatmaps = {{ enrichr_heatmaps_json|safe }};
+    </script>
 
     <div class="page" id="report-page">
 
@@ -48,7 +51,7 @@
                                 <td class="title">
                                     {% set title = dataset.title if dataset.title else 'Link to results page' %}
 
-                                    {% if gene_signature.resource.name == 'geo' %}
+                                    {% if gene_signature.resource.code == 'geo' %}
                                         <a data-toggle="tooltip"
                                            title="Results page for the processed gene signature"
                                            href="{{ gene_signature.extraction_id|c_results_url }}">
@@ -104,14 +107,13 @@
                     <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is a web tool that performs gene set enrichment analysis.  To generate the hierarchical clusterings below, GEN3VA enriched each gene signature using Enrichr and then clustered the terms. Use the <strong>select</strong> button to change Enrichr's background library.</p>
                     <p>Hierarchical clustering of enriched terms from
                     <select>
-                        {% for library in enrichr_libraries %}
-                            <option>{{ library }}</option>
+                        {% for clust in report.enrichr_hier_clusts %}
+                            <option>{{ clust.enrichr_library }}</option>
                         {% endfor %}
                     </select></p>
                 </div>
-                {% for clust in report.enrichr_hier_clusts %}
-                    <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
-                {% endfor %}
+                {% set clust = report.enrichr_hier_clusts[0] %}
+                <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
             </div>
         {% endif %}
 
