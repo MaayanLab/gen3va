@@ -27,13 +27,10 @@ def get(class_, value, key='id'):
             .first()
 
 
-def get_all(klass, session=None):
+def get_all(klass):
     """Gets all entities of a specific class.
     """
-    if not session:
-        with session_scope() as session:
-            return session.query(klass).all()
-    else:
+    with session_scope() as session:
         return session.query(klass).all()
 
 

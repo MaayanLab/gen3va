@@ -27,9 +27,19 @@
   }
   #filters {
     button {
+      &.bd2k-lincs-dcic-coursera ,
+      &.lincs,
+      &.biogps {
+        color: white;
+      }
       &.bd2k-lincs-dcic-coursera {
         background-color: @color-purple;
-        color: white;
+      }
+      &.lincs {
+        background-color: @color-lincs-teal;
+      }
+      &.biogps {
+        background-color: @color-palette-red;
       }
     }
   }
@@ -61,8 +71,9 @@
       .description {
         max-width: 400px;
       }
-      &.bd2k-lincs-dcic-coursera {
-        background-color: @color-purple;
+      &.bd2k-lincs-dcic-coursera,
+      &.lincs,
+      &.biogps{
         color: white;
         h5 {
           color: white;
@@ -75,11 +86,14 @@
           }
         }
       }
-      &.maayan-lab {
+      &.bd2k-lincs-dcic-coursera {
+        background-color: @color-purple;
+      }
+      &.lincs {
+        background-color: @color-lincs-teal;
+      }
+      &.biogps {
         background-color: @color-palette-red;
-        color: white;
-
-
       }
     }
   }
