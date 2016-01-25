@@ -1,6 +1,8 @@
 """Serves home page.
 """
 
+import random
+
 from flask import Blueprint, render_template, request
 
 from substrate import Curator, Tag
@@ -22,6 +24,7 @@ def index():
     else:
         tags = db.get_all(Tag)
         curators = _active_curators()
+        curators = _color_curators(curators)
 
     tags_ready = [t for t in tags if (t.report and t.report.ready)]
     return render_template('index.html',
@@ -52,3 +55,32 @@ def _active_curators():
         if use:
             curators.append(curator)
     return curators
+
+
+def _color_curators(curators):
+    """Utility method that ensures each curator has a color assigned.
+    """
+    map_ = {
+        'BD2K LINCS DCIC Coursera': '#9351e5',
+        'LINCS-DSGCs': '#F15A5A',
+        'BioGPS': '#7FB800',
+        'LINCS-DCIC': '#3593b1'
+    }
+    other_colors = ['#004358', '#FD7400', '#355FDE', '#F0C419']
+    for curator in curators:
+        if curator.name in map_:
+            curator.color = map_[curator.name]
+        else:
+            if len(other_colors) > 0:
+                curator.color = other_colors.pop()
+            else:
+                curator.color = _hex()
+
+    return curators
+
+
+def _hex():
+    """Returns random hexadecimal color.
+    """
+    r = lambda: random.randint(0,255)
+    return '#%02X%02X%02X' % (r(), r(), r())

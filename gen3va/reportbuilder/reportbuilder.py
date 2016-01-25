@@ -107,7 +107,8 @@ def _build(report_id):
 
 
 def subprocess_wrapper(**kwargs):
-    """A wrapper
+    """A wrapper that creates a new DB engine, session factory, and scoped
+    session for the applied function to use.
     """
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
     session_factory = sessionmaker(bind=engine)

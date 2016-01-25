@@ -25,7 +25,9 @@
                 {% for curator in curators %}
                 <li>
                     {% set curator_class = curator.name|c_curator_class %}
-                    <button class="btn btn-default {{ curator_class }}" data-filter=".{{ curator_class }}">
+                    <button class="btn btn-default curated {{ curator_class }}"
+                            data-filter=".{{ curator_class }}"
+                            style="background-color: {{ curator.color }};">
                         {{ curator.name }}
                     </button>
                 </li>
@@ -38,12 +40,13 @@
                 {% if tag.gene_signatures|length > 2 %}
 
                     {% if tag.curator %}
-                        {% set curator_class = tag.curator.name|c_curator_class %}
+                        {% set curator_class = tag.curator.name|c_curator_class + ' curated' %}
                     {% else %}
                         {% set curator_class = "uncurated" %}
                     {% endif %}
 
-                    <div class="tag-box {{ curator_class }}">
+                    <div class="tag-box {{ curator_class }}"
+                         style="background-color: {{ tag.curator.color }};">
                         <h5 class="tag-name">{{ tag.name }}</h5>
                         <p class="signature-count">
                             <span>{{ tag.gene_signatures|length }}</span> signatures
