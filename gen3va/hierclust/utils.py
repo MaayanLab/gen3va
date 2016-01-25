@@ -54,3 +54,15 @@ def build_columns(up_vec, down_vec):
         })
 
     return column_data
+
+
+# Provide default argument for unit testing.
+def sort_and_truncate_ranked_genes(genes, cutoff=250):
+    """Truncates gene list, assuming the list is sorted right-to-left,
+    greatest-to-least.
+    """
+    # Sort and then reverse the list of genes, in place.
+    # G2E and Geneva expect gene lists to be sorted left-to-right by the
+    # absolute value of their values.
+    genes.sort(key=lambda rg: abs(rg.value), reverse=True)
+    return genes[:cutoff]
