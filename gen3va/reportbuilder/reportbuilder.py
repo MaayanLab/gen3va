@@ -79,16 +79,12 @@ def update(tag):
 def _build(report_id):
     """Builds report, each visualization in its own subprocess.
     """
-    # Each function below executes with its own separate DB session. This
-    # ensures the process does not time out.
+    back_link = _get_back_link(report_id)
 
-    # Each thread should be completely responsible for its own DB connection.
+    # Each process should be completely responsible for its own DB connection.
     # It should wrap the entire process in a try/except/finally and close the
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
-
-    back_link = _get_back_link(report_id)
-
     p = multiprocessing.Process(target=subprocess_wrapper,
                                 kwargs={
                                     'report_id': report_id,
@@ -104,12 +100,11 @@ def _build(report_id):
                                 })
     p.start()
 
-    # # We don't want to spin up too many threads at once. Just process two
-    # # Enrichr libraries on build, and we can add more later using the update
-    # # function.
-    # two_enrichr_libraries = Config.SUPPORTED_ENRICHR_LIBRARIES[:2]
+    # We want a basic report as fast as possible. We can create more Enrichr
+    # visualizations later.
+    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
     # # Creates its own subprocess for each visualization.
-    # _enrichr_visualizations(report_id, two_enrichr_libraries, back_link)
+    _enrichr_visualizations(report_id, enrichr_library, back_link)
 
     p = multiprocessing.Process(target=subprocess_wrapper,
                                 kwargs={
@@ -129,11 +124,13 @@ def subprocess_wrapper(**kwargs):
     Session = scoped_session(session_factory)
     func = kwargs.get('func')
     try:
-        print('BEGINNING %s' % str(func.__name__))
+        print('BEGINNING %s' % func.__name__)
         func(Session, **kwargs)
-        print('COMPLETED %s' % str(func.__name__))
+        print('COMPLETED %s' % func.__name__)
         Session.commit()
-    except:
+    except Exception as e:
+        print('ERROR with %s' % func.__name__)
+        print(e)
         Session.rollback()
     finally:
         Session.remove()
@@ -233,6 +230,5 @@ def _save_report_link(Session, report, link, viz_type, library=None):
     if library:
         print('COMPLETED %s' % library)
     report.add_hier_clust(hier_clust)
-
     Session.merge(report)
     Session.commit()
