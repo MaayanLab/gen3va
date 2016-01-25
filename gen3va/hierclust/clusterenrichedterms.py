@@ -83,6 +83,7 @@ def _get_raw_data(signatures, library, use_up):
 def _enrich_gene_signature(genes, library):
     """Gets enrichment vector from Enrichr.
     """
+    genes = utils.sort_and_truncate_ranked_genes(genes)
     user_list_id = _post_to_enrichr(genes)
     if not user_list_id:
         message = 'Could not add gene list to Enrichr'
