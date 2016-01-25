@@ -41,12 +41,21 @@ def update(tag):
     report = tag.report
     print('Updating report for %s.' % tag.name)
     if not hasattr(report, 'pca_visualization'):
-        p = multiprocessing.Process(target=_perform_pca, args=(report.id,))
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _perform_pca
+                                    })
         p.start()
 
     back_link = _get_back_link(report.id)
     if not report.genes_hier_clust:
-        p = multiprocessing.Process(target=_cluster_ranked_genes, args=(report.id, back_link))
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _cluster_ranked_genes,
+                                        'back_link': back_link
+                                    })
         p.start()
 
     if len(report.enrichr_hier_clusts) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
@@ -58,7 +67,12 @@ def update(tag):
         _enrichr_visualizations(report.id, missing[:2], back_link)
 
     if not report.l1000cds2_hier_clust:
-        p = multiprocessing.Process(target=_cluster_perturbations, args=(report.id, back_link))
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _cluster_perturbations,
+                                        'back_link': back_link
+                                    })
         p.start()
 
 
