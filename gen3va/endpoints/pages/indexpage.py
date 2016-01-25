@@ -21,7 +21,8 @@ def index():
         curators = None
     else:
         tags = db.get_all(Tag)
-        curators = db.get_all(Curator)
+        curators = _active_curators()
+
     tags_ready = [t for t in tags if (t.report and t.report.ready)]
     return render_template('index.html',
                            tags=tags_ready,
@@ -37,3 +38,17 @@ def index_admin():
     return render_template('index-admin.html',
                            tags=tags_waiting,
                            report_url=Config.REPORT_URL)
+
+
+def _active_curators():
+    """Returns curators that have at least one ready report.
+    """
+    curators = []
+    for curator in db.get_all(Curator):
+        use = False
+        for tag in curator.tags:
+            if tag.report and tag.report.ready:
+                use = True
+        if use:
+            curators.append(curator)
+    return curators
