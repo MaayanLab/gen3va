@@ -21,6 +21,14 @@ def c_urlencode(context, value):
     return urllib.quote_plus(value)
 
 
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_signature_title')
+def c_signature_title(context, signature):
+    if signature.soft_file.dataset.record_type == 'geo':
+        return signature.soft_file.dataset.title
+    return signature.soft_file.name
+
+
 # Data filters
 # ----------------------------------------------------------------------------
 
@@ -45,7 +53,8 @@ def c_filter_optional_metadata(context, value):
             metadata.name == 'user_key' or
             metadata.name == 'userKey' or
             metadata.name == 'userEmail' or
-            metadata.name == 'user_email'):
+            metadata.name == 'user_email'
+        ):
             continue
         results.append(metadata)
     return results

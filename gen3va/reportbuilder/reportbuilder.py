@@ -93,9 +93,9 @@ def _build(report_id):
     # # We don't want to spin up too many threads at once. Just process two
     # # Enrichr libraries on build, and we can add more later using the update
     # # function.
-    two_enrichr_libraries = Config.SUPPORTED_ENRICHR_LIBRARIES[:2]
-    # Creates its own subprocess for each visualization.
-    _enrichr_visualizations(report_id, two_enrichr_libraries, back_link)
+    # two_enrichr_libraries = Config.SUPPORTED_ENRICHR_LIBRARIES[:2]
+    # # Creates its own subprocess for each visualization.
+    # _enrichr_visualizations(report_id, two_enrichr_libraries, back_link)
 
     p = multiprocessing.Process(target=subprocess_wrapper,
                                 kwargs={

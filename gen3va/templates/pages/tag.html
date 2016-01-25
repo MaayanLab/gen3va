@@ -26,16 +26,14 @@
                         <tr>
                             <td class="index">{{ loop.index }}</td>
                             <td class="title">
-                                {% set title = dataset.title if dataset.title else 'Link to results page' %}
-
                                 {% if gene_signature.resource.name == 'geo' %}
                                     <a data-toggle="tooltip"
                                        title="Results page for the processed gene signature"
                                        href="{{ gene_signature.extraction_id|c_results_url }}">
-                                         {{ title }}
+                                         {{ gene_signature|c_signature_title }}
                                     </a>
                                 {% else %}
-                                    {{ title }}
+                                    {{ gene_signature|c_signature_title }}
                                 {% endif %}
                             </td>
                             <td class="organism">
