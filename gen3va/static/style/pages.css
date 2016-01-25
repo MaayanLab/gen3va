@@ -141,6 +141,7 @@
   padding: 10px;
 }
 #tag-page table .optional-metadata-content table {
+  margin-top: 0;
   width: 100%;
 }
 #tag-page table .optional-metadata-content table td:first-child {
