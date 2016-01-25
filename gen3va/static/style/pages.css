@@ -25,14 +25,14 @@
   padding-top: 20px;
 }
 #index-page #filters button.bd2k-lincs-dcic-coursera,
-#index-page #filters button.lincs,
+#index-page #filters button.lincs-dsgcs,
 #index-page #filters button.biogps {
   color: white;
 }
 #index-page #filters button.bd2k-lincs-dcic-coursera {
   background-color: #9351e5;
 }
-#index-page #filters button.lincs {
+#index-page #filters button.lincs-dsgcs {
   background-color: #3593b1;
 }
 #index-page #filters button.biogps {
@@ -69,30 +69,30 @@
   max-width: 400px;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera,
-#index-page #isotope .tag-box.lincs,
+#index-page #isotope .tag-box.lincs-dsgcs,
 #index-page #isotope .tag-box.biogps {
   color: white;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera h5,
-#index-page #isotope .tag-box.lincs h5,
+#index-page #isotope .tag-box.lincs-dsgcs h5,
 #index-page #isotope .tag-box.biogps h5 {
   color: white;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera a,
-#index-page #isotope .tag-box.lincs a,
+#index-page #isotope .tag-box.lincs-dsgcs a,
 #index-page #isotope .tag-box.biogps a {
   /* Light blue, lighter than @color-palette-baby-blue. */
   color: #a7e2fd;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera a:hover,
-#index-page #isotope .tag-box.lincs a:hover,
+#index-page #isotope .tag-box.lincs-dsgcs a:hover,
 #index-page #isotope .tag-box.biogps a:hover {
   color: #90caf9;
 }
 #index-page #isotope .tag-box.bd2k-lincs-dcic-coursera {
   background-color: #9351e5;
 }
-#index-page #isotope .tag-box.lincs {
+#index-page #isotope .tag-box.lincs-dsgcs {
   background-color: #3593b1;
 }
 #index-page #isotope .tag-box.biogps {
