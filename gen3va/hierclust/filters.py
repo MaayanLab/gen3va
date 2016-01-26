@@ -50,3 +50,10 @@ def filter_rows_by_max_abs_val(df, max_=MAX_NUM_ROWS):
     df_temp = df.abs()
     top_rows = df_temp.max(axis=1).nlargest(max_)
     return df.ix[top_rows.index]
+
+
+def filter_rows_by_variance(df, max_=MAX_NUM_ROWS):
+    """Removes all rows less than a threshold, ordered by max values per row.
+    """
+    top_rows = df.var(axis=1).nlargest(max_)
+    return df.ix[top_rows.index]
