@@ -29,6 +29,8 @@ def get_link(type_, **kwargs):
     else:
         signatures = kwargs.get('signatures')
 
+    diff_exp_method = kwargs.get('diff_exp_method')
+
     payload = {
         'title': 'gen3va',
         'link': kwargs.get('back_link', ''),
@@ -44,7 +46,7 @@ def get_link(type_, **kwargs):
         payload['is_up_down'] = True
         row_title = 'Perturbations from L1000CDS2'
     elif type_ == 'genes':
-        payload['columns'] = prepare_ranked_genes(signatures)
+        payload['columns'] = prepare_ranked_genes(diff_exp_method, signatures)
         payload['is_up_down'] = False
         row_title = 'Genes'
 

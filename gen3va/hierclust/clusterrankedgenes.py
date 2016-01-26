@@ -9,12 +9,15 @@ from gen3va.hierclust import filters, utils
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
-def prepare_ranked_genes(signatures):
+def prepare_ranked_genes(diff_exp_method, signatures):
     """Prepares ranked genes for hierarchical clustering.
     """
     columns = []
     df = _get_raw_data(signatures)
-    df = filters.filter_rows_by_highest_abs_val_mean(df)
+    if diff_exp_method == 'z-score':
+        df = filters.filter_rows_by_max_abs_val(df)
+    else:
+        df = filters.filter_rows_by_highest_abs_val_mean(df)
 
     for col_name in df.columns:
         column = df.ix[:, col_name].tolist()

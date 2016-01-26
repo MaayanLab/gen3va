@@ -35,6 +35,46 @@ def build(tag):
     _build(report.id)
 
 
+def _build(report_id):
+    """Builds report, each visualization in its own subprocess.
+    """
+    back_link = _get_back_link(report_id)
+
+    # Each process should be completely responsible for its own DB connection.
+    # It should wrap the entire process in a try/except/finally and close the
+    # DB session in the finally statement. If an uncaught exception is thrown
+    # in the thread, a dangling session will be left open.
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _perform_pca
+                                })
+    p.start()
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _cluster_ranked_genes,
+                                    'back_link': back_link
+                                })
+    p.start()
+
+    # We want a basic report as fast as possible. We can create more Enrichr
+    # visualizations later.
+    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
+    # # Creates its own subprocess for each visualization.
+    _enrichr_visualizations(report_id, enrichr_library, back_link)
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _cluster_perturbations,
+                                    'back_link': back_link
+                                })
+    p.start()
+
+
 def update(tag):
     """updates an existing report.
     """
@@ -76,45 +116,6 @@ def update(tag):
         p.start()
 
 
-def _build(report_id):
-    """Builds report, each visualization in its own subprocess.
-    """
-    back_link = _get_back_link(report_id)
-
-    # Each process should be completely responsible for its own DB connection.
-    # It should wrap the entire process in a try/except/finally and close the
-    # DB session in the finally statement. If an uncaught exception is thrown
-    # in the thread, a dangling session will be left open.
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _perform_pca
-                                })
-    p.start()
-
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _cluster_ranked_genes,
-                                    'back_link': back_link
-                                })
-    p.start()
-
-    # We want a basic report as fast as possible. We can create more Enrichr
-    # visualizations later.
-    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
-    # # Creates its own subprocess for each visualization.
-    _enrichr_visualizations(report_id, enrichr_library, back_link)
-
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _cluster_perturbations,
-                                    'back_link': back_link
-                                })
-    p.start()
-
-
 def subprocess_wrapper(**kwargs):
     """A wrapper that creates a new DB engine, session factory, and scoped
     session for the applied function to use.
@@ -154,8 +155,12 @@ def _cluster_ranked_genes(Session, **kwargs):
     report_id = kwargs.get('report_id')
     back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
+    diff_exp_method = report.gene_signatures[0].required_metadata\
+        .diff_exp_method
+
     link = hierclust.get_link('genes',
                               signatures=report.gene_signatures,
+                              diff_exp_method=diff_exp_method,
                               back_link=back_link)
     if link:
         _save_report_link(Session, report, link, 'gen3va')
