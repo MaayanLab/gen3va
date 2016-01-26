@@ -32,3 +32,23 @@ class TestFilterRows(unittest.TestCase):
         df_filter.sort_index(inplace=True)
 
         self.assertTrue((answer == df_filter).all().all())
+
+    def test_filter_rows_negative(self):
+        df = pandas.DataFrame(
+            index=['a', 'b'],
+            data=[
+                [4, 4, 4], # average: 4
+                [-9, 0, 0] # average: 0 -- should win
+            ]
+        )
+
+        answer = pandas.DataFrame(
+            index=['b'],
+            data=[[-9, 0, 0]]
+        )
+
+        df_filter = filter_rows_by_max_abs_val(df, 1)
+        answer.sort_index(inplace=True)
+        df_filter.sort_index(inplace=True)
+
+        self.assertTrue((answer == df_filter).all().all())

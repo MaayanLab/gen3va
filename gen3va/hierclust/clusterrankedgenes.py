@@ -13,8 +13,11 @@ def prepare_ranked_genes(diff_exp_method, signatures):
     """Prepares ranked genes for hierarchical clustering.
     """
     columns = []
+    import pdb; pdb.set_trace()
     df = _get_raw_data(signatures)
+    print(diff_exp_method)
     if diff_exp_method == 'z-score':
+        print('using z-score')
         df = filters.filter_rows_by_max_abs_val(df)
     else:
         df = filters.filter_rows_by_highest_abs_val_mean(df)

@@ -47,5 +47,6 @@ def filter_rows_by_highest_abs_val_mean(df, max_=MAX_NUM_ROWS):
 def filter_rows_by_max_abs_val(df, max_=MAX_NUM_ROWS):
     """Removes all rows less than a threshold, ordered by max values per row.
     """
-    top_rows = numpy.abs(df.max(axis=1)).nlargest(max_)
+    df_temp = df.abs()
+    top_rows = df_temp.max(axis=1).nlargest(max_)
     return df.ix[top_rows.index]
