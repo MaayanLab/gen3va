@@ -26,12 +26,9 @@ def index():
         curators = _active_curators()
         curators = _color_curators(curators)
 
-    tags_ready = [t for t in tags if (t.report and t.report.ready)]
     return render_template('index.html',
-                           tags=tags_ready,
-                           curators=curators,
-                           report_url=Config.REPORT_URL,
-                           tag_url=Config.TAG_URL)
+                           tags=tags,
+                           curators=curators)
 
 
 @index_page.route('/admin')

@@ -78,6 +78,12 @@ def c_tag_url(context, value):
 
 
 @jinja2.contextfilter
+@jinjafilters.app_template_filter('c_report_url')
+def c_report_url(context, value):
+    return '%s/%s' % (Config.REPORT_URL, value)
+
+
+@jinja2.contextfilter
 @jinjafilters.app_template_filter('c_results_url')
 def c_results_url(context, value):
     return '%s/%s' % (Config.RESULTS_URL, value)

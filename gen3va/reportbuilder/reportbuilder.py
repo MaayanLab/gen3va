@@ -45,40 +45,47 @@ def _build(report_id):
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
 
-    subprocess_wrapper(**{
-        'report_id': report_id,
-        'func': _cluster_ranked_genes,
-        'back_link': back_link
-    })
+    # subprocess_wrapper(**{
+    #     'report_id': report_id,
+    #     'func': _cluster_ranked_genes,
+    #     'back_link': back_link
+    # })
 
-    # p = multiprocessing.Process(target=subprocess_wrapper,
-    #                             kwargs={
-    #                                 'report_id': report_id,
-    #                                 'func': _perform_pca
-    #                             })
-    # p.start()
-    #
-    # p = multiprocessing.Process(target=subprocess_wrapper,
-    #                             kwargs={
-    #                                 'report_id': report_id,
-    #                                 'func': _cluster_ranked_genes,
-    #                                 'back_link': back_link
-    #                             })
-    # p.start()
-    #
-    # # We want a basic report as fast as possible. We can create more Enrichr
-    # # visualizations later.
-    # enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
-    # # # Creates its own subprocess for each visualization.
-    # _enrichr_visualizations(report_id, enrichr_library, back_link)
-    #
-    # p = multiprocessing.Process(target=subprocess_wrapper,
-    #                             kwargs={
-    #                                 'report_id': report_id,
-    #                                 'func': _cluster_perturbations,
-    #                                 'back_link': back_link
-    #                             })
-    # p.start()
+    # subprocess_wrapper(**{
+    #     'report_id': report_id,
+    #     'func': _cluster_enriched_terms,
+    #     'back_link': back_link,
+    #     'library': 'ChEA_2015'
+    # })
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _perform_pca
+                                })
+    p.start()
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _cluster_ranked_genes,
+                                    'back_link': back_link
+                                })
+    p.start()
+
+    # We want a basic report as fast as possible. We can create more Enrichr
+    # visualizations later.
+    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
+    # # Creates its own subprocess for each visualization.
+    _enrichr_visualizations(report_id, enrichr_library, back_link)
+
+    p = multiprocessing.Process(target=subprocess_wrapper,
+                                kwargs={
+                                    'report_id': report_id,
+                                    'func': _cluster_perturbations,
+                                    'back_link': back_link
+                                })
+    p.start()
 
 
 def update(tag):
