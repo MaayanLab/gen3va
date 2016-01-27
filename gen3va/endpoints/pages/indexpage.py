@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request
 
 from substrate import Curator, Tag
 from gen3va.config import Config
-from gen3va.db import db
+from gen3va import db
 
 
 index_page = Blueprint('index_page',
@@ -17,15 +17,15 @@ index_page = Blueprint('index_page',
 
 @index_page.route('/')
 def index():
-    curator = request.args.get('curator')
-    if curator:
-        tags = db.get_tags_by_curator(curator)
-        curators = None
+    curator_name = request.args.get('curator')
+    if curator_name:
+        curator = db.get(Curator, curator_name, key='name')
+        curators = [curator]
+        tags = curator.tags
     else:
         tags = db.get_all(Tag)
         curators = _active_curators()
-        curators = _color_curators(curators)
-
+    curators = _color_curators(curators)
     return render_template('index.html',
                            tags=tags,
                            curators=curators)
