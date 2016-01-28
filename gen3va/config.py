@@ -9,7 +9,12 @@ class Config(object):
         lines = [x for x in f.read().split('\n')]
 
     DEBUG = lines[1] == 'True'
-    SERVER_FILE_ROOT = os.path.dirname(os.getcwd()) + 'gen3va/gen3va'
+
+    root = os.path.dirname(os.getcwd())
+    if root.endswith('/'):
+        SERVER_FILE_ROOT = root + 'gen3va/gen3va'
+    else:
+        SERVER_FILE_ROOT = root + '/gen3va/gen3va'
 
     BASE_URL = '/gen3va'
     BASE_API_URL = BASE_URL + '/api/1.0'

@@ -17,6 +17,7 @@ download_api = Blueprint('download_api',
                          url_prefix='%s/download' % Config.BASE_URL)
 
 DOWNLOAD_DIR = '%s/static/downloads' % Config.SERVER_FILE_ROOT
+print(DOWNLOAD_DIR)
 
 
 @download_api.route('/<tag_name>', methods=['GET'])
@@ -71,7 +72,8 @@ def _get_signature_files(tag):
 def _write_signature_to_file(idx, gene_signature):
     """Returns the name of a file with the contents of a gene signature.
     """
-    path = '%s/%s_%s.txt' % (DOWNLOAD_DIR, idx, gene_signature.name)
+    name = gene_signature.name.replace('/', '')
+    path = '%s/%s_%s.txt' % (DOWNLOAD_DIR, idx, name)
     with open(path, 'w+') as f:
 
         rm = gene_signature.required_metadata
