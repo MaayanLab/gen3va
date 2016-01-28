@@ -17,7 +17,6 @@ download_api = Blueprint('download_api',
                          url_prefix='%s/download' % Config.BASE_URL)
 
 DOWNLOAD_DIR = '%s/static/downloads' % Config.SERVER_FILE_ROOT
-print(DOWNLOAD_DIR)
 
 
 @download_api.route('/<tag_name>', methods=['GET'])
@@ -94,7 +93,11 @@ def _write_signature_to_file(idx, gene_signature):
 
 
 def _write_metadata(f, key, value):
+    """Writes metadata key-value pair to file, encoding to UTF-8.
     """
-    """
-    line = '!%s\t%s\n' % (key, value)
-    f.write(line)
+    try:
+        line = '!%s\t%s\n' % (key, value)
+        line = line.encode('utf-8')
+        f.write(line)
+    except UnicodeEncodeError as e:
+        print(e)

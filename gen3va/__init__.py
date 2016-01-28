@@ -29,11 +29,11 @@ cors = CORS(app)
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
 session_factory = sessionmaker(bind=engine)
 
-if not Config.DEBUG:
-    # Configure Apache logging.
-    logging.basicConfig(stream=sys.stderr)
-else:
-    print 'Starting in DEBUG mode'
+# if not Config.DEBUG:
+#     # Configure Apache logging.
+#     logging.basicConfig(stream=sys.stderr)
+# else:
+#     print 'Starting in DEBUG mode'
 
 if Config.DEBUG:
     # Verify that the report builds for multiple libraries but not all of
