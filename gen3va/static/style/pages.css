@@ -98,7 +98,6 @@
   font-size: 14px;
   font-weight: bold;
 }
-#report-page iframe,
 #report-page #pca-container {
   border: 1px solid #eeeeee;
 }
@@ -112,6 +111,7 @@
   margin-bottom: 20px;
 }
 #report-page iframe {
+  border: none;
   height: 800px;
   width: 100%;
 }
