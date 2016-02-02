@@ -384,3 +384,22 @@ div.dataTables_wrapper .pagination > .active > span:hover {
 .table-responsive {
   overflow-x: inherit;
 }
+/* Responsive design
+ * ----------------- */
+@media (max-width: 992px) {
+  body {
+    margin-bottom: 370px;
+    /* bottom = footer height */
+  }
+  #footer {
+    height: 370px;
+  }
+  #footer a,
+  #footer li,
+  #footer p {
+    font-size: 14px;
+  }
+  #footer h3 {
+    font-size: 20px;
+  }
+}
