@@ -16,6 +16,16 @@
                 <li class="last">
                     <a href="statistics" class="statistics">Statistics</a>
                 </li>
+                {% if config.user and config.user.is_authenticated %}
+                    <li>
+                        <a href="admin">{{ config.user.name }}</a>
+                    </li>
+                    <li>
+                        <form action='logout' method='POST'>
+                            <button name='logout' type='submit'>Logout</button>
+                        </form>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

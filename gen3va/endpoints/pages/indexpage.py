@@ -31,15 +31,6 @@ def index():
                            curators=curators)
 
 
-@index_page.route('/admin')
-def index_admin():
-    tags = db.get_all(Tag)
-    tags_waiting = [t for t in tags if (not t.report or not t.report.ready)]
-    return render_template('index-admin.html',
-                           tags=tags_waiting,
-                           report_url=Config.REPORT_URL)
-
-
 def _active_curators():
     """Returns curators that have at least one ready report.
     """

@@ -50,14 +50,14 @@
                             <tr>
                                 <td class="index">{{ loop.index }}</td>
                                 <td class="title">
-                                    {% if gene_signature.soft_file.dataset.record_type == 'geo' %}
+                                    {% if gene_signature.resource.code == 'geo' %}
                                         <a data-toggle="tooltip"
                                            title="Results page for the processed gene signature"
                                            href="{{ gene_signature.extraction_id|c_results_url }}">
-                                             {{ gene_signature|c_signature_title }}
+                                             {{ gene_signature.name }}
                                         </a>
                                     {% else %}
-                                        {{ gene_signature|c_signature_title }}
+                                        {{ gene_signature.name }}
                                     {% endif %}
                                 </td>
                                 <td class="organism">
