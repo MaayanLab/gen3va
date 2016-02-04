@@ -1,7 +1,7 @@
 """Configures the application at server startup.
 """
 
-from flask import Flask
+from flask import Flask, session as flask_session
 from flask.ext.cors import CORS
 from flask.ext.login import LoginManager, user_logged_out
 from sqlalchemy import create_engine
@@ -29,18 +29,23 @@ cors = CORS(app)
 app.secret_key = 'CHANGE THIS IN THE FUTURE'
 
 
+@app.before_request
+def make_session_permanent():
+    """Sets Flask session to 'permanent', meaning 31 days.
+    """
+    flask_session.permanent = True
+
+
+# Database configurations.
+# ----------------------------------------------------------------------------
 # Create a standalone session factory for non Flask-SQLAlchemy transactions.
 # See reportbuilder.py.
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
 session_factory = sessionmaker(bind=engine)
 
 
-if Config.DEBUG:
-    # Verify that the report builds for multiple libraries but not all of
-    # them.
-    Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
-                                          'ENCODE_TF_ChIP-seq_2015']
-
+# Setup endpoints (Flask Blueprints)
+# ----------------------------------------------------------------------------
 # Import these after connecting to the DB.
 from gen3va import endpoints
 from gen3va.utils.jinjafilters import jinjafilters
@@ -76,3 +81,12 @@ def unset_current_user(sender, user):
     """When the user logs out, we need to unset this global variable.
     """
     app.config.user = None
+
+
+# Miscellaneous
+# ----------------------------------------------------------------------------
+if Config.DEBUG:
+    # Verify that the report builds for multiple libraries but not all of
+    # them.
+    Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
+                                          'ENCODE_TF_ChIP-seq_2015']
