@@ -26,7 +26,7 @@
                         <tr>
                             <td class="index">{{ loop.index }}</td>
                             <td class="title">
-                                {% if gene_signature.resource.name == 'geo' %}
+                                {% if gene_signature.resource.code == 'geo' %}
                                     <a data-toggle="tooltip"
                                        title="Results page for the processed gene signature"
                                        href="{{ gene_signature.extraction_id|c_results_url }}">
