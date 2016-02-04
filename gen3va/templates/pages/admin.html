@@ -10,8 +10,9 @@
                     <ul class="list-unstyled">
                         <li><strong>{{ tag.name }}</strong></li>
                         <li><span>{{ tag.gene_signatures|length }}</span> signatures</li>
-                        <li><a href="{{ report_url }}/{{ tag.name }}/build">Build</a></li>
-                        <li><a href="{{ report_url }}/{{ tag.name }}/update">Update</a></li>
+                        <li><a href="{{ tag_url }}/{{ tag.name }}">View signatures</a></li>
+                        <li><a href="{{ report_url }}/{{ tag.name }}/build">Build report</a></li>
+                        <li><a href="{{ report_url }}/{{ tag.name }}/update">Update report</a></li>
                     </ul>
                 </li>
             {% endfor %}

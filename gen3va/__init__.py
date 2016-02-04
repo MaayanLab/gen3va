@@ -1,17 +1,15 @@
 """Configures the application at server startup.
 """
 
-import logging
-import sys
-
 from flask import Flask
 from flask.ext.cors import CORS
+from flask.ext.login import LoginManager, user_logged_out
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
 from gen3va.config import Config
-from substrate import db as substrate_db
+from substrate import User, db as substrate_db
 
 
 app = Flask(__name__,
@@ -24,16 +22,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 substrate_db.init_app(app)
 cors = CORS(app)
 
+
+# User authentication and sessioning.
+# ----------------------------------------------------------------------------
+# Change this SECRET_KEY to force all users to re-authenticate.
+app.secret_key = 'CHANGE THIS IN THE FUTURE'
+
+
 # Create a standalone session factory for non Flask-SQLAlchemy transactions.
 # See reportbuilder.py.
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
 session_factory = sessionmaker(bind=engine)
 
-# if not Config.DEBUG:
-#     # Configure Apache logging.
-#     logging.basicConfig(stream=sys.stderr)
-# else:
-#     print 'Starting in DEBUG mode'
 
 if Config.DEBUG:
     # Verify that the report builds for multiple libraries but not all of
@@ -45,6 +45,8 @@ if Config.DEBUG:
 from gen3va import endpoints
 from gen3va.utils.jinjafilters import jinjafilters
 
+app.register_blueprint(endpoints.admin_page)
+app.register_blueprint(endpoints.auth_pages)
 app.register_blueprint(endpoints.index_page)
 app.register_blueprint(endpoints.error_page)
 app.register_blueprint(endpoints.menu_pages)
@@ -52,3 +54,25 @@ app.register_blueprint(endpoints.report_pages)
 app.register_blueprint(endpoints.tag_pages)
 app.register_blueprint(endpoints.download_api)
 app.register_blueprint(jinjafilters)
+
+
+# User authentication
+# ----------------------------------------------------------------------------
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth_pages.login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Utility method for loading User for Flask-Login.
+    """
+    user = substrate_db.session.query(User).get(user_id)
+    app.config.user = user
+    return user
+
+@user_logged_out.connect_via(app)
+def unset_current_user(sender, user):
+    """When the user logs out, we need to unset this global variable.
+    """
+    app.config.user = None

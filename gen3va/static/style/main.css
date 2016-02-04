@@ -238,6 +238,7 @@ caption {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
+  /* Make logout form look like normal nav button */
 }
 #header a {
   border: none;
@@ -286,6 +287,19 @@ caption {
 }
 #header h1 a {
   font-size: 40px;
+}
+#header form {
+  padding-top: 8px;
+}
+#header form button {
+  border: none;
+  background-color: transparent;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 200;
+  text-transform: uppercase;
+}
+#header form button:hover {
+  opacity: .8;
 }
 #page {
   padding-bottom: 50px;
