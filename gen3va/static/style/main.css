@@ -275,9 +275,6 @@ caption {
   -moz-transition: background-color 0.25s ease-in-out;
   -webkit-transition: background-color 0.25s ease-in-out;
 }
-#header ul.nav li.last {
-  border-right: none;
-}
 #header img {
   width: 30px;
 }

@@ -50,7 +50,7 @@ session_factory = sessionmaker(bind=engine)
 from gen3va import endpoints
 from gen3va.utils.jinjafilters import jinjafilters
 
-app.register_blueprint(endpoints.admin_page)
+app.register_blueprint(endpoints.admin_pages)
 app.register_blueprint(endpoints.auth_pages)
 app.register_blueprint(endpoints.index_page)
 app.register_blueprint(endpoints.error_page)

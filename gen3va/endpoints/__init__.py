@@ -3,7 +3,7 @@
 
 from api.downloadapi import download_api
 
-from pages.adminpage import admin_page
+from pages.adminpages import admin_pages
 from pages.authpages import auth_pages
 from pages.errorpage import error_page
 from pages.indexpage import index_page

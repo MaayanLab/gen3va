@@ -15,7 +15,7 @@ index_page = Blueprint('index_page',
                        url_prefix=Config.BASE_URL)
 
 
-@index_page.route('/')
+@index_page.route('/', methods=['GET'])
 def index():
     curator_name = request.args.get('curator')
     if curator_name:
@@ -25,6 +25,7 @@ def index():
     else:
         tags = db.get_all(Tag)
         curators = _active_curators()
+    tags = [t for t in tags if t.approved_report]
     curators = _color_curators(curators)
     return render_template('index.html',
                            tags=tags,
