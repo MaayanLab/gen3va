@@ -11,20 +11,20 @@
                     <button class='btn btn-primary'>Approve Selected Reports</button>
                     <ul class='list-unstyled'>
                         {% for tag in all_tags %}
-                            {% for report in tag.reports %}
-                                <li>
-                                    <strong>{{ tag.name }}</strong>
-                                    <ul class='list-unstyled'>
-                                        <li>
-                                            {% if report.is_approved %}
-                                                <input type='checkbox' checked name="{{ report.id }}"/>
-                                            {% else %}
-                                                <input type='checkbox' name="{{ report.id }}"/>
-                                            {% endif %}
-                                        </li>
-                                    </ul>
-                                </li>
-                            {% endfor %}
+                            <li>
+                                <strong>{{ tag.name }}</strong>
+                                <ul class='list-unstyled'>
+                                    {% for report in tag.reports %}
+                                    <li>
+                                        {% if report.is_approved %}
+                                            <input type='checkbox' checked name="{{ report.id }}"/>
+                                        {% else %}
+                                            <input type='checkbox' name="{{ report.id }}"/>
+                                        {% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
                         {% endfor %}
                     </ul>
                 </form>

@@ -44,6 +44,20 @@ def get_signatures_by_ids(extraction_ids):
             .all()
 
 
+def delete_object(obj):
+    """Deletes object provided.
+    """
+    with session_scope() as session:
+        session.delete(obj)
+
+
+def update_object(obj):
+    """Update object, i.e. saves any edits.
+    """
+    with session_scope() as session:
+        session.merge(obj)
+
+
 def get_tags_by_curator(curator):
     """Returns all tags by a particular curator
     """

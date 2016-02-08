@@ -4,7 +4,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required
 
-from substrate import Tag
+from substrate import Report, Tag
 from gen3va.db import db
 from gen3va.config import Config
 
@@ -20,10 +20,6 @@ def admin_landing():
     """Renderings admin page.
     """
     tags = db.get_all(Tag)
-
-    #tags[1].report.is_approved = True
-    #tags[4].report.is_approved = True
-
     tags_waiting = [t for t in tags if (not t.report or not t.report.ready)]
     return render_template('pages/admin.html',
                            all_tags=tags,
@@ -37,7 +33,12 @@ def admin_landing():
 def approve_reports():
     """Endpoint for updating which reports are approved.
     """
-    for item in request.form.items():
-        report_id = item[0]
-        print(report_id)
+    reports = db.get_all(Report)
+    checked = [int(report_id) for report_id, discard in request.form.items()]
+    for r in reports:
+        if r.id in checked:
+            r.is_approved = True
+        else:
+            r.is_approved = False
+        db.update_object(r)
     return redirect(url_for('admin_pages.admin_landing'))
