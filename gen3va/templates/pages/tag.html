@@ -6,7 +6,7 @@
 
     <div class="page" id="tag-page">
 
-        <h1>{{ num_tags }} gene signatures for <strong>{{ tag.name }}</strong></h1>
+        <h1>{{ tag.gene_signatures|length }} gene signatures for <strong>{{ tag.name }}</strong></h1>
         <a class="btn btn-primary" href="{{ report_url }}/{{ tag.name }}">Back to report</a>
 
         <div class="table-responsive">
@@ -22,24 +22,19 @@
                 </thead>
                 <tbody>
                     {% for gene_signature in tag.gene_signatures %}
-                        {% set dataset = gene_signature.soft_file.dataset %}
                         <tr>
                             <td class="index">{{ loop.index }}</td>
                             <td class="title">
-                                {% if gene_signature.resource.code == 'geo' %}
-                                    <a data-toggle="tooltip"
-                                       title="Results page for the processed gene signature"
-                                       href="{{ gene_signature.extraction_id|c_results_url }}">
-                                         {{ gene_signature.name }}
-                                    </a>
-                                {% else %}
-                                    {{ gene_signature.name }}
-                                {% endif %}
+                                <a data-toggle="tooltip"
+                                   title="Results page for the processed gene signature"
+                                   href="{{ gene_signature.extraction_id|c_results_url }}">
+                                     {{ gene_signature.name }}
+                                </a>
                             </td>
                             <td class="organism">
-                                {{ dataset.organism|c_filter_empty }}
+                                {{ gene_signature.organism|c_filter_empty }}
                             </td>
-                            <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
+                            <td class="platform">{{ gene_signature.platform|c_filter_empty }}</td>
                             <td class="optional-metadata">
                                 {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
                                     <div class="optional-metadata-content">

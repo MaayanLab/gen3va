@@ -1,7 +1,6 @@
 """Renders tag pages.
 """
 
-
 from flask import Blueprint, render_template
 
 from substrate import Tag
@@ -29,6 +28,5 @@ def view_individual_tag(tag_name):
         return render_template('404.html', message=message)
     else:
         return render_template('pages/tag.html',
-                               num_tags=len(tag.gene_signatures),
                                report_url=Config.REPORT_URL,
                                tag=tag)
