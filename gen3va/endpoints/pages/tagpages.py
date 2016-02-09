@@ -25,7 +25,7 @@ def view_individual_tag(tag_name):
     tag = db.get(Tag, tag_name, key='name')
     if tag is None:
         message = 'No gene signatures with tag "%s" found' % tag_name
-        return render_template('404.html', message=message)
+        return render_template('pages/404.html', message=message)
     else:
         return render_template('pages/tag.html',
                                report_url=Config.REPORT_URL,
