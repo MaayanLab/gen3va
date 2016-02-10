@@ -28,7 +28,16 @@ class Config(object):
     DOWNLOAD_URL = BASE_URL + '/download'
 
     SQLALCHEMY_DATABASE_URI = lines[0]
-    SQLALCHEMY_POOL_RECYCLE = 3600
+
+    # This value should be less than MySQL's wait_timeout variable. To check
+    # the value of the variable, type the following query into phpMyAdmin:
+    #
+    # SHOW VARIABLES LIKE "%wait%"
+    #
+    # Currently (2016-02-10), the MySQL server's timeout is set to 600 seconds
+    # or 10 minutes. We'll see our pool to recycle on a shorter interval, 300
+    # seconds or every 5 minutes.
+    SQLALCHEMY_POOL_RECYCLE = 300
 
     # Downstream applications
     if DEBUG:
