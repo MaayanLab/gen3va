@@ -35,9 +35,9 @@ class Config(object):
     # SHOW VARIABLES LIKE "%wait%"
     #
     # Currently (2016-02-10), the MySQL server's timeout is set to 600 seconds
-    # or 10 minutes. We'll see our pool to recycle on a shorter interval, 300
-    # seconds or every 5 minutes.
-    SQLALCHEMY_POOL_RECYCLE = 300
+    # or 10 minutes. We'll see our pool to recycle on a shorter interval, 480
+    # seconds or every 8 minutes.
+    SQLALCHEMY_POOL_RECYCLE = 480
 
     # Downstream applications
     if DEBUG:
