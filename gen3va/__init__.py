@@ -4,9 +4,6 @@
 from flask import Flask, session as flask_session
 from flask.ext.cors import CORS
 from flask.ext.login import LoginManager, user_logged_out
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
 
 from gen3va.config import Config
 from substrate import User, db as substrate_db
@@ -35,14 +32,6 @@ def make_session_permanent():
     """Sets Flask session to 'permanent', meaning 31 days.
     """
     flask_session.permanent = True
-
-
-# Database configurations.
-# ----------------------------------------------------------------------------
-# Create a standalone session factory for non Flask-SQLAlchemy transactions.
-# See reportbuilder.py.
-engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
-session_factory = sessionmaker(bind=engine)
 
 
 # Setup endpoints (Flask Blueprints)
