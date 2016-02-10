@@ -5,7 +5,7 @@ import pandas
 import numpy as np
 from sklearn import decomposition
 
-from gen3va.db import db
+from gen3va.database import database
 
 
 def from_report(gene_signatures):

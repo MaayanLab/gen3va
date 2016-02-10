@@ -7,7 +7,7 @@ from flask import Blueprint, redirect, render_template, url_for
 
 from substrate import Report, Tag
 from gen3va.config import Config
-from gen3va import db, reportbuilder
+from gen3va import database, reportbuilder
 
 
 report_pages = Blueprint('report_pages',
@@ -19,7 +19,7 @@ report_pages = Blueprint('report_pages',
 def view_all_reports():
     """Renders page to view all reports.
     """
-    reports = db.get_all(Report)
+    reports = database.get_all(Report)
     return render_template('pages/reports-all.html',
                            report_url=Config.REPORT_URL,
                            reports=reports)
@@ -29,7 +29,7 @@ def view_all_reports():
 def view_report(tag_name):
     """Renders page to view report based on tag.
     """
-    tag = db.get(Tag, tag_name, 'name')
+    tag = database.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
 
@@ -69,13 +69,13 @@ def view_report_hot_fix(report_id, tag_name):
 
 @report_pages.route('/<tag_name>/build', methods=['GET'])
 def build_report(tag_name):
-    tag = db.get(Tag, tag_name, 'name')
+    tag = database.get(Tag, tag_name, 'name')
     reportbuilder.build(tag)
     return redirect(url_for('report_pages.view_report', tag_name=tag.name))
 
 
 @report_pages.route('/<tag_name>/update', methods=['GET'])
 def update_report(tag_name):
-    tag = db.get(Tag, tag_name, 'name')
+    tag = database.get(Tag, tag_name, 'name')
     reportbuilder.update(tag)
     return redirect(url_for('report_pages.view_report', tag_name=tag.name))

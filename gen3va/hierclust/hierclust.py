@@ -6,7 +6,7 @@ import json
 import requests
 from substrate import GeneSignature
 
-from gen3va import db
+from gen3va import database
 from gen3va.config import Config
 from .clusterenrichedterms import prepare_enriched_terms
 from .clusterperturbations import prepare_perturbations
@@ -24,7 +24,7 @@ def get_link(type_, **kwargs):
     if 'extraction_ids' in kwargs:
         signatures = []
         for extraction_id in kwargs.get('extraction_ids', []):
-            signature = db.get(GeneSignature, extraction_id, 'extraction_id')
+            signature = database.get(GeneSignature, extraction_id, 'extraction_id')
             signatures.append(signature)
     else:
         signatures = kwargs.get('signatures')

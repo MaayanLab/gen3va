@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request
 
 from substrate import Curator, Tag
 from gen3va.config import Config
-from gen3va import db
+from gen3va import database
 
 
 index_page = Blueprint('index_page',
@@ -19,13 +19,13 @@ index_page = Blueprint('index_page',
 def index():
     curator_name = request.args.get('curator')
     if curator_name:
-        curator = db.get(Curator, curator_name, key='name')
+        curator = database.get(Curator, curator_name, key='name')
         curators = [curator]
         tags = curator.tags
     else:
-        tags = db.get_all(Tag)
+        tags = database.get_all(Tag)
         curators = _active_curators()
-    tags = [t for t in tags if t.approved_report]
+    #tags = [t for t in tags if t.approved_report]
     curators = _color_curators(curators)
     return render_template('index.html',
                            tags=tags,
@@ -36,7 +36,7 @@ def _active_curators():
     """Returns curators that have at least one ready report.
     """
     curators = []
-    for curator in db.get_all(Curator):
+    for curator in database.get_all(Curator):
         use = False
         for tag in curator.tags:
             if tag.report and tag.report.ready:

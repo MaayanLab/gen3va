@@ -5,9 +5,9 @@ and their relationships and saves them accordingly.
 import sqlalchemy as sa
 
 from substrate import Curator, GeneList, GeneSignature, GeoDataset, Report,\
-    Resource, SoftFile, Tag
+    SoftFile, Tag
 
-from gen3va.db.utils import session_scope
+from gen3va.database.utils import session_scope
 
 
 def count(class_):

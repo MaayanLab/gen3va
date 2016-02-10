@@ -11,7 +11,7 @@ from sqlalchemy.pool import NullPool
 
 from substrate import PCAVisualization, Report, TargetApp, \
     HierClustVisualization
-from gen3va.db.utils import session_scope, \
+from gen3va.database.utils import session_scope, \
     get_or_create_with_session
 from gen3va import Config, hierclust, pca
 

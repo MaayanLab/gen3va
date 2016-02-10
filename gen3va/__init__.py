@@ -17,6 +17,7 @@ app = Flask(__name__,
             static_folder='static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 substrate_db.init_app(app)

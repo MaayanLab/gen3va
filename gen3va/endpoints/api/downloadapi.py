@@ -8,7 +8,7 @@ import StringIO
 from flask import Blueprint, Response
 
 from substrate import Tag
-from gen3va import db
+from gen3va import database
 from gen3va.config import Config
 
 
@@ -23,7 +23,7 @@ DOWNLOAD_DIR = '%s/static/downloads' % Config.SERVER_FILE_ROOT
 def test(tag_name):
     """Returns a zipped directory with one plain text file for each signature.
     """
-    tag = db.get(Tag, tag_name, 'name')
+    tag = database.get(Tag, tag_name, 'name')
 
     # Write the contents of the signatures to file and get the filenames.
     filenames = _get_signature_files(tag)

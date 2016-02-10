@@ -19,11 +19,11 @@ def session_scope():
         print 'Rolling back database'
         print e
         substrate_db.session.rollback()
-    finally:
-        # Flask-SQLAlchemy documentation:
-        # "You have to commit the session, but you don't have to remove it at
-        # the end of the request, Flask-SQLAlchemy does that for you."
-        pass
+
+    # finally:
+    #     Flask-SQLAlchemy documentation:
+    #     "You have to commit the session, but you don't have to remove it at
+    #     the end of the request, Flask-SQLAlchemy does that for you."
 
 
 def get_or_create(model, **kwargs):

@@ -5,6 +5,7 @@ import os
 
 
 class Config(object):
+
     with open('gen3va/app.conf') as f:
         lines = [x for x in f.read().split('\n')]
 
@@ -27,6 +28,7 @@ class Config(object):
     DOWNLOAD_URL = BASE_URL + '/download'
 
     SQLALCHEMY_DATABASE_URI = lines[0]
+    SQLALCHEMY_POOL_RECYCLE = 3600
 
     # Downstream applications
     if DEBUG:
