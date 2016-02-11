@@ -7,7 +7,7 @@ from flask import Blueprint, redirect, render_template, url_for
 
 from substrate import Report, Tag
 from gen3va.config import Config
-from gen3va import database, reportbuilder
+from gen3va import database, report_builder
 
 
 report_pages = Blueprint('report_pages',
@@ -37,8 +37,8 @@ def view_report(tag_name):
     if not report:
         return render_template('pages/report-not-ready.html',
                                tag=tag)
-    if report.pca_visualization:
-        pca_json = report.pca_visualization.data
+    if report.pca_plot:
+        pca_json = report.pca_plot.data
     else:
         pca_json = None
 
@@ -46,7 +46,7 @@ def view_report(tag_name):
     # HierClustVisualization class. But I don't want to rebuild the Docker
     # container (20 min) because it's a Saturday.
     enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
-                                        for x in report.enrichr_hier_clusts})
+                                        for x in report.enrichr_heat_maps})
 
     return render_template('pages/report.html',
                            tag=tag,
@@ -70,12 +70,12 @@ def view_report_hot_fix(report_id, tag_name):
 @report_pages.route('/<tag_name>/build', methods=['GET'])
 def build_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
-    reportbuilder.build(tag)
+    report_builder.build(tag)
     return redirect(url_for('report_pages.view_report', tag_name=tag.name))
 
 
 @report_pages.route('/<tag_name>/update', methods=['GET'])
 def update_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
-    reportbuilder.update(tag)
+    report_builder.update(tag)
     return redirect(url_for('report_pages.view_report', tag_name=tag.name))

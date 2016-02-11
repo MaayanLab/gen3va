@@ -9,7 +9,7 @@ import requests
 from requests.exceptions import RequestException
 
 from gen3va import Config
-from gen3va.hierclust import filters, utils
+from gen3va.heat_map_factory import filters, utils
 
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 

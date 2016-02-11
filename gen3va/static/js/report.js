@@ -4,7 +4,7 @@ $(function() {
     dataTables();
 
     function heatmaps() {
-        var $enrichr = $('#enrichr-hier-clusts');
+        var $enrichr = $('#enrichr-heat-maps');
 
         // When the user selects a new library, toggle the visible library.
         $enrichr.find('select').change(function(evt) {

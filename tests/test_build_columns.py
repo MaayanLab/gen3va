@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.hierclust.utils import build_columns
+from gen3va.heat_map_factory.utils import build_columns
 
 def _in(lst, tpl):
     for t in lst:

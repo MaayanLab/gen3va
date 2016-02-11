@@ -2,7 +2,7 @@ import unittest
 import pandas
 
 from substrate import Gene, RankedGene
-from gen3va.hierclust.utils import sort_and_truncate_ranked_genes
+from gen3va.heat_map_factory.utils import sort_and_truncate_ranked_genes
 
 
 class TestFilterRows(unittest.TestCase):

@@ -9,11 +9,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.pool import NullPool
 
-from substrate import PCAVisualization, Report, TargetApp, \
-    HierClustVisualization
+from substrate import PCAPlot, Report, TargetApp, HeatMap
 from gen3va.database.utils import session_scope, \
     get_or_create_with_session
-from gen3va import Config, hierclust, pca
+from gen3va import Config, heat_map_factory, pca_factory
 
 
 def build(tag):
@@ -45,33 +44,16 @@ def _build(report_id):
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
 
-    # subprocess_wrapper(**{
-    #     'report_id': report_id,
-    #     'func': _cluster_ranked_genes,
-    #     'back_link': back_link
-    # })
+    subprocess_wrapper(**{
+        'report_id': report_id,
+        'func': _perform_pca
+    })
 
-    # subprocess_wrapper(**{
-    #     'report_id': report_id,
-    #     'func': _cluster_enriched_terms,
-    #     'back_link': back_link,
-    #     'library': 'ChEA_2015'
-    # })
-
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _perform_pca
-                                })
-    p.start()
-
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _cluster_ranked_genes,
-                                    'back_link': back_link
-                                })
-    p.start()
+    subprocess_wrapper(**{
+        'report_id': report_id,
+        'func': _cluster_ranked_genes,
+        'back_link': back_link
+    })
 
     # We want a basic report as fast as possible. We can create more Enrichr
     # visualizations later.
@@ -79,13 +61,11 @@ def _build(report_id):
     # # Creates its own subprocess for each visualization.
     _enrichr_visualizations(report_id, enrichr_library, back_link)
 
-    p = multiprocessing.Process(target=subprocess_wrapper,
-                                kwargs={
-                                    'report_id': report_id,
-                                    'func': _cluster_perturbations,
-                                    'back_link': back_link
-                                })
-    p.start()
+    subprocess_wrapper(**{
+        'report_id': report_id,
+        'func': _cluster_perturbations,
+        'back_link': back_link
+    })
 
 
 def update(tag):
@@ -93,7 +73,7 @@ def update(tag):
     """
     report = tag.report
     print('Updating report for %s.' % tag.name)
-    if not hasattr(report, 'pca_visualization'):
+    if not hasattr(report, 'pca_plot'):
         p = multiprocessing.Process(target=subprocess_wrapper,
                                     kwargs={
                                         'report_id': report.id,
@@ -102,7 +82,7 @@ def update(tag):
         p.start()
 
     back_link = _get_back_link(report.id)
-    if not report.genes_hier_clust:
+    if not report.genes_heat_map:
         p = multiprocessing.Process(target=subprocess_wrapper,
                                     kwargs={
                                         'report_id': report.id,
@@ -111,15 +91,15 @@ def update(tag):
                                     })
         p.start()
 
-    if len(report.enrichr_hier_clusts) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
-        completed = [v.enrichr_library for v in report.enrichr_hier_clusts]
+    if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
+        completed = [v.enrichr_library for v in report.enrichr_heat_maps]
         missing = []
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             if library not in completed:
                 missing.append(library)
         _enrichr_visualizations(report.id, missing[:2], back_link)
 
-    if not report.l1000cds2_hier_clust:
+    if not report.l1000cds2_heat_map:
         p = multiprocessing.Process(target=subprocess_wrapper,
                                     kwargs={
                                         'report_id': report.id,
@@ -155,9 +135,9 @@ def _perform_pca(Session, **kwargs):
     """
     report_id = kwargs.get('report_id')
     report = Session.query(Report).get(report_id)
-    pca_data = pca.from_report(report.gene_signatures)
+    pca_data = pca_factory.from_report(report.gene_signatures)
     pca_data = json.dumps(pca_data)
-    report.pca_visualization = PCAVisualization(pca_data)
+    report.pca_plot = PCAPlot(pca_data)
     Session.merge(report)
     Session.commit()
 
@@ -171,10 +151,10 @@ def _cluster_ranked_genes(Session, **kwargs):
     diff_exp_method = report.gene_signatures[0].required_metadata\
         .diff_exp_method
 
-    link = hierclust.get_link('genes',
-                              signatures=report.gene_signatures,
-                              diff_exp_method=diff_exp_method,
-                              back_link=back_link)
+    link = heat_map_factory.get_link('genes',
+                                     signatures=report.gene_signatures,
+                                     diff_exp_method=diff_exp_method,
+                                     back_link=back_link)
     if link:
         _save_report_link(Session, report, link, 'gen3va')
 
@@ -186,9 +166,9 @@ def _cluster_perturbations(Session, **kwargs):
     report_id = kwargs.get('report_id')
     back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
-    link = hierclust.get_link('l1000cds2',
-                              signatures=report.gene_signatures,
-                              back_link=back_link)
+    link = heat_map_factory.get_link('l1000cds2',
+                                     signatures=report.gene_signatures,
+                                     back_link=back_link)
     if link:
         _save_report_link(Session, report, link, 'l1000cds2')
 
@@ -201,10 +181,10 @@ def _cluster_enriched_terms(Session, **kwargs):
     back_link = kwargs.get('back_link')
     library = kwargs.get('library')
     report = Session.query(Report).get(report_id)
-    link = hierclust.get_link('enrichr',
-                              signatures=report.gene_signatures,
-                              library=library,
-                              back_link=back_link)
+    link = heat_map_factory.get_link('enrichr',
+                                     signatures=report.gene_signatures,
+                                     library=library,
+                                     back_link=back_link)
     if link:
         _save_report_link(Session, report, link, 'enrichr', library=library)
 
@@ -241,12 +221,9 @@ def _save_report_link(Session, report, link, viz_type, library=None):
     target_app = get_or_create_with_session(Session,
                                             TargetApp,
                                             name='clustergrammer')
-    hier_clust = HierClustVisualization(link,
-                                        viz_type,
-                                        target_app,
-                                        enrichr_library=library)
+    heat_map = HeatMap(link, viz_type, target_app, enrichr_library=library)
     if library:
         print('COMPLETED %s' % library)
-    report.add_hier_clust(hier_clust)
+    report.add_heat_map(heat_map)
     Session.merge(report)
     Session.commit()

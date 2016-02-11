@@ -3,7 +3,7 @@
 
 import pandas
 
-from gen3va.hierclust import filters, utils
+from gen3va.heat_map_factory import filters, utils
 
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'

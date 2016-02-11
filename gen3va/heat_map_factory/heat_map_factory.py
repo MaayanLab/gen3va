@@ -8,10 +8,10 @@ from substrate import GeneSignature
 
 from gen3va import database
 from gen3va.config import Config
-from .clusterenrichedterms import prepare_enriched_terms
-from .clusterperturbations import prepare_perturbations
-from .clusterrankedgenes import prepare_ranked_genes
-from gen3va.hierclust import utils
+from .enriched_terms import prepare_enriched_terms
+from .perturbations import prepare_perturbations
+from .ranked_genes import prepare_ranked_genes
+from gen3va.heat_map_factory import utils
 
 
 def get_link(type_, **kwargs):

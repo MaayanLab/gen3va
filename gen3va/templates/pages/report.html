@@ -88,42 +88,42 @@
         {% endif %}
 
         <!-- Genes hierarchical clusterings -->
-        {% if report.genes_hier_clust %}
+        {% if report.genes_heat_map %}
             <div class="section">
                 <h2>Genes</h2>
                 <div class="description">
                     <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
                 </div>
-                <iframe src="{{ report.genes_hier_clust.link }}"></iframe>
+                <iframe src="{{ report.genes_heat_map.link }}"></iframe>
             </div>
         {% endif %}
 
         <!-- Enrichr hierarchical clusterings -->
-        {% if report.enrichr_hier_clusts|length > 0 %}
-            <div id="enrichr-hier-clusts" class="section">
+        {% if report.enrichr_heat_maps|length > 0 %}
+            <div id="enrichr-heat-maps" class="section">
                 <h2>Enrichr</h2>
                 <div class="description">
                     <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is a web tool that performs gene set enrichment analysis.  To generate the hierarchical clusterings below, GEN3VA enriched each gene signature using Enrichr and then clustered the terms. Use the <strong>select</strong> button to change Enrichr's background library.</p>
                     <p>Hierarchical clustering of enriched terms from
                     <select>
-                        {% for clust in report.enrichr_hier_clusts %}
+                        {% for clust in report.enrichr_heat_maps %}
                             <option>{{ clust.enrichr_library }}</option>
                         {% endfor %}
                     </select></p>
                 </div>
-                {% set clust = report.enrichr_hier_clusts[0] %}
+                {% set clust = report.enrichr_heat_maps[0] %}
                 <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
             </div>
         {% endif %}
 
         <!-- L1000CD2 hierarchical clusterings -->
-        {% if report.l1000cds2_hier_clust %}
+        {% if report.l1000cds2_heat_map %}
             <div class="section">
                 <h2>L1000CDS2</h2>
                 <div class="description">
                     <p><a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">L1000CDS2</a> is a web tool that queries the LINCS L1000 dataset to identify small molecules that can reverse or mimic the observed input expression pattern. To generate the hierarchical clustering below, GEN3VA enriched each gene signature using L1000CDS2 to generate a list of perturbations that mimic (red) and reverse (blue) expression.</p>
                 </div>
-                <iframe src="{{ report.l1000cds2_hier_clust.link }}"></iframe>
+                <iframe src="{{ report.l1000cds2_heat_map.link }}"></iframe>
             </div>
         {% endif %}
     </div>

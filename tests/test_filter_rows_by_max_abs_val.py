@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.hierclust.filters import filter_rows_by_max_abs_val
+from gen3va.heat_map_factory.filters import filter_rows_by_max_abs_val
 
 
 class TestFilterRows(unittest.TestCase):
