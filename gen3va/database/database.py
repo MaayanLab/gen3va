@@ -4,8 +4,8 @@ and their relationships and saves them accordingly.
 
 import sqlalchemy as sa
 
-from substrate import Curator, GeneList, GeneSignature, GeoDataset, Report,\
-    SoftFile, Tag
+from substrate import BioCategory, Curator, GeneList, GeneSignature, \
+    GeoDataset, Report, SoftFile, Tag
 
 from gen3va.database.utils import session_scope
 
@@ -65,6 +65,18 @@ def get_tags_by_curator(curator):
         return session\
             .query(Tag)\
             .filter(Tag.curator_fk == Curator.id)\
+            .filter(Curator.name == curator)\
+            .all()
+
+
+def get_bio_categories_by_curator(curator):
+    """Returns all bio categories which have tags from particular curators.
+    """
+    with session_scope() as session:
+        return session\
+            .query(BioCategory)\
+            .filter(BioCategory.id == Tag.bio_category_fk)\
+            .filter(Curator.id == Tag.curator_fk)\
             .filter(Curator.name == curator)\
             .all()
 

@@ -1,31 +1,25 @@
-$(function() {
+var GEN3VA = GEN3VA || {};
 
-    var currentFilter = '*';
+GEN3VA.setupTagSearch = function(bioCategories) {
 
-    var $container = $('#isotope').isotope({
-        itemSelector: '.tag-box',
-        layoutMode: 'fitRows',
-        sortBy: 'name',
-        getSortData: {
-            name: '.tag-name'
-        }
+    var lists = [],
+        options = {
+            valueNames: ['name']
+        };
+
+    $.each(bioCategories, function(i, bioCategoryName) {
+        var list = new List(bioCategoryName, options);
+        lists.push(list);
     });
 
-    setTimeout(function() {
-        $container.isotope({filter: currentFilter});
-    }, 0);
-
-    $('#filters').on('click', 'button', function() {
-        var filterValue = $(this).attr('data-filter');
-        currentFilter = filterValue;
-        $container.isotope({filter: filterValue});
+    $('.tag-search').keyup(function() {
+        var searchTerm = $(this).val();
+        $.each(lists, function(i, list) {
+            // If the list is empty, List.js throws an error. Just catch it so
+            // we can search all lists in the DOM.
+            try {
+                list.search(searchTerm);
+            } catch(e) {}
+        });
     });
-
-    // Isotope doesn't always resize correctly, but calling this once the DOM
-    // has been built seems to work.
-    $(window).on('resize', function() {
-        setTimeout(function() {
-            $container.isotope({filter: currentFilter});
-        }, 50);
-    });
-});
+};

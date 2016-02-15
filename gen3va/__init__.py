@@ -42,7 +42,6 @@ from gen3va.utils.jinjafilters import jinjafilters
 
 app.register_blueprint(endpoints.admin_pages)
 app.register_blueprint(endpoints.auth_pages)
-app.register_blueprint(endpoints.index_page)
 app.register_blueprint(endpoints.error_page)
 app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.report_pages)
@@ -80,3 +79,11 @@ if Config.DEBUG:
     # them.
     Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
                                           'ENCODE_TF_ChIP-seq_2015']
+
+
+# Setup global variables that are available in Jinja2 templates
+# ----------------------------------------------------------------------------
+app.config.update({
+    'BASE_URL': Config.BASE_URL,
+    'REPORT_URL': Config.REPORT_URL
+})

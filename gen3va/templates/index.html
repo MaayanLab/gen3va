@@ -19,51 +19,51 @@
                 analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
         </div>
 
-        {% if curators %}
+        <div id='bio-categories'>
+
+            <div>
+                <input class='tag-search form-control' placeholder='Search collections'/>
+            </div>
+
+            {% if curators %}
             <ul id="filters" class="list-inline">
-                <button class="btn btn-default is-checked" data-filter="*">All</button>
+                <a href='' class="btn btn-default is-check ed">All</a>
                 {% for curator in curators %}
                 <li>
                     {% set curator_class = curator.name|c_curator_class %}
-                    <button class="btn btn-default curated {{ curator_class }}"
-                            data-filter=".{{ curator_class }}"
-                            style="background-color: {{ curator.color }};">
+                    <a href='?curator={{ curator.name }}' class="btn btn-default">
                         {{ curator.name }}
-                    </button>
+                    </a>
                 </li>
                 {% endfor %}
             </ul>
-        {% endif %}
+            {% endif %}
 
-        <div id="isotope">
-            {% for tag in tags %}
-                {% if tag.gene_signatures|length > 2 %}
-
-                    {% if tag.curator %}
-                        {% set curator_class = tag.curator.name|c_curator_class + ' curated' %}
-                    {% else %}
-                        {% set curator_class = "uncurated" %}
-                    {% endif %}
-
-                    <div class="tag-box {{ curator_class }}"
-                         style="background-color: {{ tag.curator.color }};">
-                        <h5 class="tag-name">{{ tag.name }}</h5>
-                        <p class="signature-count">
-                            <span>{{ tag.gene_signatures|length }}</span> signatures
-                        </p>
-                        {% if tag.report and tag.report.ready %}
-                            <p>
-                                <a href="{{ tag.name|c_report_url }}" class="report-link">Report</a>
-                            </p>
-                        {% else %}
-                            <p>
-                                <a href="{{ tag.name|c_tag_url }}" class="tag-link">Signatures (report not ready)</a>
-                            </p>
+            {% for column in bio_categories | slice(3) %}
+            <div class='bio-category-column'>
+                {% for cat in column %}
+                <div id='{{ cat.name }}' class='bio-category'>
+                    <h3>{{ cat.name|capitalize }}</h3>
+                    <ul class='list list-unstyled'>
+                        {% for tag in cat.tags %}
+                        {% if not curator_name or tag.curator.name == curator_name %}
+                        <li>
+                            <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                                {{ tag.name|capitalize }}
+                            </a>
+                        </li>
                         {% endif %}
-                    </div>
-                {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}             </div>
             {% endfor %}
+            <div class='clear'></div>
         </div>
     </div>
+
+    <script>
+        GEN3VA.setupTagSearch({{ bio_category_names|safe }});
+    </script>
 
 {% endblock %}

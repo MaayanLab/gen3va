@@ -25,7 +25,7 @@ def index():
     else:
         tags = database.get_all(Tag)
         curators = _active_curators()
-    #tags = [t for t in tags if t.approved_report]
+    tags = [t for t in tags if t.is_restricted]
     curators = _color_curators(curators)
     return render_template('index.html',
                            tags=tags,

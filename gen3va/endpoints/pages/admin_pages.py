@@ -19,11 +19,14 @@ admin_pages = Blueprint('admin_pages',
 def admin_landing():
     """Renderings admin page.
     """
-    tags = database.get_all(Tag)
-    tags_waiting = [t for t in tags if (not t.report or not t.report.ready)]
+    all_tags = database.get_all(Tag)
+    incomplete_tags = [t for t in all_tags if
+                       (not t.report or not t.report.complete(
+                           Config.SUPPORTED_ENRICHR_LIBRARIES
+                       ))]
     return render_template('pages/admin.html',
-                           all_tags=tags,
-                           tags_waiting=tags_waiting,
+                           all_tags=all_tags,
+                           incomplete_tags=incomplete_tags,
                            tag_url=Config.TAG_URL,
                            report_url=Config.REPORT_URL)
 

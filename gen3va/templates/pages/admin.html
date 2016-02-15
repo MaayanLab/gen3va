@@ -6,7 +6,7 @@
         <h1>Admin Page</h1>
         <div class='row'>
             <div class='col-md-6'>
-                <h3>Unapproved reports</h3>
+                <h3>Reports</h3>
                 <form action='admin/approve_reports' method='POST'>
                     <button class='btn btn-primary'>Approve Selected Reports</button>
                     <ul class='list-unstyled'>
@@ -14,6 +14,7 @@
                             <li>
                                 <strong>{{ tag.name }}</strong>
                                 <ul class='list-unstyled'>
+                                    {{ tag.reports|length }}
                                     {% for report in tag.reports %}
                                     <li>
                                         {% if report.is_approved %}
@@ -32,7 +33,7 @@
             <div class='col-md-6'>
                 <h3>Incomplete reports</h3>
                 <ul class='list-unstyled'>
-                    {% for tag in tags_waiting %}
+                    {% for tag in incomplete_tags %}
                         <li>
                             <ul class='list-unstyled'>
                                 <li><strong>{{ tag.name }}</strong></li>
