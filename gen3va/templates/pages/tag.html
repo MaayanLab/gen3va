@@ -4,13 +4,33 @@
 
 {% block body %}
 
-    <div class="page" id="tag-page">
+    <script src='static/js/custom-report-builder.js'></script>
+
+    <div class='page' id='tag-page'>
 
         <h1>{{ tag.gene_signatures|length }} gene signatures for <strong>{{ tag.name }}</strong></h1>
-        <a class="btn btn-primary" href="{{ report_url }}/{{ tag.name }}">Back to report</a>
+        {% if tag.report %}
+            <a class='btn btn-info' href='{{ report_url }}/{{ tag.name }}'>Back to report</a>
+        {% endif %}
 
-        <div class="table-responsive">
-            <table class="table data-table responsive">
+        <div id='custom-report-builder'>
+            <div class='description'>
+                <div class='row'>
+                    <div class='col-md-12'>
+                        <h4>Build a custom report</h4>
+                        <ol>
+                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
+                            <li>You must select at least 3 signatures.</li>
+                            <li>Click <em>Build report</em></li>
+                        </ol>
+                        <button class='btn btn-primary'>Build report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='table-responsive'>
+            <table class='table data-table responsive'>
                 <thead>
                     <tr>
                         <th></th>
@@ -18,26 +38,29 @@
                         <th>Organism</th>
                         <th>Platform</th>
                         <th>Optional Metadata</th>
+                        <th>
+                            <input type='checkbox' id='select-all'/>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for gene_signature in tag.gene_signatures %}
                         <tr>
-                            <td class="index">{{ loop.index }}</td>
-                            <td class="title">
-                                <a data-toggle="tooltip"
-                                   title="Results page for the processed gene signature"
-                                   href="{{ gene_signature.extraction_id|c_results_url }}">
+                            <td class='index'>{{ loop.index }}</td>
+                            <td class='title'>
+                                <a data-toggle='tooltip'
+                                   title='Results page for the processed gene signature'
+                                   href='{{ gene_signature.extraction_id|c_results_url }}'>
                                      {{ gene_signature.name }}
                                 </a>
                             </td>
-                            <td class="organism">
+                            <td class='organism'>
                                 {{ gene_signature.organism|c_filter_empty }}
                             </td>
-                            <td class="platform">{{ gene_signature.platform|c_filter_empty }}</td>
-                            <td class="optional-metadata">
+                            <td class='platform'>{{ gene_signature.platform|c_filter_empty }}</td>
+                            <td class='optional-metadata'>
                                 {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                    <div class="optional-metadata-content">
+                                    <div class='optional-metadata-content'>
                                         <table>
                                         {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                                             <tr>
@@ -48,6 +71,9 @@
                                         </table>
                                     </div>
                                 {% endif %}
+                            </td>
+                            <td class='select-box'>
+                                <input type='checkbox' class='consensus' name='{{ gene_signature.extraction_id }}'>
                             </td>
                         </tr>
                     {% endfor %}

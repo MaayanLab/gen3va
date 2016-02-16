@@ -7,11 +7,9 @@
 
     <div class="page" id="index-page">
         <div id="intoduction">
-            <h3>Collections of labeled gene expression signatures extracted from the <a
-                    href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">Gene Expression Omnibus</a> (GEO) and other
-                resources.</h3>
+            <h1>What is GEN3VA?</h1>
 
-            <p><strong>GEN3VA:</strong> the <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
+            <p>The <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
                 <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures
                 extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a> by the crowd using <a
                         href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. Clicking on a tag below,
@@ -19,46 +17,49 @@
                 analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
         </div>
 
-        <div id='bio-categories'>
+        <div id='bio-categories-wrapper'>
 
             <div>
-                <input class='tag-search form-control' placeholder='Search collections'/>
+                <input class='tag-search form-control' placeholder='Search curated collections'/>
             </div>
 
-            {% if curators %}
-            <ul id="filters" class="list-inline">
-                <a href='' class="btn btn-default is-check ed">All</a>
-                {% for curator in curators %}
-                <li>
-                    {% set curator_class = curator.name|c_curator_class %}
-                    <a href='?curator={{ curator.name }}' class="btn btn-default">
-                        {{ curator.name }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-
-            {% for column in bio_categories | slice(3) %}
-            <div class='bio-category-column'>
-                {% for cat in column %}
-                <div id='{{ cat.name }}' class='bio-category'>
-                    <h3>{{ cat.name|capitalize }}</h3>
-                    <ul class='list list-unstyled'>
-                        {% for tag in cat.tags %}
-                        {% if not curator_name or tag.curator.name == curator_name %}
-                        <li>
-                            <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>
-                                {{ tag.name|capitalize }}
-                            </a>
-                        </li>
-                        {% endif %}
+            <div id='bio-categories'>
+                {% if curators %}
+                    <ul id="filters" class="list-inline">
+                        <a href='' class="btn btn-info is-check ed">All</a>
+                        {% for curator in curators %}
+                            <li>
+                                {% set curator_class = curator.name|c_curator_class %}
+                                <a href='?curator={{ curator.name }}' class="btn btn-info">
+                                    {{ curator.name }}
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
-                </div>
-                {% endfor %}             </div>
-            {% endfor %}
-            <div class='clear'></div>
+                {% endif %}
+
+                {% for column in bio_categories | slice(3) %}
+                    <div class='bio-category-column'>
+                        {% for cat in column %}
+                            <div id='{{ cat.name }}' class='bio-category'>
+                                <h3>{{ cat.name|capitalize }}</h3>
+                                <ul class='list list-unstyled'>
+                                    {% for tag in cat.tags %}
+                                        {% if not curator_name or tag.curator.name == curator_name %}
+                                        <li>
+                                            <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                                                {{ tag.name }}
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <div class='clear'></div>
+            </div>
         </div>
     </div>
 

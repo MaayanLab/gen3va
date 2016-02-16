@@ -34,6 +34,19 @@ def build(tag):
     _build(report.id)
 
 
+def build_custom(tag, gene_signatures):
+    """Builds a custom report.
+    """
+    with session_scope() as session:
+        if gene_signatures:
+            report = Report(tag, is_approved=False)
+            report.gene_signatures = gene_signatures
+        session.add(report)
+        session.commit()
+    _build(report.id)
+    return report.id
+
+
 def _build(report_id):
     """Builds report, each visualization in its own subprocess.
     """
@@ -44,16 +57,22 @@ def _build(report_id):
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
 
-    subprocess_wrapper(**{
-        'report_id': report_id,
-        'func': _perform_pca
-    })
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _perform_pca
+        })
+    p.start()
 
-    subprocess_wrapper(**{
-        'report_id': report_id,
-        'func': _cluster_ranked_genes,
-        'back_link': back_link
-    })
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _cluster_ranked_genes,
+            'back_link': back_link
+        })
+    p.start()
 
     # We want a basic report as fast as possible. We can create more Enrichr
     # visualizations later.
@@ -61,11 +80,14 @@ def _build(report_id):
     # # Creates its own subprocess for each visualization.
     _enrichr_visualizations(report_id, enrichr_library, back_link)
 
-    subprocess_wrapper(**{
-        'report_id': report_id,
-        'func': _cluster_perturbations,
-        'back_link': back_link
-    })
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _cluster_perturbations,
+            'back_link': back_link
+        })
+    p.start()
 
 
 def update(tag):

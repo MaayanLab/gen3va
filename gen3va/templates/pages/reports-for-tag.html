@@ -1,0 +1,33 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block body %}
+
+    <div class='page' id='reports-for-tag-page'>
+        <h1>Reports ({{ reports|length }})</h1>
+        <div class='table-responsive'>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Approved</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>
+                                <a href='{{ report_url }}/{{ report.tag.name }}'>
+                                    {{ report.tag.name }}
+                                </a>
+                            </td>
+                            <td>{{ report.is_approved }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

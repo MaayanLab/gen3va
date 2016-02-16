@@ -2,5 +2,6 @@
 """
 
 from gen3va.report_builder.report_builder import \
-    build,\
+    build, \
+    build_custom, \
     update

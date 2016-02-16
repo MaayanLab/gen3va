@@ -39,7 +39,7 @@ $(function() {
      */
     function requestReport(chbxs, tag) {
         $.ajax({
-            url: 'report/' + tag + '/custom',
+            url: 'report/custom/' + tag,
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
@@ -72,33 +72,10 @@ $(function() {
      * returning false if invalid.
      */
     function isValidSelection(chbxs, vizType) {
-        var isValid,
-            platform;
-        if (chbxs.length === 0) {
-            alert('Please select a gene signature.');
+        if (chbxs.length < 3) {
+            alert('Reports require at least three signatures.');
             return false;
         }
-        if (vizType === 'pca' && chbxs.length < 3) {
-            alert('3D PCA requires at least 3 dimensions.');
-            return false;
-        }
-
-        isValid = true;
-
-        // Disable for now in favor of select all!
-        // ---------------------------------------
-        //platform = chbxs[0].platform;
-        //$.each(chbxs, function(i, obj) {
-        //    if (obj.platform !== platform) {
-        //        isValid = false;
-        //        return false; // Early return.
-        //    }
-        //});
-        //
-        //if (!isValid) {
-        //    alert('Every gene signature must come from the same platform.');
-        //}
-
-        return isValid;
+        return true;
     }
 });

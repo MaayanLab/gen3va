@@ -28,7 +28,7 @@ def login():
                                error='Username or password is invalid')
 
     login_user(registered_user, remember=True)
-    return redirect(url_for('index_page.index'))
+    return redirect(url_for('menu_pages.index'))
 
 
 @auth_pages.route('/logout', methods=['POST'])

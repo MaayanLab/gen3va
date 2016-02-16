@@ -3,7 +3,9 @@
 
 import json
 
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, jsonify, redirect, request, render_template, \
+    url_for
+from flask.ext.login import login_required
 
 from substrate import Report, Tag
 from gen3va.config import Config
@@ -15,14 +17,16 @@ report_pages = Blueprint('report_pages',
                          url_prefix=Config.REPORT_URL)
 
 
-@report_pages.route('', methods=['GET'])
-def view_all_reports():
-    """Renders page to view all reports.
+@report_pages.route('/all/<tag_name>', methods=['GET'])
+def view_reports_for_tag(tag_name):
+    """Renders all reports for a particular tag.
     """
-    reports = database.get_all(Report)
-    return render_template('pages/reports-all.html',
-                           report_url=Config.REPORT_URL,
-                           reports=reports)
+    tag = database.get(Tag, tag_name, 'name')
+    if not tag:
+        return render_template('pages/404.html')
+    return render_template('pages/reports-for-tag.html',
+                           tag=tag,
+                           reports=tag.reports)
 
 
 @report_pages.route('/<tag_name>', methods=['GET'])
@@ -55,19 +59,65 @@ def view_report(tag_name):
                            pca_json=pca_json)
 
 
-@report_pages.route('/<int:report_id>/<tag_name>', methods=['GET'])
-def view_report_hot_fix(report_id, tag_name):
-    """We reference the report page by report ID in our abstract proposal.
-    This view can be deleted one the paper has been accepted or rejected by
-    Nucleic Acids Research.
+@report_pages.route('', methods=['GET'])
+def view_all_reports():
+    """Renders page to view all reports.
     """
-    return redirect(url_for('report_pages.view_report', tag_name=tag_name))
+    reports = database.get_all(Report)
+    return render_template('pages/reports-all.html',
+                           report_url=Config.REPORT_URL,
+                           reports=reports)
 
 
-# Admin utility methods
+@report_pages.route('/custom/<tag_name>', methods=['POST'])
+def build_custom_report(tag_name):
+    """Builds a custom report.
+    """
+    tag = database.get(Tag, tag_name, 'name')
+    if not tag:
+        return render_template('pages/404.html')
+
+    extraction_ids = _get_extraction_ids(request)
+    gene_signatures = database.get_signatures_by_ids(extraction_ids)
+    report_id = report_builder.build_custom(tag, gene_signatures)
+
+    # This endpoint is hit via an AJAX request. JavaScript must perform the
+    # redirect.
+    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
+    return jsonify({
+        'new_url': new_url
+    })
+
+
+@report_pages.route('/<report_id>/<tag_name>', methods=['GET'])
+def view_custom_report(report_id, tag_name):
+    """Views a custom report.
+    """
+    tag = database.get(Tag, tag_name, 'name')
+    report = database.get(Report, report_id)
+    if not tag or not report:
+        return render_template('pages/404.html')
+
+    if report.pca_plot:
+        pca_json = report.pca_plot.data
+    else:
+        pca_json = None
+
+    enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
+                                        for x in report.enrichr_heat_maps})
+
+    return render_template('pages/report.html',
+                           tag=tag,
+                           report=report,
+                           enrichr_heatmaps_json=enrichr_heatmaps_json,
+                           pca_json=pca_json)
+
+
+# Admin end points
 # ----------------------------------------------------------------------------
 
 @report_pages.route('/<tag_name>/build', methods=['GET'])
+@login_required
 def build_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
     report_builder.build(tag)
@@ -75,7 +125,17 @@ def build_report(tag_name):
 
 
 @report_pages.route('/<tag_name>/update', methods=['GET'])
+@login_required
 def update_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
     report_builder.update(tag)
     return redirect(url_for('report_pages.view_report', tag_name=tag.name))
+
+
+# Admin utility methods
+# ----------------------------------------------------------------------------
+
+def _get_extraction_ids(request):
+    """Returns extraction IDs from JSON post.
+    """
+    return [gs['extractionId'] for gs in request.json['gene_signatures']]
