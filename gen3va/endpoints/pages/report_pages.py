@@ -17,21 +17,22 @@ report_pages = Blueprint('report_pages',
                          url_prefix=Config.REPORT_URL)
 
 
-@report_pages.route('/all/<tag_name>', methods=['GET'])
-def view_reports_for_tag(tag_name):
-    """Renders all reports for a particular tag.
+@report_pages.route('/<tag_name>', methods=['GET'])
+def view_reports_associated_with_tag(tag_name):
+    """Renders page that lists all reports associated with a tag.
     """
     tag = database.get(Tag, tag_name, 'name')
-    if not tag:
+    reports = tag.reports
+    if not tag or len(reports) == 0:
         return render_template('pages/404.html')
     return render_template('pages/reports-for-tag.html',
                            tag=tag,
-                           reports=tag.reports)
+                           reports=reports)
 
 
-@report_pages.route('/<tag_name>', methods=['GET'])
-def view_report(tag_name):
-    """Renders page to view report based on tag.
+@report_pages.route('/approved/<tag_name>', methods=['GET'])
+def view_approved_report(tag_name):
+    """Renders approved report page.
     """
     tag = database.get(Tag, tag_name, 'name')
     if not tag:
@@ -39,8 +40,7 @@ def view_report(tag_name):
 
     report = tag.report
     if not report:
-        return render_template('pages/report-not-ready.html',
-                               tag=tag)
+        return render_template('pages/report-not-ready.html', tag=tag)
     if report.pca_plot:
         pca_json = report.pca_plot.data
     else:
@@ -83,6 +83,7 @@ def build_custom_report(tag_name):
 
     # This endpoint is hit via an AJAX request. JavaScript must perform the
     # redirect.
+    # TODO: This can just redirect, I think.
     new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
     return jsonify({
         'new_url': new_url
@@ -113,23 +114,29 @@ def view_custom_report(report_id, tag_name):
                            pca_json=pca_json)
 
 
-# Admin end points
+# Admin end points. These do not exist for non-admin reports.
 # ----------------------------------------------------------------------------
 
-@report_pages.route('/<tag_name>/build', methods=['GET'])
+@report_pages.route('/approved/<tag_name>/build', methods=['GET'])
 @login_required
-def build_report(tag_name):
+def build_approved_report(tag_name):
+    """Builds the an approved report for a tag.
+    """
     tag = database.get(Tag, tag_name, 'name')
     report_builder.build(tag)
-    return redirect(url_for('report_pages.view_report', tag_name=tag.name))
+    return redirect(url_for('report_pages.view_approved_report',
+                            tag_name=tag.name))
 
 
-@report_pages.route('/<tag_name>/update', methods=['GET'])
+@report_pages.route('/approved/<tag_name>/update', methods=['GET'])
 @login_required
-def update_report(tag_name):
+def update_approved_report(tag_name):
+    """Updates an approved report for a tag.
+    """
     tag = database.get(Tag, tag_name, 'name')
     report_builder.update(tag)
-    return redirect(url_for('report_pages.view_report', tag_name=tag.name))
+    return redirect(url_for('report_pages.view_approved_report',
+                            tag_name=tag.name))
 
 
 # Admin utility methods

@@ -23,6 +23,7 @@ class Config(object):
     BASE_CLUSTER_URL = BASE_URL + '/cluster'
 
     REPORT_URL = BASE_URL + '/report'
+    APPROVED_REPORT_URL = REPORT_URL + '/approved'
     TAG_URL = BASE_URL + '/tag'
     METADATA_URL = BASE_URL + '/metadata'
     DOWNLOAD_URL = BASE_URL + '/download'

@@ -28,7 +28,7 @@ def build(tag):
     else:
         print('Creating new report.')
         with session_scope() as session:
-            report = Report(tag)
+            report = Report(tag, is_approved=True)
             session.add(report)
             session.flush()
     _build(report.id)
@@ -39,8 +39,9 @@ def build_custom(tag, gene_signatures):
     """
     with session_scope() as session:
         if gene_signatures:
-            report = Report(tag, is_approved=False)
-            report.gene_signatures = gene_signatures
+            report = Report(tag,
+                            gene_signatures=gene_signatures,
+                            is_approved=False)
         session.add(report)
         session.commit()
     _build(report.id)
@@ -246,6 +247,6 @@ def _save_report_link(Session, report, link, viz_type, library=None):
     heat_map = HeatMap(link, viz_type, target_app, enrichr_library=library)
     if library:
         print('COMPLETED %s' % library)
-    report.add_heat_map(heat_map)
+    report.heat_maps.append(heat_map)
     Session.merge(report)
     Session.commit()

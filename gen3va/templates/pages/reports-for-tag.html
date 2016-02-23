@@ -18,9 +18,15 @@
                     {% for report in reports %}
                         <tr>
                             <td>
-                                <a href='{{ report_url }}/{{ report.tag.name }}'>
-                                    {{ report.tag.name }}
-                                </a>
+                                {% if report.is_approved %}
+                                    <a href='{{ config.REPORT_URL }}/approved/{{ report.tag.name }}'>
+                                        {{ report.tag.name }}
+                                    </a>
+                                {% else %}
+                                    <a href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'>
+                                        {{ report.tag.name }}
+                                    </a>
+                                {% endif %}
                             </td>
                             <td>{{ report.is_approved }}</td>
                         </tr>

@@ -47,7 +47,7 @@
                                     {% for tag in cat.tags %}
                                         {% if not curator_name or tag.curator.name == curator_name %}
                                         <li>
-                                            <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                                            <a class='name' href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>
                                                 {{ tag.name }}
                                             </a>
                                         </li>
