@@ -60,13 +60,29 @@
   margin-left: 10px;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li {
-  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 3px;
+  padding-bottom: 3px;
+}
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p,
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li a {
+  font-size: 13px;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p {
   margin: 0;
 }
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.name {
+  font-weight: bold;
+}
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight {
   color: #f15a5a;
+}
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a {
+  color: #f15a5a;
+  text-decoration: underline;
+}
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a:hover {
+  text-decoration: none;
 }
 @media (max-width: 992px) {
   #index-page .bio-category-column {

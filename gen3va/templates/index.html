@@ -48,12 +48,12 @@
                                 {% for tag in cat.tags %}
                                     {% if not curator_name or tag.curator.name == curator_name %}
                                         <li>
-                                            <p>
+                                            <p class='name'>
                                                 <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name }}</a>
                                             </p>
                                             <p>{{ tag.gene_signatures|length }} signatures</p>
                                             {% if not tag.report or not tag.report.ready %}
-                                                <p class='highlight'>Report not ready. <a href='{{ config.TAG_URL }}/{{ tag.name }}'>See signatures.</a></p>
+                                                <p class='highlight'>Report not ready. <a href='{{ config.TAG_URL }}/{{ tag.name }}'>See signatures</a>.</p>
                                             {% endif %}
                                         </li>
                                     {% endif %}

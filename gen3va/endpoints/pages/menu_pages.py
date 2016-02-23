@@ -29,7 +29,6 @@ def index():
     else:
         bio_categories = database.get_all(BioCategory)
         curators = _curators_with_approved_reports()
-    print(curators)
     bio_category_names = json.dumps([cat.name for cat in bio_categories])
     return render_template('index.html',
                            curators=curators,

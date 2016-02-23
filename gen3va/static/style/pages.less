@@ -54,11 +54,26 @@
           ul {
             margin-left: 10px;
             li {
-              margin-bottom: 15px;
+              border-bottom: 1px solid #eee;
+              margin-bottom: 3px;
+              padding-bottom: 3px;
+              p, a {
+                font-size: 13px;
+              }
               p {
                 margin: 0;
+                &.name {
+                  font-weight: bold;
+                }
                 &.highlight {
                   color: @color-palette-red;
+                  a {
+                    color: @color-palette-red;
+                    text-decoration: underline;
+                    &:hover {
+                      text-decoration: none;
+                    }
+                  }
                 }
               }
             }
