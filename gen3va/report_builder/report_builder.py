@@ -40,7 +40,7 @@ def build_custom(tag, gene_signatures):
     with session_scope() as session:
         if gene_signatures:
             report = Report(tag,
-                            gene_signatures=gene_signatures,
+                            _gene_signatures=gene_signatures,
                             is_approved=False)
         session.add(report)
         session.commit()
