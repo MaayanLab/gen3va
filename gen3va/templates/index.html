@@ -24,6 +24,7 @@
             </div>
 
             <div id='bio-categories'>
+
                 {% if curators %}
                     <ul id="filters" class="list-inline">
                         <a href='' class="btn btn-info is-check ed">All</a>
@@ -44,15 +45,19 @@
                             <div id='{{ cat.name }}' class='bio-category'>
                                 <h3>{{ cat.name|capitalize }}</h3>
                                 <ul class='list list-unstyled'>
-                                    {% for tag in cat.tags %}
-                                        {% if not curator_name or tag.curator.name == curator_name %}
+                                {% for tag in cat.tags %}
+                                    {% if not curator_name or tag.curator.name == curator_name %}
                                         <li>
-                                            <a class='name' href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>
-                                                {{ tag.name }}
-                                            </a>
+                                            <p>
+                                                <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name }}</a>
+                                            </p>
+                                            <p>{{ tag.gene_signatures|length }} signatures</p>
+                                            {% if not tag.report or not tag.report.ready %}
+                                                <p class='highlight'>Report not ready. <a href='{{ config.TAG_URL }}/{{ tag.name }}'>See signatures.</a></p>
+                                            {% endif %}
                                         </li>
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
                                 </ul>
                             </div>
                         {% endfor %}

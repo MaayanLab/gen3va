@@ -59,6 +59,15 @@
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul {
   margin-left: 10px;
 }
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li {
+  margin-bottom: 15px;
+}
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p {
+  margin: 0;
+}
+#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight {
+  color: #f15a5a;
+}
 @media (max-width: 992px) {
   #index-page .bio-category-column {
     width: 100%;

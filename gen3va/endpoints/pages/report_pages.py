@@ -22,12 +22,12 @@ def view_reports_associated_with_tag(tag_name):
     """Renders page that lists all reports associated with a tag.
     """
     tag = database.get(Tag, tag_name, 'name')
-    reports = tag.reports
-    if not tag or len(reports) == 0:
-        return render_template('pages/404.html')
+    for report in tag.reports:
+        if report.is_approved:
+            return redirect(url_for('report_pages.view_approved_report', tag_name=tag.name))
     return render_template('pages/reports-for-tag.html',
                            tag=tag,
-                           reports=reports)
+                           reports=tag.reports)
 
 
 @report_pages.route('/approved/<tag_name>', methods=['GET'])
@@ -49,6 +49,30 @@ def view_approved_report(tag_name):
     # TODO: This should be a utility method call serialize on
     # HierClustVisualization class. But I don't want to rebuild the Docker
     # container (20 min) because it's a Saturday.
+    enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
+                                        for x in report.enrichr_heat_maps})
+
+    return render_template('pages/report.html',
+                           tag=tag,
+                           report=report,
+                           enrichr_heatmaps_json=enrichr_heatmaps_json,
+                           pca_json=pca_json)
+
+
+@report_pages.route('/<report_id>/<tag_name>', methods=['GET'])
+def view_custom_report(report_id, tag_name):
+    """Views a custom report by report ID.
+    """
+    tag = database.get(Tag, tag_name, 'name')
+    report = database.get(Report, report_id)
+    if not tag or not report:
+        return render_template('pages/404.html')
+
+    if report.pca_plot:
+        pca_json = report.pca_plot.data
+    else:
+        pca_json = None
+
     enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
                                         for x in report.enrichr_heat_maps})
 
@@ -88,30 +112,6 @@ def build_custom_report(tag_name):
     return jsonify({
         'new_url': new_url
     })
-
-
-@report_pages.route('/<report_id>/<tag_name>', methods=['GET'])
-def view_custom_report(report_id, tag_name):
-    """Views a custom report.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    report = database.get(Report, report_id)
-    if not tag or not report:
-        return render_template('pages/404.html')
-
-    if report.pca_plot:
-        pca_json = report.pca_plot.data
-    else:
-        pca_json = None
-
-    enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
-                                        for x in report.enrichr_heat_maps})
-
-    return render_template('pages/report.html',
-                           tag=tag,
-                           report=report,
-                           enrichr_heatmaps_json=enrichr_heatmaps_json,
-                           pca_json=pca_json)
 
 
 # Admin end points. These do not exist for non-admin reports.

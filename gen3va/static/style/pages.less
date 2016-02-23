@@ -53,12 +53,22 @@
           }
           ul {
             margin-left: 10px;
+            li {
+              margin-bottom: 15px;
+              p {
+                margin: 0;
+                &.highlight {
+                  color: @color-palette-red;
+                }
+              }
+            }
           }
         }
       }
     }
   }
 }
+
 @media (max-width: 992px) {
   #index-page {
     .bio-category-column {
@@ -202,7 +212,7 @@
     border-radius: 0;
   }
   #tag-list {
-    &>li {
+    & > li {
       border-bottom: 1px solid @color-gray-light;
       margin-top: 20px;
       padding-bottom: 20px;

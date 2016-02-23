@@ -28,12 +28,13 @@ def index():
         curators = [curator]
     else:
         bio_categories = database.get_all(BioCategory)
-        curators = _active_curators()
+        curators = _curators_with_approved_reports()
+    print(curators)
     bio_category_names = json.dumps([cat.name for cat in bio_categories])
     return render_template('index.html',
+                           curators=curators,
                            curator_name=curator_name,
                            bio_category_names=bio_category_names,
-                           curators=curators,
                            bio_categories=bio_categories)
 
 
@@ -62,7 +63,7 @@ def statistics():
 # Utility methods
 # ----------------------------------------------------------------------------
 
-def _active_curators():
+def _curators_with_approved_reports():
     """Returns curators that have at least one ready report.
     """
     curators = []
