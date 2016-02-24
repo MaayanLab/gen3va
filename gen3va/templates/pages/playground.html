@@ -12,27 +12,15 @@
         <input class='search form-control' placeholder='Search collections'/>
         <ul id='tag-list' class='list list-unstyled'>
             {% for tag in tags %}
-                {% if tag.curator %}
-                    {% set curator_class = tag.curator.name|c_curator_class + ' curated' %}
-                {% else %}
-                    {% set curator_class = 'uncurated' %}
-                {% endif %}
-
                 <li>
                     <ul class='list-inline'>
-                        <li>
-                            <h4 class='name'>{{ tag.name }}</h4>
+                        <!-- We need "name" class for list.js (see bottom of page) -->
+                        <li class='name'>
+                            <strong>{{ tag.name }}</strong>
                         </li>
                         <li>
-                            <a href='{{ config.TAG_URL }}/{{ tag.name }}'>
-                                Signatures ({{ tag.gene_signatures|length }})
-                            </a>
+                            <a href='{{ config.REPORT_URL }}/{{ tag.name }}' class='report-link'>Reports</a>
                         </li>
-                        {% if tag.report and tag.report.ready %}
-                            <li>
-                                <a href='{{ tag.name|c_report_url }}' class='report-link'>Report</a>
-                            </li>
-                        {% endif %}
                     </ul>
                 </li>
             {% endfor %}

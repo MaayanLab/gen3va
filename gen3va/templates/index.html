@@ -52,8 +52,8 @@
                                                 <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name }}</a>
                                             </p>
                                             <p>{{ tag.gene_signatures|length }} signatures</p>
-                                            {% if not tag.report or not tag.report.ready %}
-                                                <p class='highlight'>Report not ready. <a href='{{ config.TAG_URL }}/{{ tag.name }}'>See signatures</a>.</p>
+                                            {% if not (tag.approved_report and tag.approved_report.ready) %}
+                                                <p class='highlight'>Approved report not ready.</p>
                                             {% endif %}
                                         </li>
                                     {% endif %}

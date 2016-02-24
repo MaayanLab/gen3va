@@ -4,49 +4,50 @@
 
     <div class='page' id='index-page-admin'>
         <h1>Admin Page</h1>
-        <div class='row'>
-            <div class='col-md-6'>
-                <h3>Reports</h3>
-                <form action='admin/approve_reports' method='POST'>
-                    <button class='btn btn-primary'>Approve Selected Reports</button>
-                    <ul class='list-unstyled'>
-                        {% for tag in all_tags %}
-                            <li>
-                                <strong>{{ tag.name }}</strong>
-                                <ul class='list-unstyled'>
-                                    {{ tag.reports|length }}
-                                    {% for report in tag.reports %}
-                                    <li>
-                                        {% if report.is_approved %}
-                                            <input type='checkbox' checked name="{{ report.id }}"/>
-                                        {% else %}
-                                            <input type='checkbox' name="{{ report.id }}"/>
-                                        {% endif %}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </form>
-            </div>
-            <div class='col-md-6'>
-                <h3>Incomplete reports</h3>
-                <ul class='list-unstyled'>
-                    {% for tag in incomplete_tags %}
-                        <li>
-                            <ul class='list-unstyled'>
-                                <li><strong>{{ tag.name }}</strong></li>
-                                <li><span>{{ tag.gene_signatures|length }}</span> signatures</li>
-                                <li><a href='{{ tag_url }}/{{ tag.name }}'>View signatures</a></li>
-                                <li><a href='{{ report_url }}/{{ tag.name }}/build'>Build report</a></li>
-                                <li><a href='{{ report_url }}/{{ tag.name }}/update'>Update report</a></li>
-                            </ul>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        <p>Under construction.</p>
+{#        <div class='row'>#}
+{#            <div class='col-md-6'>#}
+{#                <h3>Reports</h3>#}
+{#                <form action='admin/approve_reports' method='POST'>#}
+{#                    <button class='btn btn-primary'>Approve Selected Reports</button>#}
+{#                    <ul class='list-unstyled'>#}
+{#                        {% for tag in all_tags %}#}
+{#                            <li>#}
+{#                                <strong>{{ tag.name }}</strong>#}
+{#                                <ul class='list-unstyled'>#}
+{#                                    {{ tag.reports|length }}#}
+{#                                    {% for report in tag.reports %}#}
+{#                                    <li>#}
+{#                                        {% if report.is_approved %}#}
+{#                                            <input type='checkbox' checked name="{{ report.id }}"/>#}
+{#                                        {% else %}#}
+{#                                            <input type='checkbox' name="{{ report.id }}"/>#}
+{#                                        {% endif %}#}
+{#                                    </li>#}
+{#                                    {% endfor %}#}
+{#                                </ul>#}
+{#                            </li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </form>#}
+{#            </div>#}
+{#            <div class='col-md-6'>#}
+{#                <h3>Incomplete reports</h3>#}
+{#                <ul class='list-unstyled'>#}
+{#                    {% for tag in incomplete_tags %}#}
+{#                        <li>#}
+{#                            <ul class='list-unstyled'>#}
+{#                                <li><strong>{{ tag.name }}</strong></li>#}
+{#                                <li><span>{{ tag.gene_signatures|length }}</span> signatures</li>#}
+{#                                <li><a href='{{ tag_url }}/{{ tag.name }}'>View signatures</a></li>#}
+{#                                <li><a href='{{ report_url }}/{{ tag.name }}/build'>Build report</a></li>#}
+{#                                <li><a href='{{ report_url }}/{{ tag.name }}/update'>Update report</a></li>#}
+{#                            </ul>#}
+{#                        </li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
     </div>
 
 {% endblock %}

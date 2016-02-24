@@ -5,35 +5,31 @@
 {% block body %}
 
     <div class='page' id='reports-for-tag-page'>
-        <h1>Reports ({{ reports|length }})</h1>
-        <div class='table-responsive'>
-            <table class='table'>
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Approved</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for report in reports %}
-                        <tr>
-                            <td>
-                                {% if report.is_approved %}
-                                    <a href='{{ config.REPORT_URL }}/approved/{{ report.tag.name }}'>
-                                        {{ report.tag.name }}
-                                    </a>
-                                {% else %}
-                                    <a href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'>
-                                        {{ report.tag.name }}
-                                    </a>
-                                {% endif %}
-                            </td>
-                            <td>{{ report.is_approved }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        {% set num_custom_reports = tag.custom_reports|length %}
+        {% set report_count = 1+num_custom_reports if tag.approved_report else num_custom_reports %}
+        <h1><strong>{{ tag.name }}</strong> reports ({{ report_count }})</h1>
+
+        <div class='signatures-and-approved-report'>
+            <a class='btn btn-info' href='{{ config.TAG_URL }}/{{ tag.name }}'>Gene Signatures ({{ tag.gene_signatures|length }})</a>
+            {% if tag.approved_report %}
+                <a class='btn btn-primary' href='{{ config.REPORT_URL }}/approved/{{ tag.name }}'>Approved Report</a>
+            {% endif %}
         </div>
+
+        {% if tag.custom_reports|length > 0 %}
+            <div class='custom-reports'>
+                <h5>Custom Reports</h5>
+                <ul class='list-unstyled'>
+                    {% for report in tag.custom_reports %}
+                        <li>
+                            <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'>
+                                Report {{ report.id }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}

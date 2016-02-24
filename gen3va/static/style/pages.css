@@ -84,6 +84,12 @@
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a:hover {
   text-decoration: none;
 }
+#reports-for-tag-page .signatures-and-approved-report {
+  margin-top: 20px;
+}
+#reports-for-tag-page .custom-reports {
+  margin-top: 20px;
+}
 @media (max-width: 992px) {
   #index-page .bio-category-column {
     width: 100%;
@@ -199,12 +205,11 @@
 #playground-page input {
   border-radius: 0;
 }
+#playground-page #tag-list {
+  margin-top: 30px;
+}
 #playground-page #tag-list > li {
   border-bottom: 1px solid #eeeeee;
-  margin-top: 20px;
-  padding-bottom: 20px;
-}
-#playground-page #tag-list > li h4,
-#playground-page #tag-list > li p {
-  margin: 0;
+  margin-top: 5px;
+  padding-bottom: 5px;
 }

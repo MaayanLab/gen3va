@@ -8,10 +8,8 @@
 
     <div class='page' id='tag-page'>
 
-        <h1>{{ tag.gene_signatures|length }} gene signatures for <strong>{{ tag.name }}</strong></h1>
-        {% if tag.report %}
-            <a class='btn btn-info' href='{{ report_url }}/{{ tag.name }}'>Back to report</a>
-        {% endif %}
+        <h1><strong>{{ tag.name }}</strong> gene signatures ({{ tag.gene_signatures|length }})</h1>
+        <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ tag.name }}'>Back to reports for {{ tag.name }}</a>
 
         <div id='custom-report-builder'>
             <div class='description'>
@@ -23,7 +21,7 @@
                             <li>You must select at least 3 signatures.</li>
                             <li>Click <em>Build report</em></li>
                         </ol>
-                        <button class='btn btn-primary'>Build report</button>
+                        <button class='btn btn-info'>Build report</button>
                     </div>
                 </div>
             </div>

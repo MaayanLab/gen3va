@@ -19,8 +19,8 @@ def build(tag):
     """Creates a new report and returns its ID. Builds the report's links in
     a separate thread.
     """
-    if tag.report:
-        report = tag.report
+    if tag.approved_report:
+        report = tag.approved_report
         print('Reseting report.')
         with session_scope() as session:
             report.reset()
@@ -94,7 +94,7 @@ def _build(report_id):
 def update(tag):
     """updates an existing report.
     """
-    report = tag.report
+    report = tag.approved_report
     print('Updating report for %s.' % tag.name)
     if not hasattr(report, 'pca_plot'):
         p = multiprocessing.Process(target=subprocess_wrapper,

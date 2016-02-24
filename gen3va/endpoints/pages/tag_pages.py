@@ -27,6 +27,4 @@ def view_individual_tag(tag_name):
         message = 'No gene signatures with tag "%s" found' % tag_name
         return render_template('pages/404.html', message=message)
     else:
-        return render_template('pages/tag.html',
-                               report_url=Config.REPORT_URL,
-                               tag=tag)
+        return render_template('pages/tag.html', tag=tag)

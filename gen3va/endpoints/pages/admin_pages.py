@@ -21,7 +21,8 @@ def admin_landing():
     """
     all_tags = database.get_all(Tag)
     incomplete_tags = [t for t in all_tags if
-                       (not t.report or not t.report.complete(
+                       (not t.approved_report
+                        or not t.approved_report.complete(
                            Config.SUPPORTED_ENRICHR_LIBRARIES
                        ))]
     return render_template('pages/admin.html',

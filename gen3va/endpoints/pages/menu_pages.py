@@ -69,7 +69,7 @@ def _curators_with_approved_reports():
     for curator in database.get_all(Curator):
         use = False
         for tag in curator.tags:
-            if tag.report and tag.report.ready:
+            if tag.approved_report and tag.approved_report.ready:
                 use = True
         if use:
             curators.append(curator)

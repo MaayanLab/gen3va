@@ -22,12 +22,7 @@ def view_reports_associated_with_tag(tag_name):
     """Renders page that lists all reports associated with a tag.
     """
     tag = database.get(Tag, tag_name, 'name')
-    for report in tag.reports:
-        if report.is_approved:
-            return redirect(url_for('report_pages.view_approved_report', tag_name=tag.name))
-    return render_template('pages/reports-for-tag.html',
-                           tag=tag,
-                           reports=tag.reports)
+    return render_template('pages/reports-for-tag.html', tag=tag)
 
 
 @report_pages.route('/approved/<tag_name>', methods=['GET'])
@@ -38,7 +33,7 @@ def view_approved_report(tag_name):
     if not tag:
         return render_template('pages/404.html')
 
-    report = tag.report
+    report = tag.approved_report
     if not report:
         return render_template('pages/report-not-ready.html', tag=tag)
     if report.pca_plot:

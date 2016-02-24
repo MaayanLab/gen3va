@@ -21,19 +21,17 @@
 
         <div class="report-metadata">
             <h1><strong>{{ tag.name }}</strong> <span>report</span></h1>
-            {% if report.tag.description %}
-                <p>{{ report.tag.description }}</p>
-            {% endif %}
+            <p>
+                <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">Back to reports for {{ tag.name }}</a>
+{#                <a class="btn btn-info" href="{{ tag.name|c_download_url }}" target="_blank">Download genes signatures*</a>#}
+{#                <p><em>*Depending on the number of signatures, this may take a minute.</em></p>#}
+            </p>
         </div>
 
         <!-- Gene signatures -->
         <div id="gene-signatures-table" class="section">
             <h2>Gene signatures</h2>
-            <p>
-                <a class="btn btn-primary" href="{{ tag.name|c_tag_url }}">{{ report.gene_signatures|length }} processed gene signatures</a>
-                <a class="btn btn-info" href="{{ tag.name|c_download_url }}" target="_blank">Download genes signatures*</a>
-                <p><em>*Depending on the number of signatures, this may take a minute.</em></p>
-            </p>
+
             <div class="table-responsive">
                 <table class="table data-table responsive">
                     <thead>
