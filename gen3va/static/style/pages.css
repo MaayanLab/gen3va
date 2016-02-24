@@ -84,11 +84,12 @@
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a:hover {
   text-decoration: none;
 }
-#reports-for-tag-page .signatures-and-approved-report {
-  margin-top: 20px;
+#reports-for-tag-page .signatures-and-approved-report div {
+  margin-top: 10px;
 }
 #reports-for-tag-page .custom-reports {
-  margin-top: 20px;
+  border-top: 1px solid #eeeeee;
+  margin-top: 15px;
 }
 @media (max-width: 992px) {
   #index-page .bio-category-column {

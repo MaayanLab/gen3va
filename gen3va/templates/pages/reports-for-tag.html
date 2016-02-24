@@ -10,15 +10,23 @@
         <h1><strong>{{ tag.name }}</strong> reports ({{ report_count }})</h1>
 
         <div class='signatures-and-approved-report'>
-            <a class='btn btn-info' href='{{ config.TAG_URL }}/{{ tag.name }}'>Gene Signatures ({{ tag.gene_signatures|length }})</a>
             {% if tag.approved_report %}
-                <a class='btn btn-primary' href='{{ config.REPORT_URL }}/approved/{{ tag.name }}'>Approved Report</a>
+                <div class='section'>
+                    <a class='btn btn-primary' href='{{ config.REPORT_URL }}/approved/{{ tag.name }}'>
+                        Approved Report
+                    </a>
+                </div>
             {% endif %}
+            <div class='section'>
+                <a class='btn btn-info' href='{{ config.TAG_URL }}/{{ tag.name }}'>
+                    Gene Signatures ({{ tag.gene_signatures|length }})
+                </a>
+            </div>
         </div>
 
         {% if tag.custom_reports|length > 0 %}
             <div class='custom-reports'>
-                <h5>Custom Reports</h5>
+                <h3>Custom Reports</h3>
                 <ul class='list-unstyled'>
                     {% for report in tag.custom_reports %}
                         <li>
