@@ -31,7 +31,7 @@
                     {% for report in tag.custom_reports %}
                         <li>
                             <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'>
-                                Report {{ report.id }}
+                                Report {{ report.id }} - {{ report.name }}
                             </a>
                         </li>
                     {% endfor %}

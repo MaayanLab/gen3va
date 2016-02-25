@@ -78,6 +78,27 @@ def view_custom_report(report_id, tag_name):
                            pca_json=pca_json)
 
 
+@report_pages.route('/custom/<tag_name>', methods=['POST'])
+def build_custom_report(tag_name):
+    """Builds a custom report.
+    """
+    report_name = request.json.get('report_name')
+    tag = database.get(Tag, tag_name, 'name')
+    if not tag:
+        return render_template('pages/404.html')
+
+    extraction_ids = _get_extraction_ids(request)
+    gene_signatures = database.get_signatures_by_ids(extraction_ids)
+    report_id = report_builder.build_custom(tag, gene_signatures, report_name)
+
+    # This endpoint is hit via an AJAX request. JavaScript must perform the
+    # redirect.
+    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
+    return jsonify({
+        'new_url': new_url
+    })
+
+
 @report_pages.route('', methods=['GET'])
 def view_all_reports():
     """Renders page to view all reports.
@@ -86,27 +107,6 @@ def view_all_reports():
     return render_template('pages/reports-all.html',
                            report_url=Config.REPORT_URL,
                            reports=reports)
-
-
-@report_pages.route('/custom/<tag_name>', methods=['POST'])
-def build_custom_report(tag_name):
-    """Builds a custom report.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    if not tag:
-        return render_template('pages/404.html')
-
-    extraction_ids = _get_extraction_ids(request)
-    gene_signatures = database.get_signatures_by_ids(extraction_ids)
-    report_id = report_builder.build_custom(tag, gene_signatures)
-
-    # This endpoint is hit via an AJAX request. JavaScript must perform the
-    # redirect.
-    # TODO: This can just redirect, I think.
-    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
-    return jsonify({
-        'new_url': new_url
-    })
 
 
 # Admin end points. These do not exist for non-admin reports.

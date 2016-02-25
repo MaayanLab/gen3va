@@ -34,14 +34,15 @@ def build(tag):
     _build(report.id)
 
 
-def build_custom(tag, gene_signatures):
+def build_custom(tag, gene_signatures, report_name):
     """Builds a custom report.
     """
     with session_scope() as session:
         if gene_signatures:
             report = Report(tag,
                             _gene_signatures=gene_signatures,
-                            is_approved=False)
+                            is_approved=False,
+                            name=report_name)
         session.add(report)
         session.commit()
     _build(report.id)

@@ -20,7 +20,11 @@
     <div class="page" id="report-page">
 
         <div class="report-metadata">
-            <h1><strong>{{ tag.name }}</strong> <span>report</span></h1>
+            {% if report.is_approved %}
+                <h1><strong>{{ tag.name }}</strong> <span>report</span></h1>
+            {% else %}
+                <h1><strong>{{ report.name }}</strong><span>, custom report for {{ tag.name }}</span></h1>
+            {% endif %}
             <p>
                 <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">Back to reports for {{ tag.name }}</a>
 {#                <a class="btn btn-info" href="{{ tag.name|c_download_url }}" target="_blank">Download genes signatures*</a>#}

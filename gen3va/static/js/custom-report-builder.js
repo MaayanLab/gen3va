@@ -41,24 +41,31 @@ $(function() {
 
     function setupBuildReportListener() {
         $('#custom-report-builder button').click(function() {
-            var chbxs = getSelectedCheckboxes();
-            if (isValidSelection(chbxs)) {
-                var parts = window.location.href.split('/'),
-                    tag = parts[parts.length-1];
-                requestReport(chbxs, tag);
+            var chbxs = getSelectedCheckboxes(),
+                reportName = $('input[name="report-name"]').val();
+            if (!isValidSelection(chbxs)) {
+                return;
             }
+            if (!reportName) {
+                alert('Custom reports require names');
+                return;
+            }
+            var parts = window.location.href.split('/'),
+                tag = parts[parts.length-1];
+            requestReport(chbxs, tag, reportName);
         });
     }
 
     /* Kicks off custom report builder and redirects user.
      */
-    function requestReport(chbxs, tag) {
+    function requestReport(chbxs, tag, reportName) {
         $.ajax({
             url: 'report/custom/' + tag,
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                gene_signatures: chbxs
+                gene_signatures: chbxs,
+                report_name: reportName
             }),
             success: function(data) {
                 window.location = data.new_url;

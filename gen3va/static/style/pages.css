@@ -181,6 +181,9 @@
 #tag-page #custom-report-builder .description h4 {
   margin: 0;
 }
+#tag-page #custom-report-builder input.form-control {
+  margin-bottom: 10px;
+}
 #tag-page #custom-report-builder .options button {
   display: block;
   margin-top: 5px;
