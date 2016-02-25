@@ -28,7 +28,7 @@ $(function() {
                             input = $dataTable.$('input[name="' + name + '"]');
                         input.prop('checked', true);
                     });
-                    
+
                 // Otherwise, we can select all the rows.
                 } else {
                     $allCheckboxes.prop('checked', true);

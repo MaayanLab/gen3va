@@ -21,6 +21,7 @@
                             <li>You must select at least 3 signatures.</li>
                             <li>Click <em>Build report</em></li>
                         </ol>
+                        <input type='text' name='report-name'/>
                         <button class='btn btn-info'>Build report</button>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
                             <td class='title'>
                                 <a data-toggle='tooltip'
                                    title='Results page for the processed gene signature'
-                                   href='{{ gene_signature.extraction_id|c_results_url }}'>
+                                   href='{{ config.REPORT_URL }}/{{ gene_signature.extraction_id }}'>
                                      {{ gene_signature.name }}
                                 </a>
                             </td>
