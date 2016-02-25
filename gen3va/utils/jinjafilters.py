@@ -17,6 +17,15 @@ def c_urlencode(context, value):
 
 
 @jinja2.contextfilter
+@jinjafilters.app_template_filter('c_filter_organism')
+def c_filter_organism(context, value):
+    for metadata in value:
+        if metadata.name == 'organism':
+            return metadata.value
+    return None
+
+
+@jinja2.contextfilter
 @jinjafilters.app_template_filter('c_filter_optional_metadata')
 def c_filter_optional_metadata(context, value):
     results = []
@@ -49,3 +58,12 @@ def c_geo_url(context, value):
     if 'GDS' in value:
         return 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + value
     return 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + value
+
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_curator_class')
+def c_curator_class(context, value):
+    return value\
+        .replace(' ', '-')\
+        .replace('\'', '')\
+        .lower()
