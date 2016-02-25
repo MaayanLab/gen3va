@@ -91,6 +91,9 @@
   border-top: 1px solid #eeeeee;
   margin-top: 15px;
 }
+#reports-for-tag-page .custom-reports ul li {
+  margin-bottom: 10px;
+}
 @media (max-width: 992px) {
   #index-page .bio-category-column {
     width: 100%;

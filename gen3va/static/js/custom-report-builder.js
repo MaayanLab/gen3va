@@ -14,12 +14,27 @@ $(function() {
     }
 
     function setupSelectAll() {
-        var $checkboxes = $($dataTable.cells().nodes()).find('input.consensus');
+        var $allCheckboxes = $($dataTable.cells().nodes()).find('input.consensus');
+
+
         $('#select-all').click(function(evt) {
+            var searchText = $('.dataTables_filter input').val();
             if ($(evt.target).prop('checked')) {
-                $checkboxes.prop('checked', true);
+
+                // If the user has input search text, we want to only check the selected results.
+                if (searchText) {
+                    $dataTable.rows({ search: 'applied' }).data().each(function(value) {
+                        var name = $(value[5]).attr('name'),
+                            input = $dataTable.$('input[name="' + name + '"]');
+                        input.prop('checked', true);
+                    });
+                    
+                // Otherwise, we can select all the rows.
+                } else {
+                    $allCheckboxes.prop('checked', true);
+                }
             } else {
-                $checkboxes.prop('checked', false);
+                $allCheckboxes.prop('checked', false);
             }
         });
     }
