@@ -55,7 +55,7 @@
                                     {% if gene_signature.resource.code == 'geo' %}
                                         <a data-toggle="tooltip"
                                            title="Results page for the processed gene signature"
-                                           href="{{ config.REPORT_URL }}/{{ gene_signature.extraction_id }}">
+                                           href="{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}">
                                              {{ gene_signature.name }}
                                         </a>
                                     {% else %}

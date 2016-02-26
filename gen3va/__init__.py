@@ -86,6 +86,7 @@ if Config.DEBUG:
 app.config.update({
     'BASE_URL': Config.BASE_URL,
     'REPORT_URL': Config.REPORT_URL,
+    'RESULTS_URL': Config.RESULTS_URL,
     'APPROVED_REPORT_URL': Config.APPROVED_REPORT_URL,
     'TAG_URL': Config.TAG_URL
 })
