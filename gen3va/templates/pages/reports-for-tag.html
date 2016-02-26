@@ -7,7 +7,7 @@
     <div class='page' id='reports-for-tag-page'>
         {% set num_custom_reports = tag.custom_reports|length %}
         {% set report_count = 1+num_custom_reports if tag.approved_report else num_custom_reports %}
-        <h1><strong>{{ tag.name }}</strong> reports ({{ report_count }})</h1>
+        <h1><strong>{{ tag.name|upper }}</strong> reports ({{ report_count }})</h1>
 
         <div class='signatures-and-approved-report'>
             {% if tag.approved_report %}

@@ -16,10 +16,12 @@
                     <ul class='list-inline'>
                         <!-- We need "name" class for list.js (see bottom of page) -->
                         <li class='name'>
-                            <strong>{{ tag.name }}</strong>
+                            <strong>
+                                <a href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
+                            </strong>
                         </li>
                         <li>
-                            <a href='{{ config.REPORT_URL }}/{{ tag.name }}' class='report-link'>Reports</a>
+                            {{ tag.gene_signatures|length }} signatures
                         </li>
                     </ul>
                 </li>

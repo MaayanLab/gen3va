@@ -8,8 +8,8 @@
 
     <div class='page' id='tag-page'>
 
-        <h1><strong>{{ tag.name }}</strong> gene signatures ({{ tag.gene_signatures|length }})</h1>
-        <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ tag.name }}'>Back to reports for {{ tag.name }}</a>
+        <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ tag.gene_signatures|length }})</h1>
+        <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ tag.name }}'>Back to reports for {{ tag.name|upper }}</a>
 
         <div id='custom-report-builder'>
             <div class='description'>

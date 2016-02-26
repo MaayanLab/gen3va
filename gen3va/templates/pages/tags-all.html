@@ -18,9 +18,9 @@
                         {% if tag.name|c_filter_empty %}
                             <tr>
                                 <td>
-                                    <span class="label">
-                                        <a href="{{ config.TAG_URL }}/{{ tag.name }}">{{ tag.name }}</a>
-                                    </span>
+                                    <strong>
+                                        <a href="{{ config.TAG_URL }}/{{ tag.name }}">{{ tag.name|upper }}</a>
+                                    </strong>
                                 </td>
                             </tr>
                         {% endif %}

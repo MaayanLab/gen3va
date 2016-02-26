@@ -49,7 +49,7 @@
                                     {% if not curator_name or tag.curator.name == curator_name %}
                                         <li>
                                             <p class='name'>
-                                                <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name }}</a>
+                                                <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
                                             </p>
                                             <p>{{ tag.gene_signatures|length }} signatures</p>
                                             {% if not (tag.approved_report and tag.approved_report.ready) %}
