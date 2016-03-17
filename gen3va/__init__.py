@@ -47,6 +47,7 @@ app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.report_pages)
 app.register_blueprint(endpoints.tag_pages)
 app.register_blueprint(endpoints.download_api)
+app.register_blueprint(endpoints.signature_search_api)
 app.register_blueprint(jinjafilters)
 
 

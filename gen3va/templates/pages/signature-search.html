@@ -1,0 +1,15 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Signature Search{% endblock %}
+
+{% block body %}
+
+    <div class='page' id='signature-search-page'>
+        <h4>Signature Search</h4>
+        <form action='signature_search/' method='post'>
+            <textarea class='form-control' name='signature'></textarea>
+            <button type='submit' class='btn btn-primary'>Submit</button>
+        </form>
+    </div>
+
+{% endblock %}

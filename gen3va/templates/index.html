@@ -45,7 +45,8 @@
                             <div id='{{ cat.name }}' class='bio-category'>
                                 <h3>{{ cat.name|capitalize }}</h3>
                                 <ul class='list list-unstyled'>
-                                {% for tag in cat.tags %}
+                                %{
+                                {% for tag in cat.tags|sort(attribute='name') %}
                                     {% if not curator_name or tag.curator.name == curator_name %}
                                         <li>
                                             <p class='name'>

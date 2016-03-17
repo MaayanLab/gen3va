@@ -73,6 +73,7 @@
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.name {
   font-weight: bold;
+  word-wrap: break-word;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight {
   color: #f15a5a;
