@@ -37,11 +37,11 @@ def index():
                            bio_categories=bio_categories)
 
 
-@menu_pages.route('/playground', methods=['GET'])
-def playground():
+@menu_pages.route('/collections', methods=['GET'])
+def collections():
     tags = database.get_all(Tag)
     tags = [t for t in tags if not t.is_restricted]
-    return render_template('pages/playground.html',
+    return render_template('pages/collections.html',
                            tags=tags)
 
 

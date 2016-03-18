@@ -47,15 +47,12 @@
                                 <ul class='list list-unstyled'>
                                 %{
                                 {% for tag in cat.tags|sort(attribute='name') %}
-                                    {% if not curator_name or tag.curator.name == curator_name %}
+                                    {% if (not curator_name or tag.curator.name == curator_name) and (tag.approved_report and tag.approved_report.ready) %}
                                         <li>
                                             <p class='name'>
                                                 <a class='name' href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
                                             </p>
                                             <p>{{ tag.gene_signatures|length }} signatures</p>
-                                            {% if not (tag.approved_report and tag.approved_report.ready) %}
-                                                <p class='highlight'>Approved report not ready.</p>
-                                            {% endif %}
                                         </li>
                                     {% endif %}
                                 {% endfor %}

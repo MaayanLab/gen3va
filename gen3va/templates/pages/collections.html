@@ -23,6 +23,11 @@
                         <li>
                             {{ tag.gene_signatures|length }} signatures
                         </li>
+                        <li>
+                            {% if (tag.approved_report and tag.approved_report.ready) %}
+                               <span class='highlight'>Report ready</span>
+                            {% endif %}
+                        </li>
                     </ul>
                 </li>
             {% endfor %}

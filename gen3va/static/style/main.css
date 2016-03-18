@@ -157,6 +157,9 @@ pre {
 .clear {
   clear: both;
 }
+.highlight {
+  color: #f15a5a;
+}
 .caption,
 caption {
   font-style: italic;
