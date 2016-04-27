@@ -37,15 +37,11 @@ def from_report(gene_signatures):
     series = [{'name': 'Gene signatures', 'data': []}]
     for i, (x,y,z) in enumerate(pca_coords):
         sig = gene_signatures[i]
-        if sig.soft_file.dataset.record_type == 'geo':
-            name = sig.soft_file.dataset.title
-        else:
-            name = sig.soft_file.name
         series[0]['data'].append({
             'x': x,
             'y': y,
             'z': z,
-            'name': name
+            'name': sig.name
         })
 
     pca_obj = {'series': series}

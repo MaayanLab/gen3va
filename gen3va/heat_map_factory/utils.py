@@ -8,13 +8,7 @@ def column_title(i, gene_signature):
     """Utility method for normalizing how column names are built across
     hierarchical clusterings.
     """
-    sf = gene_signature.soft_file
-    ds = sf.dataset
-    if ds.record_type == 'geo':
-        return '%s - %s - %s' % (i, ds.accession, ds.title)
-    else:
-        print(sf.name)
-        return '%s - %s' % (i, sf.name)
+    return '%s - %s' % (i, gene_signature.name)
 
 
 def link(base, row_title, col_title='Gene signatures'):

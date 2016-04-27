@@ -52,7 +52,7 @@
                             <tr>
                                 <td class="index">{{ loop.index }}</td>
                                 <td class="title">
-                                    {% if gene_signature.resource.code == 'geo' %}
+                                    {% if gene_signature.is_from_geo %}
                                         <a data-toggle="tooltip"
                                            title="Results page for the processed gene signature"
                                            href="{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}">
@@ -63,9 +63,11 @@
                                     {% endif %}
                                 </td>
                                 <td class="organism">
-                                    {{ dataset.organism|c_filter_empty }}
+                                    {{ gene_signature.organism|c_filter_empty }}
                                 </td>
-                                <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
+                                <td class="platform">
+                                    {{ gene_signature.platform|c_filter_empty }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
