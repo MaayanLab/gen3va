@@ -92,10 +92,13 @@ def _build(report_id):
     p.start()
 
 
-def update(tag):
-    """updates an existing report.
+def update(tag, report_=None):
+    """Updates an existing report.
     """
-    report = tag.approved_report
+    if not report_:
+        report = tag.approved_report
+    else:
+        report = report_
     print('Updating report for %s.' % tag.name)
     if not hasattr(report, 'pca_plot'):
         p = multiprocessing.Process(target=subprocess_wrapper,
