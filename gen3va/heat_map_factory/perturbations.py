@@ -6,10 +6,11 @@ import json
 
 import pandas
 import requests
-from requests.exceptions import RequestException
 
+from substrate import db, L1000CDS2Results
 from gen3va import Config
 from gen3va.heat_map_factory import filters, utils
+from gen3va import database
 
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
@@ -22,23 +23,24 @@ def prepare_perturbations(signatures):
     # combined matrix will, in the worst case scenario or no overlap, be
     # the max size.
     max_num_rows = filters.MAX_NUM_ROWS / 2
-
     df_m = _get_raw_data(signatures, True)
     df_m = filters.filter_rows_by_non_empty_until(df_m, max_num_rows)
-
     df_r = _get_raw_data(signatures, False)
     df_r = filters.filter_rows_by_non_empty_until(df_r, max_num_rows)
 
     columns = []
     for i in range(len(signatures)):
+        sig = signatures[i]
         mimic_vec = df_m.ix[:,i]
         reverse_vec = df_r.ix[:,i]
-
         column_data = utils.build_columns(mimic_vec, reverse_vec)
-        columns.append({
-            'col_name': utils.column_title(i, signatures[i]),
+        col = {
+            'col_name': utils.column_title(i, sig),
             'data': column_data
-        })
+        }
+        opt = sig.get_optional_metadata('cell_type')
+        col['cat'] = opt.value.lower() if opt else ''
+        columns.append(col)
 
     return columns
 
@@ -50,6 +52,7 @@ def _get_raw_data(signatures, use_mimic):
 
         try:
             perts, scores = _mimic_or_reverse_signature(signature, use_mimic)
+            db.session.commit()
         except Exception as e:
             print(e)
             perts, scores = [], []
@@ -75,6 +78,12 @@ def _mimic_or_reverse_signature(signature, use_mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
+    # Use the existing pertubrations and scores if we've already computed them.
+    results = signature.get_l1000cds2_results(use_mimic)
+    if results:
+        print('Already have L1000CDS2 results.')
+        return results.perts_scores
+
     ranked_genes = signature.combined_genes
     payload = {
         'data': {
@@ -93,24 +102,12 @@ def _mimic_or_reverse_signature(signature, use_mimic):
     resp = requests.post(L1000CDS2_QUERY,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
-
     data = json.loads(resp.text)
+    share_id = data.get('shareId')
 
-    perts = []
-    scores = []
-    top_meta = data['topMeta']
-    for obj in top_meta:
-        desc_temp = obj['pert_desc']
-        if desc_temp == '-666':
-            desc_temp = obj['pert_id']
-        pert = '%s - %s' % (desc_temp, obj['cell_id'])
+    results = L1000CDS2Results(share_id, use_mimic)
+    signature.l1000cds2_results.append(results)
+    database.update_object(signature)
 
-        # L1000CDS^2 gives scores from 0 to 2. With mimic, low scores are
-        # better; with reverse, high scores are better. If we subtract
-        # this score from 1, we get a negative value for reverse and a
-        # positive value for mimic.
-        score = 1 - obj['score']
-        perts.append(pert)
-        scores.append(score)
-
-    return perts, scores
+    r = signature.get_l1000cds2_results(use_mimic)
+    return r.perts_scores

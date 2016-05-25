@@ -53,7 +53,7 @@
                                 <a data-toggle='tooltip'
                                    title='Results page for the processed gene signature'
                                    href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
-                                     {{ gene_signature.name }}
+                                     {{ gene_signature.name|truncate(50) }}
                                 </a>
                             </td>
                             <td class='organism'>
@@ -67,7 +67,7 @@
                                         {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                                             <tr>
                                                 <td>{{ opt_meta.name|capitalize }}</td>
-                                                <td>{{ opt_meta.value }}</td>
+                                                <td>{{ opt_meta.value|truncate(25) }}</td>
                                             </tr>
                                         {% endfor %}
                                         </table>

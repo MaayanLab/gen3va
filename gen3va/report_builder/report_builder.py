@@ -99,41 +99,53 @@ def update(tag, report_=None):
         report = tag.approved_report
     else:
         report = report_
-    print('Updating report for %s.' % tag.name)
-    if not hasattr(report, 'pca_plot'):
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _perform_pca
-                                    })
-        p.start()
 
+    with session_scope() as session:
+        report.reset()
+        session.merge(report)
+    # print('Updating report for %s.' % tag.name)
+    # if not hasattr(report, 'pca_plot'):
+    #     p = multiprocessing.Process(target=subprocess_wrapper,
+    #                                 kwargs={
+    #                                     'report_id': report.id,
+    #                                     'func': _perform_pca
+    #                                 })
+    #     p.start()
+    #
     back_link = _get_back_link(report.id)
-    if not report.genes_heat_map:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _cluster_ranked_genes,
-                                        'back_link': back_link
-                                    })
-        p.start()
+    print(back_link)
+    # if not report.genes_heat_map:
+    #     p = multiprocessing.Process(target=subprocess_wrapper,
+    #                                 kwargs={
+    #                                     'report_id': report.id,
+    #                                     'func': _cluster_ranked_genes,
+    #                                     'back_link': back_link
+    #                                 })
+    #     p.start()
+    #
+    # if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
+    #     completed = [v.enrichr_library for v in report.enrichr_heat_maps]
+    #     missing = []
+    #     for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+    #         if library not in completed:
+    #             missing.append(library)
+    #     _enrichr_visualizations(report.id, missing[:2], back_link)
+    _enrichr_visualizations(report.id, ['ChEA_2015'], back_link)
 
-    if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
-        completed = [v.enrichr_library for v in report.enrichr_heat_maps]
-        missing = []
-        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-            if library not in completed:
-                missing.append(library)
-        _enrichr_visualizations(report.id, missing[:2], back_link)
+    # if not report.l1000cds2_heat_map:
+    #     p = multiprocessing.Process(target=subprocess_wrapper,
+    #                                 kwargs={
+    #                                     'report_id': report.id,
+    #                                     'func': _cluster_perturbations,
+    #                                     'back_link': back_link
+    #                                 })
+    #     p.start()
 
-    if not report.l1000cds2_heat_map:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _cluster_perturbations,
-                                        'back_link': back_link
-                                    })
-        p.start()
+    # subprocess_wrapper(**{
+    #     'report_id': report.id,
+    #     'func': _cluster_perturbations,
+    #     'back_link': back_link
+    # })
 
 
 def subprocess_wrapper(**kwargs):
@@ -219,15 +231,22 @@ def _cluster_enriched_terms(Session, **kwargs):
 def _enrichr_visualizations(report_id, libraries, back_link):
     """Builds Enrichr visualizations for all libraries.
     """
+    # for library in libraries:
+    #     p = multiprocessing.Process(target=subprocess_wrapper,
+    #                                 kwargs={
+    #                                     'report_id': report_id,
+    #                                     'func': _cluster_enriched_terms,
+    #                                     'back_link': back_link,
+    #                                     'library': library
+    #                                 })
+    #     p.start()
     for library in libraries:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report_id,
-                                        'func': _cluster_enriched_terms,
-                                        'back_link': back_link,
-                                        'library': library
-                                    })
-        p.start()
+        subprocess_wrapper(**{
+            'report_id': report_id,
+            'func': _cluster_enriched_terms,
+            'back_link': back_link,
+            'library': library
+        })
 
 
 def _get_back_link(report_id):
@@ -236,7 +255,7 @@ def _get_back_link(report_id):
     with session_scope() as session:
         print('starting report build %s' % report_id)
         report = session.query(Report).get(report_id)
-        return '{0}{1}/{3}'.format(Config.SERVER,
+        return '{0}{1}/{2}'.format(Config.SERVER,
                                    Config.REPORT_URL,
                                    report.tag.name)
 

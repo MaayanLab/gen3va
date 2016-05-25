@@ -22,15 +22,19 @@ $(function() {
 
     function dataTables() {
         $('table').DataTable({
-            iDisplayLength: 5,
+            iDisplayLength: 5
         });
     }
 
     window.plotPCA = function plotPCA(pcaObj, container, tooltipFormatter) {
 
-        Highcharts.setOptions({
-            colors: ['#1689E5']
-        });
+        // If there is only one data series, use Geneva's blue. Otherwise,
+        // let Highcharts figure it out.
+        if (pcaObj.series.length == 1) {
+            Highcharts.setOptions({
+                colors: ['#1689E5']
+            });
+        }
 
         container = container || 'pca-container';
         tooltipFormatter = tooltipFormatter || function() { return this.key; };

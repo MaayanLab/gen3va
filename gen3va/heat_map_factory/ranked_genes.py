@@ -21,16 +21,21 @@ def prepare_ranked_genes(diff_exp_method, signatures):
     else:
         df = filters.filter_rows_by_highest_abs_val_mean(df)
 
-    for col_name in df.columns:
+    for col_name, signature in zip(df.columns, signatures):
         column = df.ix[:, col_name].tolist()
         column = [float(x) for x in column]
         genes = zip(df.index, column)
 
         data = [{'row_name': name, 'val': value} for name, value in genes]
-        columns.append({
+        col = {
             'col_name': col_name,
             'data': data,
-        })
+        }
+
+        category_name = 'cell_type'
+        opt = signature.get_optional_metadata(category_name)
+        col['cat'] = opt.value.lower() if opt else ''
+        columns.append(col)
 
     return columns
 

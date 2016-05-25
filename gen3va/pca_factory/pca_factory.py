@@ -34,14 +34,36 @@ def from_report(gene_signatures):
     df = df.fillna(0)
     pca_coords, variance_explained = compute_pca(df.T)
 
-    series = [{'name': 'Gene signatures', 'data': []}]
-    for i, (x,y,z) in enumerate(pca_coords):
+    unspecified_key = 'unspecified'
+    series_obj = {}
+    category_name = 'cell_type'
+    for i, (x, y, z) in enumerate(pca_coords):
         sig = gene_signatures[i]
-        series[0]['data'].append({
-            'x': x,
-            'y': y,
-            'z': z,
-            'name': sig.name
+        opt = sig.get_optional_metadata(category_name)
+        if opt:
+            if opt.value not in series_obj:
+                series_obj[opt.value] = []
+            series_obj[opt.value].append({
+                'x': x,
+                'y': y,
+                'z': z,
+                'name': sig.name
+            })
+        else:
+            if unspecified_key not in series_obj:
+                series_obj[unspecified_key] = []
+            series_obj[unspecified_key].append({
+                'x': x,
+                'y': y,
+                'z': z,
+                'name': sig.name
+            })
+
+    series = []
+    for name, data in series_obj.items():
+        series.append({
+            'name': name,
+            'data': data
         })
 
     pca_obj = {'series': series}

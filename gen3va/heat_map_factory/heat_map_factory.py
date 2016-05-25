@@ -32,7 +32,7 @@ def get_link(type_, **kwargs):
     diff_exp_method = kwargs.get('diff_exp_method')
 
     payload = {
-        'title': 'gen3va',
+        #'title': 'gen3va',
         'link': kwargs.get('back_link', ''),
         'filter': 'N_row_sum',
     }
