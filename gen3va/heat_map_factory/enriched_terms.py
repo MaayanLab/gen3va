@@ -13,16 +13,15 @@ from gen3va import database
 from gen3va.heat_map_factory import filters, utils
 
 
-def prepare_enriched_terms(signatures, library, category_name=None):
+def prepare_enriched_terms(Session, signatures, library, category_name):
     """Prepares enriched terms for hierarchical clustering.
     """
     max_num_rows = filters.MAX_NUM_ROWS / 2
-
-    df_up = _get_raw_data(signatures, library, True)
+    df_up = _get_raw_data(Session, signatures, library, True)
     df_up = filters.filter_rows_by_highest_abs_val_mean(df_up, max_num_rows)
-
-    df_down = _get_raw_data(signatures, library, False)
-    df_down = filters.filter_rows_by_highest_abs_val_mean(df_down, max_num_rows)
+    df_down = _get_raw_data(Session, signatures, library, False)
+    df_down = filters.filter_rows_by_highest_abs_val_mean(df_down,
+                                                          max_num_rows)
 
     columns = []
     for i in range(len(signatures)):
@@ -33,16 +32,13 @@ def prepare_enriched_terms(signatures, library, category_name=None):
             'col_name': utils.column_title(i, signatures[i]),
             'data': column_data
         }
-        category_name = 'cell_type'
-        if category_name:
-            opt = signatures[i].get_optional_metadata(category_name)
-            col['cat'] = opt.value.lower() if opt else ''
+        opt = signatures[i].get_optional_metadata(category_name)
+        col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
-
     return columns
 
 
-def _get_raw_data(signatures, library, use_up):
+def _get_raw_data(Session, signatures, library, use_up):
     """Creates a matrix of genes (rows) and signatures (columns).
     """
     df = pandas.DataFrame(index=[])
@@ -55,7 +51,8 @@ def _get_raw_data(signatures, library, use_up):
             genes = signature.down_genes
 
         try:
-            terms, scores = _enrich_gene_signature(signature, genes, library, use_up)
+            terms, scores = _enrich_gene_signature(Session, signature, genes,
+                                                   library, use_up)
         except RequestException as e:
             print(e)
             terms, scores = [], []
@@ -75,9 +72,7 @@ def _get_raw_data(signatures, library, use_up):
 
         if type(right) is not pandas.DataFrame:
             continue
-
         df = df.join(right, how='outer')
-
         if not df.index.is_unique:
             df = df.groupby(df.index).mean()
 
@@ -85,10 +80,9 @@ def _get_raw_data(signatures, library, use_up):
     return df
 
 
-def _enrich_gene_signature(signature, genes, library, use_up):
+def _enrich_gene_signature(Session, signature, genes, library, use_up):
     """Gets enrichment vector from Enrichr.
     """
-    #import pdb; pdb.set_trace()
     # Use the existing pertubrations and scores if we've already computed them.
     results = signature.get_enrichr_results(use_up)
     if results:
@@ -100,9 +94,7 @@ def _enrich_gene_signature(signature, genes, library, use_up):
 
     results = EnrichrResults(user_list_id, use_up)
     signature.enrichr_results.append(results)
-    database.update_object(signature)
-
-    results = signature.get_enrichr_results(use_up)
+    Session.merge(signature)
     return results.terms_scores(library)
 
 

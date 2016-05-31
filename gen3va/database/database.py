@@ -44,11 +44,11 @@ def get_signatures_by_ids(extraction_ids):
             .all()
 
 
-def delete_object(obj):
-    """Deletes object provided.
+def add_object(obj):
+    """Create new object.
     """
     with session_scope() as session:
-        session.delete(obj)
+        session.add(obj)
 
 
 def update_object(obj):
@@ -56,6 +56,13 @@ def update_object(obj):
     """
     with session_scope() as session:
         session.merge(obj)
+
+
+def delete_object(obj):
+    """Deletes object provided.
+    """
+    with session_scope() as session:
+        session.delete(obj)
 
 
 def get_tags_by_curator(curator):

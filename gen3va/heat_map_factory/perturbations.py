@@ -15,7 +15,7 @@ from gen3va import database
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def prepare_perturbations(signatures):
+def prepare_perturbations(Session, signatures, category_name):
     """Prepares perturbations to mimic and reverse expression pattern for
     hierarchical clustering.
     """
@@ -23,9 +23,9 @@ def prepare_perturbations(signatures):
     # combined matrix will, in the worst case scenario or no overlap, be
     # the max size.
     max_num_rows = filters.MAX_NUM_ROWS / 2
-    df_m = _get_raw_data(signatures, True)
+    df_m = _get_raw_data(Session, signatures, True)
     df_m = filters.filter_rows_by_non_empty_until(df_m, max_num_rows)
-    df_r = _get_raw_data(signatures, False)
+    df_r = _get_raw_data(Session, signatures, False)
     df_r = filters.filter_rows_by_non_empty_until(df_r, max_num_rows)
 
     columns = []
@@ -36,22 +36,23 @@ def prepare_perturbations(signatures):
         column_data = utils.build_columns(mimic_vec, reverse_vec)
         col = {
             'col_name': utils.column_title(i, sig),
-            'data': column_data
+            'data': column_data,
         }
-        opt = sig.get_optional_metadata('cell_type')
+        opt = sig.get_optional_metadata(category_name)
         col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
 
     return columns
 
 
-def _get_raw_data(signatures, use_mimic):
+def _get_raw_data(Session, signatures, use_mimic):
     df = pandas.DataFrame(index=[])
     for i, signature in enumerate(signatures):
         print('%s - %s' % (i, signature.extraction_id))
 
         try:
-            perts, scores = _mimic_or_reverse_signature(signature, use_mimic)
+            perts, scores = _mimic_or_reverse_signature(Session, signature,
+                                                        use_mimic)
             db.session.commit()
         except Exception as e:
             print(e)
@@ -74,7 +75,7 @@ def _get_raw_data(signatures, use_mimic):
     return df
 
 
-def _mimic_or_reverse_signature(signature, use_mimic):
+def _mimic_or_reverse_signature(Session, signature, use_mimic):
     """Analyzes gene signature to find perturbations that reverse or mimic its
     expression pattern.
     """
@@ -107,7 +108,7 @@ def _mimic_or_reverse_signature(signature, use_mimic):
 
     results = L1000CDS2Results(share_id, use_mimic)
     signature.l1000cds2_results.append(results)
-    database.update_object(signature)
-
+    Session.merge(signature)
     r = signature.get_l1000cds2_results(use_mimic)
+
     return r.perts_scores

@@ -15,7 +15,7 @@ from gen3va.database.utils import session_scope, \
 from gen3va import Config, heat_map_factory, pca_factory
 
 
-def build(tag):
+def build(tag, reanalyze=False):
     """Creates a new report and returns its ID. Builds the report's links in
     a separate thread.
     """
@@ -23,7 +23,7 @@ def build(tag):
         report = tag.approved_report
         print('Reseting report.')
         with session_scope() as session:
-            report.reset()
+            report.reset(reanalyze=reanalyze)
             session.merge(report)
     else:
         print('Creating new report.')
@@ -79,7 +79,7 @@ def _build(report_id):
     # We want a basic report as fast as possible. We can create more Enrichr
     # visualizations later.
     enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
-    # # Creates its own subprocess for each visualization.
+    # Creates its own subprocess for each visualization.
     _enrichr_visualizations(report_id, enrichr_library, back_link)
 
     p = multiprocessing.Process(
@@ -162,7 +162,7 @@ def subprocess_wrapper(**kwargs):
         print('COMPLETED %s' % func.__name__)
         Session.commit()
     except Exception as e:
-        print('ERROR with %s' % func.__name__)
+        print('ERROR with %s:' % func.__name__)
         print(e)
         Session.rollback()
     finally:
@@ -205,7 +205,7 @@ def _cluster_perturbations(Session, **kwargs):
     report_id = kwargs.get('report_id')
     back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
-    link = heat_map_factory.get_link('l1000cds2',
+    link = heat_map_factory.get_link('l1000cds2', Session,
                                      signatures=report.gene_signatures,
                                      back_link=back_link)
     if link:
@@ -220,7 +220,7 @@ def _cluster_enriched_terms(Session, **kwargs):
     back_link = kwargs.get('back_link')
     library = kwargs.get('library')
     report = Session.query(Report).get(report_id)
-    link = heat_map_factory.get_link('enrichr',
+    link = heat_map_factory.get_link('enrichr', Session,
                                      signatures=report.gene_signatures,
                                      library=library,
                                      back_link=back_link)
@@ -231,22 +231,15 @@ def _cluster_enriched_terms(Session, **kwargs):
 def _enrichr_visualizations(report_id, libraries, back_link):
     """Builds Enrichr visualizations for all libraries.
     """
-    # for library in libraries:
-    #     p = multiprocessing.Process(target=subprocess_wrapper,
-    #                                 kwargs={
-    #                                     'report_id': report_id,
-    #                                     'func': _cluster_enriched_terms,
-    #                                     'back_link': back_link,
-    #                                     'library': library
-    #                                 })
-    #     p.start()
     for library in libraries:
-        subprocess_wrapper(**{
-            'report_id': report_id,
-            'func': _cluster_enriched_terms,
-            'back_link': back_link,
-            'library': library
-        })
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report_id,
+                                        'func': _cluster_enriched_terms,
+                                        'back_link': back_link,
+                                        'library': library
+                                    })
+        p.start()
 
 
 def _get_back_link(report_id):

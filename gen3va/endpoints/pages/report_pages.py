@@ -123,6 +123,18 @@ def build_approved_report(tag_name):
                             tag_name=tag.name))
 
 
+@report_pages.route('/approved/<tag_name>/reanalyze', methods=['GET'])
+@login_required
+def reanalyze_approved_report(tag_name):
+    """Reanalyze, i.e. requests new results from Enrichr and L1000CDS2, an
+    approved report for a tag.
+    """
+    tag = database.get(Tag, tag_name, 'name')
+    report_builder.build(tag, reanalyze=True)
+    return redirect(url_for('report_pages.view_approved_report',
+                            tag_name=tag.name))
+
+
 @report_pages.route('/approved/<tag_name>/update', methods=['GET'])
 @login_required
 def update_approved_report(tag_name):
