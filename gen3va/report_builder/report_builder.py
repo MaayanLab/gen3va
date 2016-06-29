@@ -16,8 +16,7 @@ from gen3va import Config, heat_map_factory, pca_factory
 
 
 def build(tag, reanalyze=False):
-    """Creates a new report and returns its ID. Builds the report's links in
-    a separate thread.
+    """Creates a new report in a separate thread.
     """
     if tag.approved_report:
         report = tag.approved_report
@@ -103,49 +102,42 @@ def update(tag, report_=None):
     with session_scope() as session:
         report.reset()
         session.merge(report)
-    # print('Updating report for %s.' % tag.name)
-    # if not hasattr(report, 'pca_plot'):
-    #     p = multiprocessing.Process(target=subprocess_wrapper,
-    #                                 kwargs={
-    #                                     'report_id': report.id,
-    #                                     'func': _perform_pca
-    #                                 })
-    #     p.start()
+
+    print('Updating report for %s.' % tag.name)
+    if not hasattr(report, 'pca_plot'):
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _perform_pca
+                                    })
+        p.start()
     #
     back_link = _get_back_link(report.id)
-    print(back_link)
-    # if not report.genes_heat_map:
-    #     p = multiprocessing.Process(target=subprocess_wrapper,
-    #                                 kwargs={
-    #                                     'report_id': report.id,
-    #                                     'func': _cluster_ranked_genes,
-    #                                     'back_link': back_link
-    #                                 })
-    #     p.start()
-    #
-    # if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
-    #     completed = [v.enrichr_library for v in report.enrichr_heat_maps]
-    #     missing = []
-    #     for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-    #         if library not in completed:
-    #             missing.append(library)
-    #     _enrichr_visualizations(report.id, missing[:2], back_link)
-    _enrichr_visualizations(report.id, ['ChEA_2015'], back_link)
+    if not report.genes_heat_map:
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _cluster_ranked_genes,
+                                        'back_link': back_link
+                                    })
+        p.start()
 
-    # if not report.l1000cds2_heat_map:
-    #     p = multiprocessing.Process(target=subprocess_wrapper,
-    #                                 kwargs={
-    #                                     'report_id': report.id,
-    #                                     'func': _cluster_perturbations,
-    #                                     'back_link': back_link
-    #                                 })
-    #     p.start()
+    if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
+        completed = [v.enrichr_library for v in report.enrichr_heat_maps]
+        missing = []
+        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
+            if library not in completed:
+                missing.append(library)
+        _enrichr_visualizations(report.id, missing[:2], back_link)
 
-    # subprocess_wrapper(**{
-    #     'report_id': report.id,
-    #     'func': _cluster_perturbations,
-    #     'back_link': back_link
-    # })
+    if not report.l1000cds2_heat_map:
+        p = multiprocessing.Process(target=subprocess_wrapper,
+                                    kwargs={
+                                        'report_id': report.id,
+                                        'func': _cluster_perturbations,
+                                        'back_link': back_link
+                                    })
+        p.start()
 
 
 def subprocess_wrapper(**kwargs):
