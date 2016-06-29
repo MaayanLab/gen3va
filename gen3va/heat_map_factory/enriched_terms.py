@@ -95,6 +95,8 @@ def _enrich_gene_signature(Session, signature, genes, library, use_up):
     results = EnrichrResults(user_list_id, use_up)
     signature.enrichr_results.append(results)
     Session.merge(signature)
+    # Wait for Enrichr to add the new user list.
+    time.sleep(1)
     return results.terms_scores(library)
 
 
