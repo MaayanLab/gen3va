@@ -9,7 +9,7 @@ from gen3va.heat_map_factory import filters, utils
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
-def prepare_ranked_genes(diff_exp_method, signatures):
+def prepare_ranked_genes(diff_exp_method, signatures, category_name):
     """Prepares ranked genes for hierarchical clustering.
     """
     columns = []
@@ -32,7 +32,6 @@ def prepare_ranked_genes(diff_exp_method, signatures):
             'data': data,
         }
 
-        category_name = 'cell_type'
         opt = signature.get_optional_metadata(category_name)
         col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
