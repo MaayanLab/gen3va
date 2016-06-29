@@ -11,7 +11,7 @@ alembic.ini
 # Generated SOFT files
 gen3va/static/softfile/
 gen3va/static/downloads/
-clustergrammer_payload
+clustergrammer_payload*
 
 # Scripts and data for the database
 scripts/
