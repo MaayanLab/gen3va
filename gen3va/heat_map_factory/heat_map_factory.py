@@ -5,6 +5,7 @@ import json
 
 import requests
 from substrate import GeneSignature
+from .clustergrammer import Network
 
 from gen3va import database
 from gen3va.config import Config
@@ -34,6 +35,7 @@ def get_link(type_, Session=None, **kwargs):
     else:
         signatures = kwargs.get('signatures')
 
+
     diff_exp_method = kwargs.get('diff_exp_method')
     payload = {
         #'title': 'gen3va',
@@ -56,6 +58,15 @@ def get_link(type_, Session=None, **kwargs):
                                                   category_name)
         payload['is_up_down'] = False
         row_title = 'Genes'
+
+    import json
+    import pdb; pdb.set_trace()
+    f = file('/Users/gwg/clustergrammer.js/json/fake_vect_post.json')
+    j = json.loads(f.read())
+    print(j)
+    net = Network()
+    net.load_vect_post_to_net(j)
+    net.make_clust()
 
     # with open('clustergrammer_payload', 'w+') as out:
     #     out.write(json.dumps(payload))

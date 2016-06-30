@@ -53,42 +53,48 @@ def _build(report_id):
     """
     back_link = _get_back_link(report_id)
 
-    # Each process should be completely responsible for its own DB connection.
-    # It should wrap the entire process in a try/except/finally and close the
-    # DB session in the finally statement. If an uncaught exception is thrown
-    # in the thread, a dangling session will be left open.
+    subprocess_wrapper(**{
+        'report_id': report_id,
+        'func': _cluster_ranked_genes,
+        'back_link': back_link
+    })
 
-    p = multiprocessing.Process(
-        target=subprocess_wrapper,
-        kwargs={
-            'report_id': report_id,
-            'func': _perform_pca
-        })
-    p.start()
-
-    p = multiprocessing.Process(
-        target=subprocess_wrapper,
-        kwargs={
-            'report_id': report_id,
-            'func': _cluster_ranked_genes,
-            'back_link': back_link
-        })
-    p.start()
-
-    # We want a basic report as fast as possible. We can create more Enrichr
-    # visualizations later.
-    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
-    # Creates its own subprocess for each visualization.
-    _enrichr_visualizations(report_id, enrichr_library, back_link)
-
-    p = multiprocessing.Process(
-        target=subprocess_wrapper,
-        kwargs={
-            'report_id': report_id,
-            'func': _cluster_perturbations,
-            'back_link': back_link
-        })
-    p.start()
+    # # Each process should be completely responsible for its own DB connection.
+    # # It should wrap the entire process in a try/except/finally and close the
+    # # DB session in the finally statement. If an uncaught exception is thrown
+    # # in the thread, a dangling session will be left open.
+    #
+    # p = multiprocessing.Process(
+    #     target=subprocess_wrapper,
+    #     kwargs={
+    #         'report_id': report_id,
+    #         'func': _perform_pca
+    #     })
+    # p.start()
+    #
+    # p = multiprocessing.Process(
+    #     target=subprocess_wrapper,
+    #     kwargs={
+    #         'report_id': report_id,
+    #         'func': _cluster_ranked_genes,
+    #         'back_link': back_link
+    #     })
+    # p.start()
+    #
+    # # We want a basic report as fast as possible. We can create more Enrichr
+    # # visualizations later.
+    # enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
+    # # Creates its own subprocess for each visualization.
+    # _enrichr_visualizations(report_id, enrichr_library, back_link)
+    #
+    # p = multiprocessing.Process(
+    #     target=subprocess_wrapper,
+    #     kwargs={
+    #         'report_id': report_id,
+    #         'func': _cluster_perturbations,
+    #         'back_link': back_link
+    #     })
+    # p.start()
 
 
 def update(tag, report_=None):
@@ -149,13 +155,17 @@ def subprocess_wrapper(**kwargs):
     Session = scoped_session(session_factory)
     func = kwargs.get('func')
     try:
+        print('=' * 80)
         print('BEGINNING %s' % func.__name__)
         func(Session, **kwargs)
         print('COMPLETED %s' % func.__name__)
+        print('=' * 80)
         Session.commit()
     except Exception as e:
+        print('=' * 80)
         print('ERROR with %s:' % func.__name__)
         print(e)
+        print('=' * 80)
         Session.rollback()
     finally:
         Session.remove()

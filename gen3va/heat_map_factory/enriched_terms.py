@@ -50,12 +50,8 @@ def _get_raw_data(Session, signatures, library, use_up):
         else:
             genes = signature.down_genes
 
-        try:
-            terms, scores = _enrich_gene_signature(Session, signature, genes,
-                                                   library, use_up)
-        except RequestException as e:
-            print(e)
-            terms, scores = [], []
+        terms, scores = get_terms_scores(Session, signature, genes, library,
+                                         use_up)
 
         # We eliminate negative combined scores when collecting the data, but
         # visually--and in clustering--we want to think of combined scores as
@@ -78,6 +74,22 @@ def _get_raw_data(Session, signatures, library, use_up):
 
     df = df.fillna(0)
     return df
+
+
+def get_terms_scores(Session, signature, genes, library, use_up, attempts=0):
+    """Wrapper function to getting enrichment results. Calls itself on failure
+    at most 3 times.
+    """
+    if attempts > 3:
+        return [], []
+    try:
+        terms, scores = _enrich_gene_signature(Session, signature, genes,
+                                               library, use_up)
+    except RequestException as e:
+        attempts += 1
+        return get_terms_scores(Session, signature, genes, library, use_up,
+                                attempts)
+    return terms, scores
 
 
 def _enrich_gene_signature(Session, signature, genes, library, use_up):
