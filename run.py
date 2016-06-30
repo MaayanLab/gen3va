@@ -11,6 +11,9 @@ parser.add_argument('--port',
                     default=8084,
                     type=int,
                     help='Port for development Flask application.')
+parser.add_argument('--nodebug',
+                    action='store_true',
+                    help='Application debug mode.')
 args = parser.parse_args()
 
-app.run(debug=True, port=args.port, host='0.0.0.0')
+app.run(debug=not args.nodebug, port=args.port, host='0.0.0.0')
