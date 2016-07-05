@@ -63,14 +63,14 @@ def _build(report_id):
     # # It should wrap the entire process in a try/except/finally and close the
     # # DB session in the finally statement. If an uncaught exception is thrown
     # # in the thread, a dangling session will be left open.
-    #
-    # p = multiprocessing.Process(
-    #     target=subprocess_wrapper,
-    #     kwargs={
-    #         'report_id': report_id,
-    #         'func': _perform_pca
-    #     })
-    # p.start()
+
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _perform_pca
+        })
+    p.start()
     #
     # p = multiprocessing.Process(
     #     target=subprocess_wrapper,
@@ -192,12 +192,12 @@ def _cluster_ranked_genes(Session, **kwargs):
     diff_exp_method = report.gene_signatures[0].required_metadata\
         .diff_exp_method
 
-    link = heat_map_factory.get_link('genes',
+    network = heat_map_factory.get_link('genes',
                                      signatures=report.gene_signatures,
                                      diff_exp_method=diff_exp_method,
                                      back_link=back_link)
-    if link:
-        _save_report_link(Session, report, link, 'gen3va')
+    if network:
+       _save_heat_map(Session, report, network, 'gen3va')
 
 
 def _cluster_perturbations(Session, **kwargs):
@@ -211,7 +211,7 @@ def _cluster_perturbations(Session, **kwargs):
                                      signatures=report.gene_signatures,
                                      back_link=back_link)
     if link:
-        _save_report_link(Session, report, link, 'l1000cds2')
+        _save_heat_map(Session, report, link, 'l1000cds2')
 
 
 def _cluster_enriched_terms(Session, **kwargs):
@@ -227,7 +227,7 @@ def _cluster_enriched_terms(Session, **kwargs):
                                      library=library,
                                      back_link=back_link)
     if link:
-        _save_report_link(Session, report, link, 'enrichr', library=library)
+        _save_heat_map(Session, report, link, 'enrichr', library=library)
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):
@@ -255,14 +255,10 @@ def _get_back_link(report_id):
                                    report.tag.name)
 
 
-def _save_report_link(Session, report, link, viz_type, library=None):
+def _save_heat_map(Session, report, network, viz_type, library=None):
     """Utility method for saving link based on report ID.
     """
-    # title, description, link, viz_type, target_app
-    target_app = get_or_create_with_session(Session,
-                                            TargetApp,
-                                            name='clustergrammer')
-    heat_map = HeatMap(link, viz_type, target_app, enrichr_library=library)
+    heat_map = HeatMap(network, viz_type, enrichr_library=library)
     if library:
         print('COMPLETED %s' % library)
     report.heat_maps.append(heat_map)

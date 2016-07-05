@@ -18,7 +18,6 @@ from gen3va.heat_map_factory import utils
 def get_link(type_, Session=None, **kwargs):
     """Returns link to hierarchical clustering.
     """
-
     # TODO: Implement pulling these variables from the user interface.
     category_name = 'cell_type'
 
@@ -34,7 +33,6 @@ def get_link(type_, Session=None, **kwargs):
             signatures.append(signature)
     else:
         signatures = kwargs.get('signatures')
-
 
     diff_exp_method = kwargs.get('diff_exp_method')
     payload = {
@@ -59,28 +57,10 @@ def get_link(type_, Session=None, **kwargs):
         payload['is_up_down'] = False
         row_title = 'Genes'
 
-    import json
-    import pdb; pdb.set_trace()
-    f = file('/Users/gwg/clustergrammer.js/json/fake_vect_post.json')
-    j = json.loads(f.read())
-    print(j)
     net = Network()
-    net.load_vect_post_to_net(j)
+    net.load_vect_post_to_net(payload)
     net.make_clust()
-
-    # with open('clustergrammer_payload', 'w+') as out:
-    #     out.write(json.dumps(payload))
-    resp = _post(payload)
-    if resp.ok:
-        link_base = json.loads(resp.text)['link']
-        return utils.link(link_base, row_title)
-    return None
-
-
-def _post(payload):
-    """Utility method for jsonifying payload and POSTing with correct headers.
-    """
-    url = '%s/vector_upload/' % Config.CLUSTERGRAMMER_URL
-    payload = json.dumps(payload)
-    headers = {'content-type': 'application/json'}
-    return requests.post(url, data=payload, headers=headers)
+    result = net.export_net_json()
+    with open('clustergrammer.txt', 'w+') as out:
+        out.write(result)
+    return result

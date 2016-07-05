@@ -1,23 +1,25 @@
-$(function() {
+function ReportModule () {
 
-    heatmaps();
-    dataTables();
+    var clustergrams = [];
 
-    function heatmaps() {
+    function watchEnrichrHeatmaps(enrichrHeatmaps) {
         var $enrichr = $('#enrichr-heat-maps');
 
         // When the user selects a new library, toggle the visible library.
         $enrichr.find('select').change(function(evt) {
             var newEnrichrLibrary = $(evt.target).val(),
-
-                // globalHeatmaps is placed on the results page by the server.
-                // It's hacky, but I want this rolled out today for a conference.
-                // Maybe improve using API?
-                newLink = globalHeatmaps[newEnrichrLibrary];
-
+                newLink = enrichrHeatmaps[newEnrichrLibrary];
             $enrichr.find('iframe').remove();
             $enrichr.append('<iframe src="' + newLink + '"></iframe>');
         });
+    }
+
+    function createClustergram(rootElement, networkData) {
+        var clustergram = Clustergrammer({
+            root: rootElement,
+            network_data: networkData
+        });
+        clustergrams.push(clustergram);
     }
 
     function dataTables() {
@@ -26,7 +28,19 @@ $(function() {
         });
     }
 
-    window.plotPCA = function plotPCA(pcaObj, container, tooltipFormatter) {
+    function watchClustergramWidths() {
+        var WAIT = 250;
+        $(window).resize(_.debounce(function() {
+            $.each(clustergrams, function(i, clustergram) {
+                clustergram.resize_viz();
+            });
+        }, WAIT));
+    }
+
+    function plotPCA(container, pcaObj) {
+
+        if (typeof pcaObj === 'undefined')
+            return;
 
         // If there is only one data series, use Geneva's blue. Otherwise,
         // let Highcharts figure it out.
@@ -36,14 +50,13 @@ $(function() {
             });
         }
 
-        container = container || 'pca-container';
-        tooltipFormatter = tooltipFormatter || function() { return this.key; };
-
-        var mins = pcaObj.ranges[1],
+        var tooltipFormatter = function() { return this.key; },
+            mins = pcaObj.ranges[1],
             maxs = pcaObj.ranges[0],
-            titles = pcaObj.titles;
+            titles = pcaObj.titles,
+            chart;
 
-        var chart = new Highcharts.Chart({
+        chart = new Highcharts.Chart({
             chart: {
                 renderTo: container,
                 margin: [150, 150, 150, 150],
@@ -125,4 +138,15 @@ $(function() {
             });
         });
     }
-});
+
+    $(function() {
+        dataTables();
+        watchClustergramWidths();
+    });
+
+    return {
+        createClustergram: createClustergram,
+        plotPCA: plotPCA,
+        watchEnrichrHeatmaps: watchEnrichrHeatmaps
+    }
+}

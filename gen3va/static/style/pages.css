@@ -51,7 +51,7 @@
   font-size: 14px;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category h3 {
-  background-color: #1689e5;
+  background-color: #1689E5;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);
   color: white;
   padding: 5px 10px;
@@ -76,10 +76,10 @@
   word-wrap: break-word;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight {
-  color: #f15a5a;
+  color: #F15A5A;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a {
-  color: #f15a5a;
+  color: #F15A5A;
   text-decoration: underline;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.highlight a:hover {
@@ -116,7 +116,7 @@
   font-weight: 400;
 }
 #report-page .notification {
-  color: #f15a5a;
+  color: #F15A5A;
   font-size: 14px;
   font-weight: bold;
 }
@@ -139,6 +139,19 @@
 }
 #report-page .section {
   margin-bottom: 30px;
+}
+#report-page .clustergrammer {
+  height: 800px;
+  width: 100%;
+}
+#report-page .clustergrammer .ui-state-default,
+#report-page .clustergrammer .ui-widget-content .ui-state-default,
+#report-page .clustergrammer .ui-widget-header .ui-state-default {
+  background: #7FB800;
+  border: none;
+}
+#report-page .clustergrammer .slider.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
+  border: 1px solid #aaaaaa;
 }
 #tag-page .note,
 #tags-all-page .note,

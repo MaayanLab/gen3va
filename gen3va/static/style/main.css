@@ -41,7 +41,7 @@ input {
   font-size: 13px;
 }
 a {
-  color: #1689e5;
+  color: #1689E5;
   text-decoration: none;
 }
 a:hover {
@@ -54,7 +54,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #444444;
+  color: #444;
   font-family: 'Roboto', arial, sans-serif;
 }
 h1,
@@ -113,7 +113,7 @@ select {
   padding-right: 1.5em !important;
   border-radius: 0 !important;
   line-height: inherit !important;
-  border-color: #7fb800;
+  border-color: #7FB800;
 }
 pre,
 .code {
@@ -140,7 +140,7 @@ pre {
   border-radius: 0;
 }
 .fa {
-  color: #444444;
+  color: #444;
 }
 .fa:hover {
   color: #aaaaaa;
@@ -158,7 +158,7 @@ pre {
   clear: both;
 }
 .highlight {
-  color: #f15a5a;
+  color: #F15A5A;
 }
 .caption,
 caption {
@@ -171,8 +171,8 @@ caption {
   /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
 }
 .tooltip .tooltip-inner {
-  background: #7fb800;
-  border: 1px solid #7fb800;
+  background: #7FB800;
+  border: 1px solid #7FB800;
   color: white;
   font-weight: bold;
   border-radius: 0;
@@ -182,16 +182,16 @@ caption {
   max-width: 400px;
 }
 .tooltip.top .tooltip-arrow {
-  border-top-color: #7fb800 !important;
+  border-top-color: #7FB800 !important;
 }
 .tooltip.right .tooltip-arrow {
-  border-right-color: #7fb800 !important;
+  border-right-color: #7FB800 !important;
 }
 .tooltip.bottom .tooltip-arrow {
-  border-bottom-color: #7fb800 !important;
+  border-bottom-color: #7FB800 !important;
 }
 .tooltip.left .tooltip-arrow {
-  border-left-color: #7fb800 !important;
+  border-left-color: #7FB800 !important;
 }
 .instruction {
   font-size: 13px;
@@ -220,7 +220,7 @@ caption {
   display: block;
 }
 .label {
-  background-color: #1689e5;
+  background-color: #1689E5;
   border-radius: 0;
   font-size: 12px;
 }
@@ -240,7 +240,7 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-  background-color: #17406b;
+  background-color: #17406B;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
@@ -265,7 +265,7 @@ caption {
 #header .nav.navbar-nav.navbar-right a:hover,
 #header .nav.navbar-nav.navbar-right a:focus {
   opacity: .8;
-  background-color: #17406b;
+  background-color: #17406B;
 }
 #header ul.nav {
   position: relative;
@@ -335,7 +335,7 @@ caption {
  * ----------------- */
 .btn {
   padding: 2px 6px;
-  border-radius: 0;
+  border-radius: 0 !important;
   border: none;
   font-size: 14px;
   font-family: 'Roboto', arial, sans-serif;
@@ -345,7 +345,7 @@ caption {
   border: 1px solid #eee;
 }
 .btn.btn-primary {
-  background-color: #1689e5;
+  background-color: #1689E5;
 }
 .btn.btn-primary:hover {
   background-color: #126db6;
@@ -355,8 +355,13 @@ caption {
   -ms-transition: background-color 200ms linear;
   transition: background-color 200ms linear;
 }
+.btn.btn-primary.active {
+  background-color: #126db6;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .btn.btn-info {
-  background-color: #7fb800;
+  background-color: #7FB800;
 }
 .btn.btn-info:hover {
   background-color: #4C6E00;
@@ -381,8 +386,8 @@ div.dataTables_wrapper .pagination > .active > a:hover,
 div.dataTables_wrapper .pagination > .active > span,
 div.dataTables_wrapper .pagination > .active > span:focus,
 div.dataTables_wrapper .pagination > .active > span:hover {
-  border-color: #7fb800;
-  background-color: #7fb800;
+  border-color: #7FB800;
+  background-color: #7FB800;
   color: white;
 }
 .ui-widget {
@@ -392,7 +397,7 @@ div.dataTables_wrapper .pagination > .active > span:hover {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  color: #444444;
+  color: #444;
 }
 .hljs {
   background-color: #f9f9f9 !important;

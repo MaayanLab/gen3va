@@ -12,9 +12,30 @@
     <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 
+    <script src="static/lib/d3/d3.js"></script>
+    <script src="static/lib/underscore/underscore.js"></script>
+
+    <script src="static/js/clustergrammer.js"></script>
     <script src="static/js/report.js"></script>
     <script>
-        window.globalHeatmaps = {{ enrichr_heatmaps_json|safe }};
+        $(function() {
+            var report = ReportModule();
+            report.plotPCA(
+                'pca-container',
+                {% if pca_json %}
+                    {{ pca_json|safe }}
+                {% else %}
+                    undefined
+                {% endif %}
+            );
+            report.watchEnrichrHeatmaps(
+                {{ enrichr_heatmaps_json|safe }}
+            );
+            report.createClustergram(
+                '#clustergrammer-genes',
+                {{ report.genes_heat_map.network|safe }}
+            );
+        });
     </script>
 
     <div class="page" id="report-page">
@@ -84,11 +105,6 @@
                 </div>
                 <div id="pca-container"></div>
             </div>
-            <script>
-                $(function () {
-                    plotPCA({{ pca_json|safe }});
-                });
-            </script>
         {% endif %}
 
         <!-- Genes hierarchical clusterings -->
@@ -98,7 +114,7 @@
                 <div class="description">
                     <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
                 </div>
-                <iframe src="{{ report.genes_heat_map.link }}"></iframe>
+                <div id="clustergrammer-genes" class="clustergrammer"></div>
             </div>
         {% endif %}
 
