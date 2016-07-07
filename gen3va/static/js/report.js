@@ -36,8 +36,7 @@ function createAndManageVisualizations(config) {
             createClustergram(rootElement, heatMap);
         }
 
-        $('.enrichr-heat-map').hide();
-        $('#' + enrichrHeatMaps[0].enrichr_library).show();
+        showEnrichrHeatMap(enrichrHeatMaps[0].enrichr_library);
         watchEnrichrClustergram($enrichr, enrichrHeatMaps);
     }
 
@@ -53,9 +52,13 @@ function createAndManageVisualizations(config) {
         // When the user selects a new library, toggle the visible library.
         $enrichr.find('select').change(function(evt) {
             var newEnrichrLibrary = $(evt.target).val();
-            $enrichr.find('.enrichr-heat-map').hide();
-            $enrichr.find('#' + newEnrichrLibrary).show();
+            showEnrichrHeatMap(newEnrichrLibrary);
         });
+    }
+
+    function showEnrichrHeatMap(enrichrLibrary) {
+        $('.enrichr-heat-map').hide();
+        $('#' + enrichrLibrary).show();
     }
 
     function clustergramExists(clustergram) {
