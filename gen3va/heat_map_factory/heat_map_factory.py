@@ -61,6 +61,4 @@ def get_link(type_, Session=None, **kwargs):
     net.load_vect_post_to_net(payload)
     net.make_clust()
     result = net.export_net_json()
-    with open('clustergrammer.txt', 'w+') as out:
-        out.write(result)
     return result

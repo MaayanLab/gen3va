@@ -18,25 +18,27 @@
     <script src="static/js/clustergrammer.js"></script>
     <script src="static/js/report.js"></script>
     <script>
-        $(function() {
-            var report = ReportModule();
-            report.plotPCA(
-                'pca-container',
-                {% if pca_json %}
-                    {{ pca_json|safe }}
-                {% else %}
-                    undefined
-                {% endif %}
-            );
-            report.watchEnrichrHeatmaps(
-                {{ enrichr_heatmaps_json|safe }}
-            );
-            report.createClustergram(
-                '#clustergrammer-genes',
-                {{ report.genes_heat_map.network|safe }}
-            );
+        createAndManageVisualizations({
+            pcaPlot: {{
+                report.pca_plot.to_json()|safe
+                if report.pca_plot
+                else 'undefined'
+            }},
+            genesHeatMap: {{
+                report.genes_heat_map.to_json()|safe
+                if report.genes_heat_map
+                else 'undefined'
+            }},
+            l1000cds2HeatMap: {{
+                report.l1000cds2_heat_map.to_json()|safe
+                if report.l1000cds2_heat_map
+                else 'undefined'
+            }},
+            enrichrHeatMaps: {{
+                report.enrichr_heat_maps|c_to_json|safe
+            }}
         });
-    </script>
+    </script>å
 
     <div class="page" id="report-page">
 
@@ -48,8 +50,6 @@
             {% endif %}
             <p>
                 <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">Back to reports for {{ tag.name }}</a>
-{#                <a class="btn btn-info" href="{{ tag.name|c_download_url }}" target="_blank">Download genes signatures*</a>#}
-{#                <p><em>*Depending on the number of signatures, this may take a minute.</em></p>#}
             </p>
         </div>
 
@@ -96,56 +96,73 @@
             </div>
         </div>
 
+        <div id="heat-maps"></div>
+
         <!-- Principal Component Analysis -->
-        {% if pca_json %}
-            <div class="section">
-                <h2>PCA</h2>
-                <div class="description">
-                    <p>Interactive 3D principal component analysis of gene signatures. You can rotate the visualization and mouse over the data points.</p>
-                </div>
-                <div id="pca-container"></div>
+        <div class="section">
+            <h2>PCA</h2>
+            <div class="description">
+                <p>
+                    Interactive 3D principal component analysis of gene
+                    signatures. You can rotate the visualization and mouse
+                    over the data points.
+                </p>
             </div>
-        {% endif %}
+            <div id="pca-plot"></div>
+        </div>
 
         <!-- Genes hierarchical clusterings -->
-        {% if report.genes_heat_map %}
-            <div class="section">
-                <h2>Genes</h2>
-                <div class="description">
-                    <p>Hierarchical clustering of genes based on weights from differential expression method.</p>
-                </div>
-                <div id="clustergrammer-genes" class="clustergrammer"></div>
+        <div class="section">
+            <h2>Genes</h2>
+            <div class="description">
+                <p>
+                    Hierarchical clustering of genes based on weights from
+                    differential expression method.
+                </p>
             </div>
-        {% endif %}
+            <div id="genes-heat-map" class="heat-map"></div>
+        </div>
 
         <!-- Enrichr hierarchical clusterings -->
-        {% if report.enrichr_heat_maps|length > 0 %}
-            <div id="enrichr-heat-maps" class="section">
-                <h2>Enrichr</h2>
-                <div class="description">
-                    <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is a web tool that performs gene set enrichment analysis.  To generate the hierarchical clusterings below, GEN3VA enriched each gene signature using Enrichr and then clustered the terms. Use the <strong>select</strong> button to change Enrichr's background library.</p>
-                    <p>Hierarchical clustering of enriched terms from
+        <div id="enrichr-heat-maps" class="section">
+            <h2>Enrichr</h2>
+            <div class="description">
+                <p>
+                    <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">
+                    Enrichr</a> is a web tool that performs gene set enrichment
+                    analysis. To generate the hierarchical clusterings below,
+                    GEN3VA enriched each gene signature using Enrichr and then
+                    clustered the terms. Use the <strong>select</strong> button
+                    to change Enrichr's background library.
+                </p>
+                <p>
+                    Hierarchical clustering of enriched terms from
                     <select>
-                        {% for clust in report.enrichr_heat_maps %}
-                            <option>{{ clust.enrichr_library }}</option>
+                        {% for heat_map in report.enrichr_heat_maps %}
+                            <option>{{ heat_map.enrichr_library }}</option>
                         {% endfor %}
-                    </select></p>
-                </div>
-                {% set clust = report.enrichr_heat_maps[0] %}
-                <iframe src="{{ clust.link }}" data-enrichr-library="{{ clust.enrichr_library }}"></iframe>
+                    </select>
+                </p>
             </div>
-        {% endif %}
+        </div>
 
         <!-- L1000CD2 hierarchical clusterings -->
-        {% if report.l1000cds2_heat_map %}
-            <div class="section">
-                <h2>L1000CDS2</h2>
-                <div class="description">
-                    <p><a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">L1000CDS2</a> is a web tool that queries the LINCS L1000 dataset to identify small molecules that can reverse or mimic the observed input expression pattern. To generate the hierarchical clustering below, GEN3VA enriched each gene signature using L1000CDS2 to generate a list of perturbations that mimic (red) and reverse (blue) expression.</p>
-                </div>
-                <iframe src="{{ report.l1000cds2_heat_map.link }}"></iframe>
+        <div class="section">
+            <h2>L1000CDS2</h2>
+            <div class="description">
+                <p>
+                    <a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">
+                    L1000CDS2</a> is a web tool that queries the LINCS L1000
+                    dataset to identify small molecules that can reverse or
+                    mimic the observed input expression pattern. To generate
+                    the hierarchical clustering below, GEN3VA enriched each
+                    gene signature using L1000CDS2 to generate a list of
+                    perturbations that mimic (red) and reverse (blue)
+                    expression.
+                </p>
             </div>
-        {% endif %}
+            <div id="l1000cds2-heat-map" class="heat-map"></div>
+        </div>
     </div>
 
 {% endblock %}

@@ -1,44 +1,87 @@
-function ReportModule () {
+function createAndManageVisualizations(config) {
+
+    $(function() {
+        dataTables();
+        watchClustergramWidths();
+        plotPCA(config.pcaPlot);
+        createClustergram(
+            '#genes-heat-map',
+            config.genesHeatMap
+        );
+        createClustergram(
+            '#l1000cds2-heat-map',
+            config.l1000cds2HeatMap
+        );
+        createAndWatchEnrichrHeatMaps(config.enrichrHeatMaps);
+    });
 
     var clustergrams = [];
 
-    function watchEnrichrHeatmaps(enrichrHeatmaps) {
-        var $enrichr = $('#enrichr-heat-maps');
+    function createAndWatchEnrichrHeatMaps(enrichrHeatMaps) {
+        var $enrichr = $('#enrichr-heat-maps'),
+            len = Object.keys(enrichrHeatMaps).length,
+            heatMap,
+            rootElement,
+            i;
 
-        // When the user selects a new library, toggle the visible library.
-        $enrichr.find('select').change(function(evt) {
-            var newEnrichrLibrary = $(evt.target).val(),
-                newLink = enrichrHeatmaps[newEnrichrLibrary];
-            $enrichr.find('iframe').remove();
-            $enrichr.append('<iframe src="' + newLink + '"></iframe>');
-        });
+        for (i = 0; i < len; i++) {
+            heatMap = enrichrHeatMaps[i];
+            rootElement = '#' + heatMap.enrichr_library;
+            $enrichr.append(
+                '<div ' +
+                '   id="' + heatMap.enrichr_library + '"' +
+                '   class="heat-map enrichr-heat-map"' +
+                '></div>'
+            );
+            createClustergram(rootElement, heatMap);
+        }
+
+        $('.enrichr-heat-map').hide();
+        $('#' + enrichrHeatMaps[0].enrichr_library).show();
+        watchEnrichrClustergram($enrichr, enrichrHeatMaps);
     }
 
-    function createClustergram(rootElement, networkData) {
+    function createClustergram(rootElement, clustergramData) {
         var clustergram = Clustergrammer({
             root: rootElement,
-            network_data: networkData
+            network_data: clustergramData.network
         });
         clustergrams.push(clustergram);
     }
 
-    function dataTables() {
-        $('table').DataTable({
-            iDisplayLength: 5
+    function watchEnrichrClustergram($enrichr, enrichrHeatMaps) {
+        // When the user selects a new library, toggle the visible library.
+        $enrichr.find('select').change(function(evt) {
+            var newEnrichrLibrary = $(evt.target).val();
+            $enrichr.find('.enrichr-heat-map').hide();
+            $enrichr.find('#' + newEnrichrLibrary).show();
         });
     }
 
+    function clustergramExists(clustergram) {
+        var i;
+        for (i = 0; i < clustergrams.length; i++) {
+            if (clustergrams[i].root === clustergram.root) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function dataTables() {
+        $('table').DataTable({ iDisplayLength: 5 });
+    }
+
     function watchClustergramWidths() {
-        var WAIT = 250;
+        // Debounce this resizing callback because it's fairly intensive.
         $(window).resize(_.debounce(function() {
             $.each(clustergrams, function(i, clustergram) {
                 clustergram.resize_viz();
             });
-        }, WAIT));
+        }, 250));
     }
 
-    function plotPCA(container, pcaObj) {
-
+    function plotPCA(pcaObj) {
         if (typeof pcaObj === 'undefined')
             return;
 
@@ -58,7 +101,7 @@ function ReportModule () {
 
         chart = new Highcharts.Chart({
             chart: {
-                renderTo: container,
+                renderTo: 'pca-plot',
                 margin: [150, 150, 150, 150],
                 type: 'scatter',
                 options3d: {
@@ -137,16 +180,5 @@ function ReportModule () {
                 }
             });
         });
-    }
-
-    $(function() {
-        dataTables();
-        watchClustergramWidths();
-    });
-
-    return {
-        createClustergram: createClustergram,
-        plotPCA: plotPCA,
-        watchEnrichrHeatmaps: watchEnrichrHeatmaps
     }
 }

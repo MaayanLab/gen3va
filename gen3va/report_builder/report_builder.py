@@ -53,16 +53,10 @@ def _build(report_id):
     """
     back_link = _get_back_link(report_id)
 
-    subprocess_wrapper(**{
-        'report_id': report_id,
-        'func': _cluster_ranked_genes,
-        'back_link': back_link
-    })
-
-    # # Each process should be completely responsible for its own DB connection.
-    # # It should wrap the entire process in a try/except/finally and close the
-    # # DB session in the finally statement. If an uncaught exception is thrown
-    # # in the thread, a dangling session will be left open.
+    # Each process should be completely responsible for its own DB connection.
+    # It should wrap the entire process in a try/except/finally and close the
+    # DB session in the finally statement. If an uncaught exception is thrown
+    # in the thread, a dangling session will be left open.
 
     p = multiprocessing.Process(
         target=subprocess_wrapper,
@@ -71,30 +65,30 @@ def _build(report_id):
             'func': _perform_pca
         })
     p.start()
-    #
-    # p = multiprocessing.Process(
-    #     target=subprocess_wrapper,
-    #     kwargs={
-    #         'report_id': report_id,
-    #         'func': _cluster_ranked_genes,
-    #         'back_link': back_link
-    #     })
-    # p.start()
-    #
-    # # We want a basic report as fast as possible. We can create more Enrichr
-    # # visualizations later.
-    # enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
-    # # Creates its own subprocess for each visualization.
-    # _enrichr_visualizations(report_id, enrichr_library, back_link)
-    #
-    # p = multiprocessing.Process(
-    #     target=subprocess_wrapper,
-    #     kwargs={
-    #         'report_id': report_id,
-    #         'func': _cluster_perturbations,
-    #         'back_link': back_link
-    #     })
-    # p.start()
+
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _cluster_ranked_genes,
+            'back_link': back_link
+        })
+    p.start()
+
+    # We want a basic report as fast as possible. We can create more Enrichr
+    # visualizations later.
+    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
+    # Creates its own subprocess for each visualization.
+    _enrichr_visualizations(report_id, enrichr_library, back_link)
+
+    p = multiprocessing.Process(
+        target=subprocess_wrapper,
+        kwargs={
+            'report_id': report_id,
+            'func': _cluster_perturbations,
+            'back_link': back_link
+        })
+    p.start()
 
 
 def update(tag, report_=None):
@@ -105,10 +99,6 @@ def update(tag, report_=None):
     else:
         report = report_
 
-    with session_scope() as session:
-        report.reset()
-        session.merge(report)
-
     print('Updating report for %s.' % tag.name)
     if not hasattr(report, 'pca_plot'):
         p = multiprocessing.Process(target=subprocess_wrapper,
@@ -117,7 +107,7 @@ def update(tag, report_=None):
                                         'func': _perform_pca
                                     })
         p.start()
-    #
+
     back_link = _get_back_link(report.id)
     if not report.genes_heat_map:
         p = multiprocessing.Process(target=subprocess_wrapper,
@@ -129,7 +119,7 @@ def update(tag, report_=None):
         p.start()
 
     if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
-        completed = [v.enrichr_library for v in report.enrichr_heat_maps]
+        completed = [v['enrichr_library'] for v in report.enrichr_heat_maps]
         missing = []
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             if library not in completed:
@@ -193,11 +183,10 @@ def _cluster_ranked_genes(Session, **kwargs):
         .diff_exp_method
 
     network = heat_map_factory.get_link('genes',
-                                     signatures=report.gene_signatures,
-                                     diff_exp_method=diff_exp_method,
-                                     back_link=back_link)
-    if network:
-       _save_heat_map(Session, report, network, 'gen3va')
+                                        signatures=report.gene_signatures,
+                                        diff_exp_method=diff_exp_method,
+                                        back_link=back_link)
+    _save_heat_map(Session, report, network, 'gen3va')
 
 
 def _cluster_perturbations(Session, **kwargs):
@@ -207,11 +196,10 @@ def _cluster_perturbations(Session, **kwargs):
     report_id = kwargs.get('report_id')
     back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
-    link = heat_map_factory.get_link('l1000cds2', Session,
-                                     signatures=report.gene_signatures,
-                                     back_link=back_link)
-    if link:
-        _save_heat_map(Session, report, link, 'l1000cds2')
+    network = heat_map_factory.get_link('l1000cds2', Session,
+                                        signatures=report.gene_signatures,
+                                        back_link=back_link)
+    _save_heat_map(Session, report, network, 'l1000cds2')
 
 
 def _cluster_enriched_terms(Session, **kwargs):
@@ -222,12 +210,11 @@ def _cluster_enriched_terms(Session, **kwargs):
     back_link = kwargs.get('back_link')
     library = kwargs.get('library')
     report = Session.query(Report).get(report_id)
-    link = heat_map_factory.get_link('enrichr', Session,
-                                     signatures=report.gene_signatures,
-                                     library=library,
-                                     back_link=back_link)
-    if link:
-        _save_heat_map(Session, report, link, 'enrichr', library=library)
+    network = heat_map_factory.get_link('enrichr', Session,
+                                        signatures=report.gene_signatures,
+                                        library=library,
+                                        back_link=back_link)
+    _save_heat_map(Session, report, network, 'enrichr', library=library)
 
 
 def _enrichr_visualizations(report_id, libraries, back_link):

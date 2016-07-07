@@ -32,26 +32,12 @@ def view_approved_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
     if not tag:
         return render_template('pages/404.html')
-
     report = tag.approved_report
     if not report:
         return render_template('pages/report-not-ready.html', tag=tag)
-    if report.pca_plot:
-        pca_json = report.pca_plot.data
-    else:
-        pca_json = None
-
-    # TODO: This should be a utility method call serialize on
-    # HierClustVisualization class. But I don't want to rebuild the Docker
-    # container (20 min) because it's a Saturday.
-    enrichr_heatmaps_json = json.dumps({x.enrichr_library: x.link
-                                        for x in report.enrichr_heat_maps})
-
     return render_template('pages/report.html',
                            tag=tag,
-                           report=report,
-                           enrichr_heatmaps_json=enrichr_heatmaps_json,
-                           pca_json=pca_json)
+                           report=report)
 
 
 @report_pages.route('/<report_id>/<tag_name>', methods=['GET'])

@@ -1,7 +1,7 @@
 """Custom filters for Jinja2 templates.
 """
 
-
+import json
 from flask import Blueprint
 import jinja2
 import urllib
@@ -14,6 +14,12 @@ jinjafilters = Blueprint('filters', __name__)
 @jinjafilters.app_template_filter('c_urlencode')
 def c_urlencode(context, value):
     return urllib.quote_plus(value)
+
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_to_json')
+def c_to_json(context, value):
+    return json.dumps(value)
 
 
 @jinja2.contextfilter

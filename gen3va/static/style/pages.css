@@ -140,17 +140,17 @@
 #report-page .section {
   margin-bottom: 30px;
 }
-#report-page .clustergrammer {
+#report-page .heat-map {
   height: 800px;
   width: 100%;
 }
-#report-page .clustergrammer .ui-state-default,
-#report-page .clustergrammer .ui-widget-content .ui-state-default,
-#report-page .clustergrammer .ui-widget-header .ui-state-default {
+#report-page .heat-map .ui-state-default,
+#report-page .heat-map .ui-widget-content .ui-state-default,
+#report-page .heat-map .ui-widget-header .ui-state-default {
   background: #7FB800;
   border: none;
 }
-#report-page .clustergrammer .slider.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
+#report-page .heat-map .slider.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
   border: 1px solid #aaaaaa;
 }
 #tag-page .note,
