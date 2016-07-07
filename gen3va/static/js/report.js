@@ -43,6 +43,10 @@ function createAndManageVisualizations(config) {
     function createClustergram(rootElement, clustergramData) {
         var clustergram = Clustergrammer({
             root: rootElement,
+            // This specifies the filtering for the clustergram.
+            // For more, see:
+            // https://github.com/MaayanLab/clustergrammer.js/blob/master/load_clustergram.js
+            ini_view: {N_row_sum :50},
             network_data: clustergramData.network
         });
         clustergrams.push(clustergram);
@@ -59,16 +63,6 @@ function createAndManageVisualizations(config) {
     function showEnrichrHeatMap(enrichrLibrary) {
         $('.enrichr-heat-map').hide();
         $('#' + enrichrLibrary).show();
-    }
-
-    function clustergramExists(clustergram) {
-        var i;
-        for (i = 0; i < clustergrams.length; i++) {
-            if (clustergrams[i].root === clustergram.root) {
-                return true;
-            }
-        }
-        return false;
     }
 
     function dataTables() {

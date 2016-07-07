@@ -177,6 +177,26 @@
   }
 }
 
+/* These selectors cannot be nested because Clustergrammer creates them in the
+ * <body> tag. But these should only appear on report pages.
+ */
+.d3-tip {
+  background: @color-green;
+  border-radius: 0;
+  color: white;
+  font-family: @font-family-accent;
+  font-size: 12px;
+  font-weight: bold;
+  max-width: 300px;
+  padding: 6px;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  left: 0;
+  margin: -1px 0 0 0;
+  top: 100%;
+}
 
 #tag-page,
 #tags-all-page,
