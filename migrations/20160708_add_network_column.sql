@@ -1,0 +1,2 @@
+ALTER TABLE heat_map
+ADD network LONGTEXT DEFAULT NULL AFTER id;
