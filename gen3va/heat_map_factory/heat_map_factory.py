@@ -36,7 +36,6 @@ def get_link(type_, Session=None, **kwargs):
 
     diff_exp_method = kwargs.get('diff_exp_method')
     payload = {
-        #'title': 'gen3va',
         'link': kwargs.get('back_link', ''),
         'filter': 'N_row_sum',
     }
@@ -45,17 +44,14 @@ def get_link(type_, Session=None, **kwargs):
         payload['is_up_down'] = True
         payload['columns'] = prepare_enriched_terms(Session, signatures,
                                                     library, category_name)
-        row_title = 'Enriched terms from %s' % library
     elif type_ == 'l1000cds2':
         payload['columns'] = prepare_perturbations(Session, signatures,
                                                    category_name)
         payload['is_up_down'] = True
-        row_title = 'Perturbations from L1000CDS2'
     elif type_ == 'genes':
         payload['columns'] = prepare_ranked_genes(diff_exp_method, signatures,
                                                   category_name)
         payload['is_up_down'] = False
-        row_title = 'Genes'
 
     net = Network()
     net.load_vect_post_to_net(payload)

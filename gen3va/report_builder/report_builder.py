@@ -181,7 +181,6 @@ def _cluster_ranked_genes(Session, **kwargs):
     report = Session.query(Report).get(report_id)
     diff_exp_method = report.gene_signatures[0].required_metadata\
         .diff_exp_method
-
     network = heat_map_factory.get_link('genes',
                                         signatures=report.gene_signatures,
                                         diff_exp_method=diff_exp_method,
