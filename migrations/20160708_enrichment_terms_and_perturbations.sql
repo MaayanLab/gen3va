@@ -14,12 +14,6 @@ CREATE TABLE enrichment_term (
   enrichr_result_fk INT
 );
 
--- Add foreign keys
-ALTER TABLE enrichment_term
-ADD CONSTRAINT fk_enrichr_result FOREIGN KEY (enrichr_result_fk)
-REFERENCES enrichr_result (id)
-ON DELETE CASCADE;
-
 -- Create perturbation table
 CREATE TABLE perturbation (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -27,4 +21,16 @@ CREATE TABLE perturbation (
   score DOUBLE,
   rank INT,
   l1000cds2_result_fk INT
-)
+);
+
+-- Add foreign keys
+ALTER TABLE enrichment_term
+ADD CONSTRAINT fk_enrichr_result FOREIGN KEY (enrichr_result_fk)
+REFERENCES enrichr_result (id)
+ON DELETE CASCADE;
+
+-- Add foreign keys
+ALTER TABLE perturbation
+ADD CONSTRAINT fk_l1000cds2_result FOREIGN KEY (l1000cds2_result_fk)
+REFERENCES enrichr_result (id)
+ON DELETE CASCADE;
