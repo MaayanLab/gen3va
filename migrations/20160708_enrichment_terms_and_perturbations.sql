@@ -9,7 +9,7 @@ ADD library VARCHAR(255);
 CREATE TABLE enrichment_term (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255),
-  combined_score INT,
+  combined_score DOUBLE,
   rank INT,
   enrichr_result_fk INT
 );
@@ -19,3 +19,12 @@ ALTER TABLE enrichment_term
 ADD CONSTRAINT fk_enrichr_result FOREIGN KEY (enrichr_result_fk)
 REFERENCES enrichr_result (id)
 ON DELETE CASCADE;
+
+-- Create perturbation table
+CREATE TABLE perturbation (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255),
+  score DOUBLE,
+  rank INT,
+  l1000cds2_result_fk INT
+)

@@ -60,3 +60,15 @@ def sort_and_truncate_ranked_genes(genes, cutoff=250):
     # absolute value of their values.
     genes.sort(key=lambda rg: abs(rg.value), reverse=True)
     return genes[:cutoff]
+
+
+# TODO: Write a unit test for this code.
+def sort_scores_rank(ranks, names, scores):
+    """Sorts enrichment terms or perturbations and scores by rank.
+    """
+    zipped = zip(ranks, names, scores)
+    zipped.sort()
+    ranks, names, scores = zip(*zipped)
+    # zip() returns tuples. Convert to list. This may be unnecessary, but I
+    # don't want to introduce a bug because I changed the collection type.
+    return list(names), list(scores)

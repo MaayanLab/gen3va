@@ -107,7 +107,7 @@ def _enrich_gene_signature(Session, signature, genes, library, use_up):
             ranks.append(t.rank)
             names.append(t.name)
             scores.append(t.combined_score)
-        names, scores = _sort_terms(ranks, names, scores)
+        names, scores = utils.sort_scores_rank(ranks, names, scores)
         return names, scores
 
     genes = utils.sort_and_truncate_ranked_genes(genes)
@@ -168,13 +168,3 @@ def _post_to_enrichr(ranked_genes):
     if resp.ok:
         return json.loads(resp.text)['userListId']
     return None
-
-
-# TODO: Write a unit test for this code.
-def _sort_terms(ranks, names, scores):
-    """Sorts enrichment names and scores by rank.
-    """
-    zipped = zip(ranks, names, scores)
-    zipped.sort()
-    ranks, names, scores = zip(*zipped)
-    return names, scores
