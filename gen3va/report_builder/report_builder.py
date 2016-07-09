@@ -66,14 +66,14 @@ def _build(report_id):
         })
     p.start()
 
-    p = multiprocessing.Process(
-        target=subprocess_wrapper,
-        kwargs={
-            'report_id': report_id,
-            'func': _cluster_ranked_genes,
-            'back_link': back_link
-        })
-    p.start()
+    # p = multiprocessing.Process(
+    #     target=subprocess_wrapper,
+    #     kwargs={
+    #         'report_id': report_id,
+    #         'func': _cluster_ranked_genes,
+    #         'back_link': back_link
+    #     })
+    # p.start()
 
     # We want a basic report as fast as possible. We can create more Enrichr
     # visualizations later.
@@ -81,14 +81,14 @@ def _build(report_id):
     # Creates its own subprocess for each visualization.
     _enrichr_visualizations(report_id, enrichr_library, back_link)
 
-    p = multiprocessing.Process(
-        target=subprocess_wrapper,
-        kwargs={
-            'report_id': report_id,
-            'func': _cluster_perturbations,
-            'back_link': back_link
-        })
-    p.start()
+    # p = multiprocessing.Process(
+    #     target=subprocess_wrapper,
+    #     kwargs={
+    #         'report_id': report_id,
+    #         'func': _cluster_perturbations,
+    #         'back_link': back_link
+    #     })
+    # p.start()
 
 
 def update(tag, report_=None):
@@ -220,14 +220,20 @@ def _enrichr_visualizations(report_id, libraries, back_link):
     """Builds Enrichr visualizations for all libraries.
     """
     for library in libraries:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report_id,
-                                        'func': _cluster_enriched_terms,
-                                        'back_link': back_link,
-                                        'library': library
-                                    })
-        p.start()
+        # p = multiprocessing.Process(target=subprocess_wrapper,
+        #                             kwargs={
+        #                                 'report_id': report_id,
+        #                                 'func': _cluster_enriched_terms,
+        #                                 'back_link': back_link,
+        #                                 'library': library
+        #                             })
+        # p.start()
+        subprocess_wrapper(**{
+            'report_id': report_id,
+            'func': _cluster_enriched_terms,
+            'back_link': back_link,
+            'library': library
+        })
 
 
 def _get_back_link(report_id):

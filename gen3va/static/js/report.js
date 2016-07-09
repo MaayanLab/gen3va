@@ -1,24 +1,43 @@
 function createAndManageVisualizations(config) {
 
     $(function() {
+        var elem;
         dataTables();
         watchClustergramWidths();
         plotPCA(config.pcaPlot);
-        createClustergram(
-            '#genes-heat-map',
-            config.genesHeatMap
-        );
-        createClustergram(
-            '#l1000cds2-heat-map',
-            config.l1000cds2HeatMap
-        );
-        createAndWatchEnrichrHeatMaps(config.enrichrHeatMaps);
+        try {
+            elem = '#genes-heat-map';
+            createClustergram(
+                elem,
+                config.genesHeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#l1000cds2-heat-map';
+            createClustergram(
+                elem,
+                config.l1000cds2HeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#enrichr-heat-maps';
+            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
     });
 
     var clustergrams = [];
 
-    function createAndWatchEnrichrHeatMaps(enrichrHeatMaps) {
-        var $enrichr = $('#enrichr-heat-maps'),
+    function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
+        var $enrichr = $(elem),
             len = Object.keys(enrichrHeatMaps).length,
             heatMap,
             rootElement,
