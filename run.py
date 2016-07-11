@@ -16,4 +16,4 @@ parser.add_argument('--nodebug',
                     help='Application debug mode.')
 args = parser.parse_args()
 
-app.run(debug=not args.nodebug, port=args.port, host='0.0.0.0')
+app.run(debug=True, port=args.port, host='0.0.0.0')

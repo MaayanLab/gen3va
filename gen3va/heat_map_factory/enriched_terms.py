@@ -153,6 +153,7 @@ def _enrich_gene_signature(Session, signature, genes, library, use_up):
     #
     # Also, Enrichr's API returns the results sorted by rank, so we do not
     # need to sort these.
+    Session.commit()
     return names, scores
 
 

@@ -32,5 +32,5 @@ ON DELETE CASCADE;
 -- Add foreign keys
 ALTER TABLE perturbation
 ADD CONSTRAINT fk_l1000cds2_result FOREIGN KEY (l1000cds2_result_fk)
-REFERENCES enrichr_result (id)
+REFERENCES l1000cds2_result (id)
 ON DELETE CASCADE;

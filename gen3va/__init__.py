@@ -73,15 +73,6 @@ def unset_current_user(sender, user):
     app.config.user = None
 
 
-# Miscellaneous
-# ----------------------------------------------------------------------------
-if Config.DEBUG:
-    # Verify that the report builds for multiple libraries but not all of
-    # them.
-    Config.SUPPORTED_ENRICHR_LIBRARIES = ['ChEA_2015',
-                                          'ENCODE_TF_ChIP-seq_2015']
-
-
 # Setup global variables that are available in Jinja2 templates
 # ----------------------------------------------------------------------------
 app.config.update({

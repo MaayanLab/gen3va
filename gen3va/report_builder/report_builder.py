@@ -89,11 +89,6 @@ def _build(report_id):
             'back_link': back_link
         })
     p.start()
-    # subprocess_wrapper(**{
-    #     'report_id': report_id,
-    #     'func': _cluster_perturbations,
-    #     'back_link': back_link
-    # })
 
 
 def update(tag, report_=None):
@@ -129,7 +124,7 @@ def update(tag, report_=None):
         for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
             if library not in completed:
                 missing.append(library)
-        _enrichr_visualizations(report.id, missing[:2], back_link)
+        _enrichr_visualizations(report.id, missing, back_link)
 
     if not report.l1000cds2_heat_map:
         p = multiprocessing.Process(target=subprocess_wrapper,
@@ -233,12 +228,6 @@ def _enrichr_visualizations(report_id, libraries, back_link):
                                         'library': library
                                     })
         p.start()
-        # subprocess_wrapper(**{
-        #     'report_id': report_id,
-        #     'func': _cluster_enriched_terms,
-        #     'back_link': back_link,
-        #     'library': library
-        # })
 
 
 def _get_back_link(report_id):
