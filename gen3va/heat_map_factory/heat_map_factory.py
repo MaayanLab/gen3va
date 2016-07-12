@@ -18,9 +18,7 @@ from gen3va.heat_map_factory import utils
 def create(type_, Session=None, **kwargs):
     """Returns link to hierarchical clustering.
     """
-    # category_name = kwargs.get('category')
-    category_name = 'cell_type'
-
+    category_name = kwargs.get('category')
     TYPES = ['genes', 'enrichr', 'l1000cds2']
     if type_ not in TYPES:
         raise ValueError('Invalid type_ argument. Must be in %s' % str(TYPES))
@@ -37,7 +35,7 @@ def create(type_, Session=None, **kwargs):
     diff_exp_method = kwargs.get('diff_exp_method')
     payload = {}
     if type_ == 'enrichr':
-        library = kwargs.get('library', 'ChEA_2015')
+        library = kwargs.get('library')
         payload['is_up_down'] = True
         payload['columns'] = prepare_enriched_terms(Session, signatures,
                                                     library, category_name)

@@ -97,20 +97,24 @@ def view_all_reports():
 def build_approved_report(tag_name):
     """Builds the an approved report for a tag.
     """
+    category = request.args.get('category')
+    print(category)
     tag = database.get(Tag, tag_name, 'name')
-    report_builder.build(tag)
+    report_builder.build(tag, category=category)
     return redirect(url_for('report_pages.view_approved_report',
                             tag_name=tag.name))
 
 
-@report_pages.route('/approved/<tag_name>/reanalyze', methods=['GET'])
+@report_pages.route('/approved/<tag_name>/rebuild', methods=['GET'])
 @login_required
 def reanalyze_approved_report(tag_name):
     """Reanalyze, i.e. requests new results from Enrichr and L1000CDS2, an
     approved report for a tag.
     """
+    category = request.args.get('category')
+    print(category)
     tag = database.get(Tag, tag_name, 'name')
-    report_builder.build(tag, reanalyze=True)
+    report_builder.build(tag, category=category, reanalyze=True)
     return redirect(url_for('report_pages.view_approved_report',
                             tag_name=tag.name))
 

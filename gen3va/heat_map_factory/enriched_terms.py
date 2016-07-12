@@ -14,7 +14,7 @@ from gen3va import database
 from gen3va.heat_map_factory import filters, utils
 
 
-def prepare_enriched_terms(Session, signatures, library, category_name):
+def prepare_enriched_terms(Session, signatures, library, category):
     """Prepares enriched terms for hierarchical clustering.
     """
     max_num_rows = filters.MAX_NUM_ROWS / 2
@@ -26,16 +26,10 @@ def prepare_enriched_terms(Session, signatures, library, category_name):
 
     columns = []
     for i in range(len(signatures)):
+        sig = signatures[i]
         up_vec = df_up.ix[:,i]
         down_vec = df_down.ix[:,i]
-        column_data = utils.build_columns(up_vec, down_vec)
-        col = {
-            'col_name': utils.column_title(i, signatures[i]),
-            'data': column_data
-        }
-        if category_name:
-            opt = signatures[i].get_optional_metadata(category_name)
-            col['cat'] = opt.value.lower() if opt else ''
+        col = utils.build_column(i, sig, up_vec, down_vec, category)
         columns.append(col)
     return columns
 

@@ -8,7 +8,7 @@ from sklearn import decomposition
 from gen3va.database import database
 
 
-def from_report(gene_signatures):
+def from_report(gene_signatures, category):
     data_frames = []
     for gene_signature in gene_signatures:
 
@@ -36,10 +36,9 @@ def from_report(gene_signatures):
 
     unspecified_key = 'unspecified'
     series_obj = {}
-    category_name = 'cell_type'
     for i, (x, y, z) in enumerate(pca_coords):
         sig = gene_signatures[i]
-        opt = sig.get_optional_metadata(category_name)
+        opt = sig.get_optional_metadata(category)
         if opt:
             if opt.value not in series_obj:
                 series_obj[opt.value] = []

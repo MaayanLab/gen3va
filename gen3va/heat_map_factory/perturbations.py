@@ -15,7 +15,7 @@ from gen3va import database
 L1000CDS2_QUERY = '%s/query' % Config.L1000CDS2_URL
 
 
-def prepare_perturbations(Session, signatures, category_name):
+def prepare_perturbations(Session, signatures, category):
     """Prepares perturbations to mimic and reverse expression pattern for
     hierarchical clustering.
     """
@@ -33,14 +33,7 @@ def prepare_perturbations(Session, signatures, category_name):
         sig = signatures[i]
         mimic_vec = df_m.ix[:,i]
         reverse_vec = df_r.ix[:,i]
-        column_data = utils.build_columns(mimic_vec, reverse_vec)
-        col = {
-            'col_name': utils.column_title(i, sig),
-            'data': column_data,
-        }
-        if category_name:
-            opt = sig.get_optional_metadata(category_name)
-            col['cat'] = opt.value.lower() if opt else ''
+        col = utils.build_column(i, sig, mimic_vec, reverse_vec, category)
         columns.append(col)
 
     return columns

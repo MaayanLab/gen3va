@@ -1,7 +1,7 @@
 import unittest
 import pandas
 
-from gen3va.heat_map_factory.utils import build_columns
+from gen3va.heat_map_factory.utils import build_column
 
 def _in(lst, tpl):
     for t in lst:
@@ -64,8 +64,8 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -1
             }
         ]
-        column_data = build_columns(mimic, reverse)
-        self.assertTrue(column_data == answer)
+        column = build_column(mimic, reverse)
+        self.assertTrue(column['data'] == answer)
 
     def test_no_sets_with_no_overlap(self):
         mimic = pandas.Series(index=['A', 'B'], data=[1, 1])
@@ -96,8 +96,8 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -1
             }
         ]
-        column_data = build_columns(mimic, reverse)
-        self.assertTrue(column_data == answer)
+        column = build_column(mimic, reverse)
+        self.assertTrue(column['data'] == answer)
 
     def test_with_doubles(self):
         mimic = pandas.Series(index=['A', 'B', 'C'], data=[0.5, 0.7, 0.85])
@@ -134,5 +134,5 @@ class TestBuildColumns(unittest.TestCase):
                 'val_dn': -0.3
             }
         ]
-        column_data = build_columns(mimic, reverse)
-        self.assertTrue(column_data == answer)
+        column = build_column(mimic, reverse)
+        self.assertTrue(column['data'] == answer)
