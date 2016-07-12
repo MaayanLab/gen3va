@@ -11,22 +11,16 @@
                 <thead>
                     <tr>
                         <th>Report</th>
-                        <th>Status</th>
-                        <th>Type</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for report in reports %}
                         <tr>
                             <td>
-                                <strong>
-                                    <a href="{{ report_url }}/{{ report.tag.name }}">
-                                        {{ report.tag.name|upper }}
-                                    </a>
-                                </strong>
+                                <a href="{{ report_url }}/{{ report.tag.name }}">
+                                    {{ report.tag.name|upper }}
+                                </a>
                             </td>
-                            <td>{{ report.status }}</td>
-                            <td>{{ report.report_type }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
