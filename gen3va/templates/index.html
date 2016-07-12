@@ -24,10 +24,8 @@
             </div>
 
             <div id='bio-categories'>
-
-                {% if curators %}
-                    <ul id="filters" class="list-inline">
-                        <a href='' class="btn btn-info is-check ed">All</a>
+                <ul id="filters" class="list-inline">
+                    {% if curators %}
                         {% for curator in curators %}
                             <li>
                                 {% set curator_class = curator.name|c_curator_class %}
@@ -36,8 +34,12 @@
                                 </a>
                             </li>
                         {% endfor %}
-                    </ul>
-                {% endif %}
+                    {% else %}
+                        <li>
+                            <a href='' class="btn btn-info is-check ed">All</a>
+                        </li>
+                    {% endif %}
+                </ul>
 
                 {% for column in bio_categories | slice(3) %}
                     <div class='bio-category-column'>

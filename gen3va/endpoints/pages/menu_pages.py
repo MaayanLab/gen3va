@@ -25,7 +25,7 @@ def index():
     if curator_name:
         bio_categories = database.get_bio_categories_by_curator(curator_name)
         curator = database.get(Curator, curator_name, key='name')
-        curators = [curator]
+        curators = None
     else:
         bio_categories = database.get_all(BioCategory)
         curators = _curators_with_approved_reports()
