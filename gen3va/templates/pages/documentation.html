@@ -8,7 +8,7 @@
         <h1>Getting Started</h1>
 
         <div class="section">
-            <p>To get started with GEN3VA you first need to create a collection of tagged gene expression signatures from GEO using <a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. GEO2Enrichr is a browser extension software tool that would enable you to easily extract and tag signatures from GEO, and it automatically adds these signatures to GEN3VA.</p>
+            <p>To get started with GEN3VA, you first need to create a collection of tagged gene expression signatures from GEO using <a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. GEO2Enrichr is a browser extension software tool that enables users to easily extract and tag signatures from GEO, automatically adding these signatures to GEN3VA.</p>
         </div>
 
         <div class="section">
@@ -19,13 +19,13 @@
         <div class="section">
             <h4>Tags and reports</h4>
             <p>A <em>tag</em> is a plain text term that you can use to associate multiple signatures from different studies. These tags are non-hierarchical keywords assigned to a gene signature. In social media, the equivalent idea is a "hashtag", which is a tag preceded by a "#" or hash symbol. These tags enable the creation of collections of gene signatures around common themes. A gene signature can have multiple tags. Tagging is handled by GEO2Enrichr and is done when the signature is processed. See <a href="http://amp.pharm.mssm.edu/g2e/manual#tags" target="_blank">GEO2Enrichr's documentation</a> for more details.</p>
-            <p>A <em>report</em> is a GEN3VA page with multiple visualizations and analyses of gene signatures under a single tag. For example, the gene signatures associated with the tag <em>LIGANDS_BD2K_LINCS_DCIC_COURSERA</em> can be found <a href="http://amp.pharm.mssm.edu/gen3va/tag/LIGANDS_BD2K_LINCS_DCIC_COURSERA" target="_blank">here</a>, while the report is <a href="http://amp.pharm.mssm.edu/gen3va/report/1/LIGANDS_BD2K_LINCS_DCIC_COURSERA" target="_blank">here</a>. A report can also be be generated from a subset of signatures from tags. This can be done using the <em>Custom Report Builder</em> on each tag page.</p>
+            <p>A <em>report</em> is a GEN3VA page with multiple visualizations and analyses of gene signatures under a single tag. For example, the gene signatures associated with the tag <em>AGING_BD2K_LINCS_DCIC_COURSERA</em> can be found <a href="http://amp.pharm.mssm.edu/gen3va/tag/AGING_BD2K_LINCS_DCIC_COURSERA" target="_blank">here</a>, while the report can be found <a href="http://amp.pharm.mssm.edu/gen3va/report/approved/AGING_BD2K_LINCS_DCIC_COURSERA" target="_blank">here</a>. A report can also be generated from a subset of signatures associated with a tag. This can be done using the <em>Custom Report Builder</em> on each tag page.</p>
         </div>
 
         <h1>Understanding reports</h1>
         <div class="section">
 
-            <p>Finding consensus across gene signatures profiled under the same or similar conditions by independent studies can address important issues such as data reproducibility, assist in better understanding common biological mechanisms, or assist in drug discovery by identifying consensus drugs that can mimic or reverse gene expression across a collection of signatures. The key idea underpinning GEN3VA is that gene signatures under a common biological theme may share common properties, such as genes in their gene lists, enrichment terms for gene set enrichment analysis results, or drugs that are predicted to reverse or mimic expression. A <em>report</em> is best understood as aggregated information, a consolidation of metadata, analyses, and visualizations on a collection of gene signatures around a common theme in an attempt to find consensus between signatures. See the documentation section to learn more about the different components of a report.</p>
+            <p>Finding consensus across gene signatures profiled under the same or similar conditions by independent studies can address important issues such as data reproducibility, assist in better understanding common biological mechanisms, or assist in drug discovery by identifying consensus drugs that can mimic or reverse gene expression across a collection of signatures. The key idea underpinning GEN3VA is that gene signatures under a common biological theme may share common properties, such as genes in their gene lists, enrichment terms for gene set enrichment analysis results, or drugs that are predicted to reverse or mimic expression. A <em>report</em> is best understood as aggregated information, a consolidation of metadata, analyses, and visualizations on a collection of gene signatures around a common theme in an attempt to find consensus between signatures.</p>
         </div>
 
         <div class="section">
@@ -35,13 +35,13 @@
                 <img src="static/images/screenshots/screenshot_pca.png"/>
                 <p class="caption">Fig. 1: Screenshot of the principal component analysis plot of 116 gene signatures extracted from studies that profiled the effect of adding endogenous ligands to mammalian cells.</p>
                 <img src="static/images/screenshots/screenshot_hierarchical_clustering.png"/>
-                <p class="caption">Fig. 2: Screenshot of the hierarchical clustering of the 116 gene signatures from endogenous ligand collection..</p>
+                <p class="caption">Fig. 2: Screenshot of the hierarchical clustering of the 116 gene signatures from endogenous ligand collection.</p>
             </div>
         </div>
 
         <div class="section">
             <h4>Enrichment vector analysis with Enrichr</h4>
-            <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is an enrichment analysis web application for performing gene set enrichment analysis on individual lists of genes. The input is a list of genes optionally followed by a weight, indicating the degree of membership in the gene list; the output is a list of enrichment terms from many gene set libraries. GEN3VA performs enrichment vector analysis with Enrichr by submitting each gene signature from a tagged collection in a report and then clustering the resultant terms.</p>
+            <p><a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> is a web application for performing enrichment analysis on individual lists of genes. The input is a list of genes; optionally, each gene can be followed by a weight indicating the degree of membership in the gene list. The output is a list of enrichment terms from many gene set libraries. GEN3VA performs enrichment vector analysis with Enrichr by submitting each gene signature from a tagged collection in a report and then clustering the resultant terms.</p>
         </div>
 
         <div class="section">
