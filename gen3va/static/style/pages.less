@@ -13,7 +13,10 @@
   button {
     background-color: @color-gray-very-light;
   }
-  #intoduction {
+  #introduction {
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 200;
     margin-bottom: 30px;
     h1 {
       font-weight: 500;
@@ -278,16 +281,25 @@
   }
 }
 
-#playground-page {
+#collections-page {
+  #instructions {
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 200;
+    margin-bottom: 30px;
+    h1 {
+      font-weight: 500;
+    }
+  }
   input {
     border-radius: 0;
   }
-  #tag-list {
-    margin-top: 30px;
-    & > li {
-      border-bottom: 1px solid @color-gray-light;
-      margin-top: 5px;
-      padding-bottom: 5px;
-    }
-  }
+  //#tag-list {
+  //  margin-top: 30px;
+  //  & > li {
+  //    border-bottom: 1px solid @color-gray-light;
+  //    margin-top: 5px;
+  //    padding-bottom: 5px;
+  //  }
+  //}
 }

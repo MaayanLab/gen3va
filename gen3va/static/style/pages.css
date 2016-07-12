@@ -20,10 +20,13 @@
 #index-page button {
   background-color: #f9f9f9;
 }
-#index-page #intoduction {
+#index-page #introduction {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
   margin-bottom: 30px;
 }
-#index-page #intoduction h1 {
+#index-page #introduction h1 {
   font-weight: 500;
 }
 #index-page #filters button.curated {
@@ -242,14 +245,15 @@
 #tag-page #custom-report-builder #pca-container {
   margin-top: 20px;
 }
-#playground-page input {
+#collections-page #instructions {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+  margin-bottom: 30px;
+}
+#collections-page #instructions h1 {
+  font-weight: 500;
+}
+#collections-page input {
   border-radius: 0;
-}
-#playground-page #tag-list {
-  margin-top: 30px;
-}
-#playground-page #tag-list > li {
-  border-bottom: 1px solid #eeeeee;
-  margin-top: 5px;
-  padding-bottom: 5px;
 }
