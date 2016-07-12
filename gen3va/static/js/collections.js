@@ -9,4 +9,3 @@ $(function() {
        dataTable.fnFilter(this.value);
     });
 });
-

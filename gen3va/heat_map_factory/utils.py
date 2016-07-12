@@ -8,7 +8,8 @@ def column_title(i, gene_signature):
     """Utility method for normalizing how column names are built across
     hierarchical clusterings.
     """
-    return '%s - %s' % (i, gene_signature.name)
+    name = gene_signature.name.replace(':', ' -')
+    return '%s - %s' % (i, name)
 
 
 def link(base, row_title, col_title='Gene signatures'):

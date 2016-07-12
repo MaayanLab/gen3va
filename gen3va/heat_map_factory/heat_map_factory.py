@@ -18,7 +18,8 @@ from gen3va.heat_map_factory import utils
 def create(type_, Session=None, **kwargs):
     """Returns link to hierarchical clustering.
     """
-    category_name = kwargs.get('category')
+    # category_name = kwargs.get('category')
+    category_name = 'cell_type'
 
     TYPES = ['genes', 'enrichr', 'l1000cds2']
     if type_ not in TYPES:

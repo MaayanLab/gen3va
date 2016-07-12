@@ -25,6 +25,7 @@ def prepare_ranked_genes(diff_exp_method, signatures, category_name):
         column = df.ix[:, col_name].tolist()
         column = [float(x) for x in column]
         genes = zip(df.index, column)
+        print(col_name)
 
         data = [{'row_name': name, 'val': value} for name, value in genes]
         col = {

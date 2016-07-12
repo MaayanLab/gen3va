@@ -15,7 +15,7 @@ def filter_rows_by_non_empty_until(df, max_=MAX_NUM_ROWS):
     threshold = 1
     while df.shape[0] > max_:
         df = filter_rows_by_non_empty(df, threshold=threshold)
-        print('Thresholded to shape: %s' % str(df.shape))
+        print('THRESHOLDING: to shape: %s' % str(df.shape))
         threshold += 1
     print('Ending shape: %s' % str(df.shape))
     return df
@@ -34,7 +34,10 @@ def filter_rows_by_non_empty(df, threshold=1):
         lambda row: True in row.value_counts() and row.value_counts()[True] > threshold,
         axis=1
     )
-    return df[enough_non_zeros]
+    result = df[enough_non_zeros]
+    if df.shape != result.shape:
+        print('THRESHOLDING: filter_rows_by_non_empty')
+    return result
 
 
 def filter_rows_by_highest_abs_val_mean(df, max_=MAX_NUM_ROWS):
