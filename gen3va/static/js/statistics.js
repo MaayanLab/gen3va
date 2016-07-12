@@ -29,10 +29,12 @@ function buildStats(stats) {
     });
 
     $.each(platform_counts, function(i, obj) {
-        if (obj.count > 1) {
+        if (obj.count === 1) {
+            series[0].data.push(0.175);
+        } else {
             series[0].data.push(Math.log(obj.count) / Math.log(10));
-            categories.push(obj.platform);
         }
+        categories.push(obj.platform);
     });
 
     $('#platforms-bar-chart').highcharts({
