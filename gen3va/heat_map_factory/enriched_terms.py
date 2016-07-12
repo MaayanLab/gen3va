@@ -33,8 +33,9 @@ def prepare_enriched_terms(Session, signatures, library, category_name):
             'col_name': utils.column_title(i, signatures[i]),
             'data': column_data
         }
-        opt = signatures[i].get_optional_metadata(category_name)
-        col['cat'] = opt.value.lower() if opt else ''
+        if category_name:
+            opt = signatures[i].get_optional_metadata(category_name)
+            col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
     return columns
 

@@ -32,8 +32,9 @@ def prepare_ranked_genes(diff_exp_method, signatures, category_name):
             'data': data,
         }
 
-        opt = signature.get_optional_metadata(category_name)
-        col['cat'] = opt.value.lower() if opt else ''
+        if category_name:
+            opt = signature.get_optional_metadata(category_name)
+            col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
 
     return columns

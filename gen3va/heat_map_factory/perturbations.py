@@ -38,8 +38,9 @@ def prepare_perturbations(Session, signatures, category_name):
             'col_name': utils.column_title(i, sig),
             'data': column_data,
         }
-        opt = sig.get_optional_metadata(category_name)
-        col['cat'] = opt.value.lower() if opt else ''
+        if category_name:
+            opt = sig.get_optional_metadata(category_name)
+            col['cat'] = opt.value.lower() if opt else ''
         columns.append(col)
 
     return columns

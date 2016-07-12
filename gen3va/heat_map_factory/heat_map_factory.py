@@ -15,11 +15,10 @@ from .ranked_genes import prepare_ranked_genes
 from gen3va.heat_map_factory import utils
 
 
-def get_link(type_, Session=None, **kwargs):
+def create(type_, Session=None, **kwargs):
     """Returns link to hierarchical clustering.
     """
-    # TODO: Implement pulling these variables from the user interface.
-    category_name = 'cell_type'
+    category_name = kwargs.get('category')
 
     TYPES = ['genes', 'enrichr', 'l1000cds2']
     if type_ not in TYPES:
@@ -35,10 +34,7 @@ def get_link(type_, Session=None, **kwargs):
         signatures = kwargs.get('signatures')
 
     diff_exp_method = kwargs.get('diff_exp_method')
-    payload = {
-        'link': kwargs.get('back_link', ''),
-        'filter': 'N_row_sum',
-    }
+    payload = {}
     if type_ == 'enrichr':
         library = kwargs.get('library', 'ChEA_2015')
         payload['is_up_down'] = True

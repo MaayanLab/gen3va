@@ -10,8 +10,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.pool import NullPool
 
 from substrate import PCAPlot, Report, TargetApp, HeatMap
-from gen3va.database.utils import session_scope, \
-    get_or_create_with_session
+from gen3va.database.utils import session_scope
 from gen3va import Config, heat_map_factory, pca_factory
 
 
@@ -20,7 +19,7 @@ def build(tag, reanalyze=False):
     """
     if tag.approved_report:
         report = tag.approved_report
-        print('Reseting report.')
+        print('Resetting report.')
         with session_scope() as session:
             report.reset(reanalyze=reanalyze)
             session.merge(report)
@@ -38,10 +37,8 @@ def build_custom(tag, gene_signatures, report_name):
     """
     with session_scope() as session:
         if gene_signatures:
-            report = Report(tag,
-                            _gene_signatures=gene_signatures,
-                            is_approved=False,
-                            name=report_name)
+            report = Report(tag, _gene_signatures=gene_signatures,
+                            is_approved=False, name=report_name)
         session.add(report)
         session.commit()
     _build(report.id)
@@ -51,8 +48,6 @@ def build_custom(tag, gene_signatures, report_name):
 def _build(report_id):
     """Builds report, each visualization in its own subprocess.
     """
-    back_link = _get_back_link(report_id)
-
     # Each process should be completely responsible for its own DB connection.
     # It should wrap the entire process in a try/except/finally and close the
     # DB session in the finally statement. If an uncaught exception is thrown
@@ -63,29 +58,29 @@ def _build(report_id):
         kwargs={
             'report_id': report_id,
             'func': _perform_pca
-        })
+        }
+    )
     p.start()
 
     p = multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
-            'func': _cluster_ranked_genes,
-            'back_link': back_link
-        })
+            'func': _cluster_ranked_genes
+        }
+    )
     p.start()
 
     # Creates its own subprocess for each visualization.
-    _enrichr_visualizations(report_id, Config.SUPPORTED_ENRICHR_LIBRARIES,
-                            back_link)
+    _enrichr_visualizations(report_id, Config.SUPPORTED_ENRICHR_LIBRARIES)
 
     p = multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
-            'func': _cluster_perturbations,
-            'back_link': back_link
-        })
+            'func': _cluster_perturbations
+        }
+    )
     p.start()
 
 
@@ -98,8 +93,6 @@ def subprocess_wrapper(**kwargs):
     Session = scoped_session(session_factory)
     func = kwargs.get('func')
 
-    func(Session, **kwargs)
-    Session.commit()
     try:
         print('=' * 80)
         print('BEGINNING %s' % func.__name__)
@@ -133,14 +126,12 @@ def _cluster_ranked_genes(Session, **kwargs):
     """Performs hierarchical clustering on genes.
     """
     report_id = kwargs.get('report_id')
-    back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
     diff_exp_method = report.gene_signatures[0].required_metadata\
         .diff_exp_method
-    network = heat_map_factory.get_link('genes',
-                                        signatures=report.gene_signatures,
-                                        diff_exp_method=diff_exp_method,
-                                        back_link=back_link)
+    network = heat_map_factory.create('genes',
+                                      signatures=report.gene_signatures,
+                                      diff_exp_method=diff_exp_method)
     _save_heat_map(Session, report, network, 'gen3va')
 
 
@@ -149,11 +140,9 @@ def _cluster_perturbations(Session, **kwargs):
     hierarchical clustering.
     """
     report_id = kwargs.get('report_id')
-    back_link = kwargs.get('back_link')
     report = Session.query(Report).get(report_id)
-    network = heat_map_factory.get_link('l1000cds2', Session,
-                                        signatures=report.gene_signatures,
-                                        back_link=back_link)
+    network = heat_map_factory.create('l1000cds2', Session,
+                                      signatures=report.gene_signatures)
     _save_heat_map(Session, report, network, 'l1000cds2')
 
 
@@ -162,43 +151,31 @@ def _cluster_enriched_terms(Session, **kwargs):
     hierarchical clustering.
     """
     report_id = kwargs.get('report_id')
-    back_link = kwargs.get('back_link')
     library = kwargs.get('library')
     report = Session.query(Report).get(report_id)
-    network = heat_map_factory.get_link('enrichr', Session,
-                                        signatures=report.gene_signatures,
-                                        library=library,
-                                        back_link=back_link)
+    network = heat_map_factory.create('enrichr', Session,
+                                      signatures=report.gene_signatures,
+                                      library=library)
     _save_heat_map(Session, report, network, 'enrichr', library=library)
 
 
-def _enrichr_visualizations(report_id, libraries, back_link):
+def _enrichr_visualizations(report_id, libraries):
     """Builds Enrichr visualizations for all libraries.
     """
     for library in libraries:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report_id,
-                                        'func': _cluster_enriched_terms,
-                                        'back_link': back_link,
-                                        'library': library
-                                    })
+        p = multiprocessing.Process(
+            target=subprocess_wrapper,
+            kwargs={
+                'report_id': report_id,
+                'func': _cluster_enriched_terms,
+                'library': library
+            }
+        )
         p.start()
 
 
-def _get_back_link(report_id):
-    """Generates a back link for Clustergrammer based on tag name.
-    """
-    with session_scope() as session:
-        print('starting report build %s' % report_id)
-        report = session.query(Report).get(report_id)
-        return '{0}{1}/{2}'.format(Config.SERVER,
-                                   Config.REPORT_URL,
-                                   report.tag.name)
-
-
 def _save_heat_map(Session, report, network, viz_type, library=None):
-    """Utility method for saving link based on report ID.
+    """Utility method for saving heat map based on report ID.
     """
     heat_map = HeatMap(network, viz_type, enrichr_library=library)
     if library:
