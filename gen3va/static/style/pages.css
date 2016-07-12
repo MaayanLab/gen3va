@@ -147,6 +147,9 @@
   height: 800px;
   width: 100%;
 }
+#report-page .heat-map .fa {
+  color: #7FB800;
+}
 #report-page .heat-map .ui-state-default,
 #report-page .heat-map .ui-widget-content .ui-state-default,
 #report-page .heat-map .ui-widget-header .ui-state-default {
@@ -155,6 +158,14 @@
 }
 #report-page .heat-map .slider.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
   border: 1px solid #aaaaaa;
+}
+#report-page .heat-map .modal-content {
+  border-radius: 0;
+}
+#report-page .heat-map .modal-content .bootstrap_highlight.share_url {
+  border: 1px solid #eee !important;
+  width: 100% !important;
+  padding: 5px !important;
 }
 /* These selectors cannot be nested because Clustergrammer creates them in the
  * <body> tag. But these should only appear on report pages.
