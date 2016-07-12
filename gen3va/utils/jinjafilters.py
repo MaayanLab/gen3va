@@ -23,6 +23,12 @@ def c_to_json(context, value):
 
 
 @jinja2.contextfilter
+@jinjafilters.app_template_filter('to_css_selector')
+def to_css_selector(context, value):
+    return value.lower().replace(' ', '-').replace('_', '-')
+
+
+@jinja2.contextfilter
 @jinjafilters.app_template_filter('c_filter_organism')
 def c_filter_organism(context, value):
     for metadata in value:

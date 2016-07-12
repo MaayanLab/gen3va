@@ -42,7 +42,7 @@
                 {% for column in bio_categories | slice(3) %}
                     <div class='bio-category-column'>
                         {% for cat in column %}
-                            <div id='{{ cat.name }}' class='bio-category'>
+                            <div id='{{ cat.name|to_css_selector }}' class='bio-category'>
                                 <h3>{{ cat.name|capitalize }}</h3>
                                 <ul class='list list-unstyled'>
                                 %{
@@ -67,6 +67,7 @@
     </div>
 
     <script>
+        GEN3VA.hideEmptyBioCategories({{ bio_category_names|safe }});
         GEN3VA.setupTagSearch({{ bio_category_names|safe }});
     </script>
 

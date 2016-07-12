@@ -23,3 +23,16 @@ GEN3VA.setupTagSearch = function(bioCategories) {
         });
     });
 };
+
+GEN3VA.hideEmptyBioCategories = function(bioCategories) {
+    $.each(bioCategories, function(i, bioCategoryName) {
+        var $category = $('#' + toCssSelector(bioCategoryName))
+        var $list = $category.find(' ul li');
+        if (!$list.length) {
+            $category.hide();
+        }
+    });
+    function toCssSelector(value) {
+        return value.toLowerCase().replace(/ /g, '-').replace(/_/g, '');
+    }
+};
