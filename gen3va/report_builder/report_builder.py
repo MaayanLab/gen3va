@@ -75,11 +75,9 @@ def _build(report_id):
         })
     p.start()
 
-    # We want a basic report as fast as possible. We can create more Enrichr
-    # visualizations later.
-    enrichr_library = Config.SUPPORTED_ENRICHR_LIBRARIES[:1]
     # Creates its own subprocess for each visualization.
-    _enrichr_visualizations(report_id, enrichr_library, back_link)
+    _enrichr_visualizations(report_id, Config.SUPPORTED_ENRICHR_LIBRARIES,
+                            back_link)
 
     p = multiprocessing.Process(
         target=subprocess_wrapper,
@@ -89,51 +87,6 @@ def _build(report_id):
             'back_link': back_link
         })
     p.start()
-
-
-def update(tag, report_=None):
-    """Updates an existing report.
-    """
-    if not report_:
-        report = tag.approved_report
-    else:
-        report = report_
-
-    print('Updating report for %s.' % tag.name)
-    if not hasattr(report, 'pca_plot'):
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _perform_pca
-                                    })
-        p.start()
-
-    back_link = _get_back_link(report.id)
-    if not report.genes_heat_map:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _cluster_ranked_genes,
-                                        'back_link': back_link
-                                    })
-        p.start()
-
-    if len(report.enrichr_heat_maps) != len(Config.SUPPORTED_ENRICHR_LIBRARIES):
-        completed = [v['enrichr_library'] for v in report.enrichr_heat_maps]
-        missing = []
-        for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-            if library not in completed:
-                missing.append(library)
-        _enrichr_visualizations(report.id, missing, back_link)
-
-    if not report.l1000cds2_heat_map:
-        p = multiprocessing.Process(target=subprocess_wrapper,
-                                    kwargs={
-                                        'report_id': report.id,
-                                        'func': _cluster_perturbations,
-                                        'back_link': back_link
-                                    })
-        p.start()
 
 
 def subprocess_wrapper(**kwargs):

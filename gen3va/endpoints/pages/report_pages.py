@@ -115,31 +115,7 @@ def reanalyze_approved_report(tag_name):
                             tag_name=tag.name))
 
 
-@report_pages.route('/approved/<tag_name>/update', methods=['GET'])
-@login_required
-def update_approved_report(tag_name):
-    """Updates an approved report for a tag.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    report_builder.update(tag)
-    return redirect(url_for('report_pages.view_approved_report',
-                            tag_name=tag.name))
-
-
-@report_pages.route('/<report_id>/<tag_name>/update', methods=['GET'])
-@login_required
-def update_custom_report(report_id, tag_name):
-    """Updates an custom report for a tag.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    report = database.get(Report, report_id)
-    report_builder.update(tag, report_=report)
-    return redirect(url_for('report_pages.view_custom_report',
-                            report_id=report_id,
-                            tag_name=tag_name))
-
-
-# Admin utility methods
+# Utility methods
 # ----------------------------------------------------------------------------
 
 def _get_extraction_ids(request):
