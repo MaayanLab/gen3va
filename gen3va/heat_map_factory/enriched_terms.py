@@ -86,7 +86,7 @@ def get_names_scores(Session, signature, genes, library, use_up, attempts=0):
     try:
         terms, scores = _enrich_gene_signature(Session, signature, genes,
                                                library, use_up)
-    except RequestException as e:
+    except (RequestException, ValueError) as e:
         attempts += 1
         return get_names_scores(Session, signature, genes, library, use_up,
                                 attempts)
@@ -112,6 +112,8 @@ def _enrich_gene_signature(Session, signature, genes, library, use_up):
 
     genes = utils.sort_and_truncate_ranked_genes(genes)
     user_list_id = _post_to_enrichr(genes)
+    if not user_list_id:
+        raise ValueError('No Enrichr user_list_id')
 
     enrichr_result = EnrichrResults(user_list_id, use_up, library)
     signature.enrichr_results.append(enrichr_result)

@@ -144,6 +144,9 @@ def subprocess_wrapper(**kwargs):
     session_factory = sessionmaker(bind=engine)
     Session = scoped_session(session_factory)
     func = kwargs.get('func')
+
+    func(Session, **kwargs)
+    Session.commit()
     try:
         print('=' * 80)
         print('BEGINNING %s' % func.__name__)
