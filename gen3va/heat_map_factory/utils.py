@@ -43,11 +43,14 @@ def column_title(i, gene_signature, category_name=None, category_val=None):
     """
     title = gene_signature.name.replace(':', ' -')
     title = '%s - %s' % (i, title)
-    if category_name and category_val:
+    if category_name:
+        if category_val:
+            category = '%s: %s' % (category_name, category_val)
+        else:
+            category = '%s: NA' % category_name
+        tpl = (title, category)
         # This is the syntax for Clustergrammer to parse category names and
         # values. The space between ":" and the value is required.
-        category = '%s: %s' % (category_name, category_val)
-        tpl = (title, category)
         return str(tpl)
     return title
 

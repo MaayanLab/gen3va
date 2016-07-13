@@ -105,7 +105,7 @@ def build_approved_report(tag_name):
                             tag_name=tag.name))
 
 
-@report_pages.route('/approved/<tag_name>/rebuild', methods=['GET'])
+@report_pages.route('/approved/<tag_name>/build_no_cache', methods=['GET'])
 @login_required
 def reanalyze_approved_report(tag_name):
     """Reanalyze, i.e. requests new results from Enrichr and L1000CDS2, an

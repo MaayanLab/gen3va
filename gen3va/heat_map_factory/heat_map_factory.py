@@ -38,7 +38,7 @@ def create(type_, Session=None, **kwargs):
         library = kwargs.get('library')
         payload['is_up_down'] = True
         payload['columns'] = prepare_enriched_terms(Session, signatures,
-                                                    library, category_name)
+                                                    category_name, library)
     elif type_ == 'l1000cds2':
         payload['columns'] = prepare_perturbations(Session, signatures,
                                                    category_name)

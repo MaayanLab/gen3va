@@ -14,7 +14,7 @@ from gen3va import database
 from gen3va.heat_map_factory import filters, utils
 
 
-def prepare_enriched_terms(Session, signatures, library, category):
+def prepare_enriched_terms(Session, signatures, category, library):
     """Prepares enriched terms for hierarchical clustering.
     """
     max_num_rows = filters.MAX_NUM_ROWS / 2
