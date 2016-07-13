@@ -62,6 +62,7 @@ def view_custom_report(report_id, tag_name):
 def build_custom_report(tag_name):
     """Builds a custom report.
     """
+    category = request.args.get('category')
     report_name = request.json.get('report_name')
     tag = database.get(Tag, tag_name, 'name')
     if not tag:
@@ -69,7 +70,8 @@ def build_custom_report(tag_name):
 
     extraction_ids = _get_extraction_ids(request)
     gene_signatures = database.get_signatures_by_ids(extraction_ids)
-    report_id = report_builder.build_custom(tag, gene_signatures, report_name)
+    report_id = report_builder.build_custom(tag, gene_signatures, report_name,
+                                            category)
 
     # This endpoint is hit via an AJAX request. JavaScript must perform the
     # redirect.
@@ -98,7 +100,6 @@ def build_approved_report(tag_name):
     """Builds the an approved report for a tag.
     """
     category = request.args.get('category')
-    print(category)
     tag = database.get(Tag, tag_name, 'name')
     report_builder.build(tag, category=category)
     return redirect(url_for('report_pages.view_approved_report',
@@ -112,7 +113,6 @@ def reanalyze_approved_report(tag_name):
     approved report for a tag.
     """
     category = request.args.get('category')
-    print(category)
     tag = database.get(Tag, tag_name, 'name')
     report_builder.build(tag, category=category, reanalyze=True)
     return redirect(url_for('report_pages.view_approved_report',

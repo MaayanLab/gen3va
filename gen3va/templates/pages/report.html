@@ -43,10 +43,15 @@
     <div class="page" id="report-page">
 
         <div class="report-metadata">
+            <h1>
             {% if report.is_approved %}
-                <h1><strong>{{ tag.name|upper }}</strong> <span>report</span></h1>
+                <strong>{{ tag.name|upper }}</strong> <span>report</span>
             {% else %}
-                <h1><strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span></h1>
+                <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
+            {% endif %}
+            </h1>
+            {% if report.category %}
+                <p>Categorized using metadata field <strong>{{ report.category }}</strong></p>
             {% endif %}
             <p>
                 <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">Back to reports for {{ tag.name }}</a>

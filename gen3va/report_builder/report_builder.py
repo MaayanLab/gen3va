@@ -14,7 +14,7 @@ from gen3va.database.utils import session_scope
 from gen3va import Config, heat_map_factory, pca_factory
 
 
-def build(tag, category=None, reanalyze=False):
+def build(tag, category, reanalyze=False):
     """Creates a new report in a separate thread.
     """
     if tag.approved_report:
@@ -22,17 +22,18 @@ def build(tag, category=None, reanalyze=False):
         print('Resetting report.')
         with session_scope() as session:
             report.reset(reanalyze=reanalyze)
+            report.category = category
             session.merge(report)
     else:
         print('Creating new report.')
         with session_scope() as session:
-            report = Report(tag, is_approved=True)
+            report = Report(tag, is_approved=True, category=category)
             session.add(report)
             session.flush()
     _build(report.id, category)
 
 
-def build_custom(tag, gene_signatures, report_name):
+def build_custom(tag, gene_signatures, report_name, category):
     """Builds a custom report.
     """
     with session_scope() as session:
@@ -41,8 +42,7 @@ def build_custom(tag, gene_signatures, report_name):
                             is_approved=False, name=report_name)
         session.add(report)
         session.commit()
-    # TODO: Implement categories for custom reports.
-    _build(report.id, category=None)
+    _build(report.id, category)
     return report.id
 
 
@@ -58,16 +58,14 @@ def _build(report_id, category):
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
-            'func': _perform_pca,
-            'category': category
+            'func': _perform_pca
         }).start()
 
     multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
-            'func': _cluster_ranked_genes,
-            'category': category
+            'func': _cluster_ranked_genes
         }
     ).start()
 
@@ -77,7 +75,6 @@ def _build(report_id, category):
             kwargs={
                 'report_id': report_id,
                 'func': _cluster_enriched_terms,
-                'category': category,
                 'library': library
             }
         ).start()
@@ -86,8 +83,7 @@ def _build(report_id, category):
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
-            'func': _cluster_perturbations,
-            'category': category
+            'func': _cluster_perturbations
         }
     ).start()
 
@@ -122,10 +118,9 @@ def _perform_pca(Session, **kwargs):
     """Performs principal component analysis on gene signatures from report.
     """
     report_id = kwargs.get('report_id')
-    category = kwargs.get('category')
     report = Session.query(Report).get(report_id)
-    pca_data = pca_factory.from_report(report.gene_signatures, category)
-    pca_data = json.dumps(pca_data)
+    data = pca_factory.from_report(report.gene_signatures, report.category)
+    pca_data = json.dumps(data)
     report.pca_plot = PCAPlot(pca_data)
     Session.merge(report)
     Session.commit()
@@ -135,14 +130,13 @@ def _cluster_ranked_genes(Session, **kwargs):
     """Performs hierarchical clustering on genes.
     """
     report_id = kwargs.get('report_id')
-    category = kwargs.get('category')
     report = Session.query(Report).get(report_id)
     diff_exp_method = report.gene_signatures[0].required_metadata\
         .diff_exp_method
     network = heat_map_factory.create('genes',
                                       signatures=report.gene_signatures,
                                       diff_exp_method=diff_exp_method,
-                                      category=category)
+                                      category=report.category)
     _save_heat_map(Session, report, network, 'gen3va')
 
 
@@ -152,10 +146,9 @@ def _cluster_perturbations(Session, **kwargs):
     """
     report_id = kwargs.get('report_id')
     report = Session.query(Report).get(report_id)
-    category = kwargs.get('category')
     network = heat_map_factory.create('l1000cds2', Session,
                                       signatures=report.gene_signatures,
-                                      category=category)
+                                      category=report.category)
     _save_heat_map(Session, report, network, 'l1000cds2')
 
 
@@ -164,12 +157,11 @@ def _cluster_enriched_terms(Session, **kwargs):
     hierarchical clustering.
     """
     report_id = kwargs.get('report_id')
-    category = kwargs.get('category')
     library = kwargs.get('library')
     report = Session.query(Report).get(report_id)
     network = heat_map_factory.create('enrichr', Session,
                                       signatures=report.gene_signatures,
-                                      library=library, category=category)
+                                      library=library, category=report.category)
     _save_heat_map(Session, report, network, 'enrichr', library=library)
 
 
