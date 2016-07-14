@@ -28,22 +28,27 @@
             </div>
 
             <div id='bio-categories'>
-                <ul id="filters" class="list-inline">
+                <div id="filters">
                     {% if curators %}
-                        {% for curator in curators %}
-                            <li>
-                                {% set curator_class = curator.name|c_curator_class %}
-                                <a href='?curator={{ curator.name }}' class="btn btn-info">
-                                    {{ curator.name }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    {% else %}
-                        <li>
-                            <a href='' class="btn btn-info is-check ed">All</a>
-                        </li>
+                        <p class="instruction">Select below to see collections only by a specific curator.</p>
                     {% endif %}
-                </ul>
+                    <ul class="list-inline">
+                        {% if curators %}
+                            {% for curator in curators %}
+                                <li>
+                                    {% set curator_class = curator.name|c_curator_class %}
+                                    <a href='?curator={{ curator.name }}' class="btn btn-info">
+                                        {{ curator.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>
+                                <a href='' class="btn btn-info is-check ed">All</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
 
                 {% for column in bio_categories | slice(3) %}
                     <div class='bio-category-column'>
@@ -73,8 +78,7 @@
     </div>
 
     <script>
-        GEN3VA.hideEmptyBioCategories({{ bio_category_names|safe }});
-        GEN3VA.setupTagSearch({{ bio_category_names|safe }});
+        GEN3VA.setupIndexPage({{ bio_category_names|safe }});
     </script>
 
 {% endblock %}

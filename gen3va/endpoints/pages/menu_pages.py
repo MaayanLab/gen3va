@@ -24,7 +24,8 @@ def index():
     curator_name = request.args.get('curator')
     if curator_name:
         bio_categories = database.get_bio_categories_by_curator(curator_name)
-        curator = database.get(Curator, curator_name, key='name')
+        # We don't need to show the curator when the user has already elected
+        # to see only signatures by a specific curator.
         curators = None
     else:
         bio_categories = database.get_all(BioCategory)
@@ -43,9 +44,6 @@ def collections():
     tags = [t for t in tags if not t.is_restricted]
     return render_template('pages/collections.html',
                            tags=tags)
-
-
-# See signature_search_api
 
 
 @menu_pages.route('/documentation', methods=['GET'])
@@ -77,32 +75,3 @@ def _curators_with_approved_reports():
         if use:
             curators.append(curator)
     return curators
-
-
-def _color_curators(curators):
-    """Utility method that ensures each curator has a color assigned.
-    """
-    map_ = {
-        'BD2K LINCS DCIC Coursera': '#9351e5',
-        'LINCS-DSGCs': '#F15A5A',
-        'BioGPS': '#7FB800',
-        'LINCS-DCIC': '#3593b1'
-    }
-    other_colors = ['#004358', '#FD7400', '#355FDE', '#F0C419']
-    for curator in curators:
-        if curator.name in map_:
-            curator.color = map_[curator.name]
-        else:
-            if len(other_colors) > 0:
-                curator.color = other_colors.pop()
-            else:
-                curator.color = _hex()
-
-    return curators
-
-
-def _hex():
-    """Returns random hexadecimal color.
-    """
-    r = lambda: random.randint(0,255)
-    return '#%02X%02X%02X' % (r(), r(), r())
