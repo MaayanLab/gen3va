@@ -41,7 +41,6 @@ def index():
 @menu_pages.route('/collections', methods=['GET'])
 def collections():
     tags = database.get_all(Tag)
-    tags = [t for t in tags if not t.is_restricted]
     return render_template('pages/collections.html',
                            tags=tags)
 
