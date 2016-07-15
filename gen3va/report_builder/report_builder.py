@@ -24,6 +24,7 @@ def build(tag, category, reanalyze=False):
             report.reset(reanalyze=reanalyze)
             report.category = category
             session.merge(report)
+            session.commit()
     else:
         print('Creating new report.')
         with session_scope() as session:
@@ -107,7 +108,6 @@ def subprocess_wrapper(**kwargs):
     except Exception as e:
         print('=' * 80)
         print('ERROR with %s:' % func.__name__)
-        print(e)
         print('=' * 80)
         Session.rollback()
     finally:
