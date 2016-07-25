@@ -1,10 +1,8 @@
 """Renders report pages.
 """
 
-import json
-
 from flask import Blueprint, jsonify, redirect, request, render_template, \
-    url_for
+    url_for, abort
 from flask.ext.login import login_required
 
 from substrate import Report, Tag
@@ -22,6 +20,8 @@ def view_reports_associated_with_tag(tag_name):
     """Renders page that lists all reports associated with a tag.
     """
     tag = database.get(Tag, tag_name, 'name')
+    if not tag:
+        abort(404)
     return render_template('pages/reports-for-tag.html', tag=tag)
 
 
@@ -31,10 +31,8 @@ def view_approved_report(tag_name):
     """
     tag = database.get(Tag, tag_name, 'name')
     if not tag:
-        return render_template('pages/404.html')
+        abort(404)
     report = tag.approved_report
-    if not report:
-        return render_template('pages/report-not-ready.html', tag=tag)
     return render_template('pages/report.html',
                            tag=tag,
                            report=report)
@@ -47,8 +45,9 @@ def view_custom_report(report_id, tag_name):
     tag = database.get(Tag, tag_name, 'name')
     report = database.get(Report, report_id)
     print(report.category)
+    print(report.gene_signatures)
     if not tag or not report:
-        return render_template('pages/404.html')
+        abort(404)
     if report.pca_plot:
         pca_json = report.pca_plot.data
     else:
@@ -67,7 +66,7 @@ def build_custom_report(tag_name):
     report_name = request.json.get('report_name')
     tag = database.get(Tag, tag_name, 'name')
     if not tag:
-        return render_template('pages/404.html')
+        abort(404)
 
     extraction_ids = _get_extraction_ids(request)
     gene_signatures = database.get_signatures_by_ids(extraction_ids)

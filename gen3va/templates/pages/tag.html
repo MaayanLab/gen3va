@@ -8,37 +8,54 @@
 
     <div class='page' id='tag-page'>
 
-        <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ tag.gene_signatures|length }})</h1>
-        <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ tag.name }}'>Back to reports for {{ tag.name|upper }}</a>
+        <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
+        <a id='all-reports-btn'
+           class='btn btn-primary'
+           href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+            All reports
+        </a>
 
-        <div id='custom-report-builder'>
-            <div class='description'>
-                <div class='row'>
-                    <div class='col-md-12'>
-                        <h4>Build a custom report</h4>
-                        <ol>
-                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
-                            <li>Select at least 3 signatures.</li>
-                            <li>Name the report.</li>
-                            <li>(Optional) Select a metadata field upon which to categorize the signatures. The percentage indicates what percentage of gene signatures have values for that metadata field.</li>
-                            <li>Click <em>Build report</em></li>
-                        </ol>
-                        <div>
-                            <select>
-                                <option>(Select a metadata field)</option>
-                                {% for name, pct in metadata.iteritems() %}
-                                    <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
-                                {% endfor %}
-                            </select>
+        <!--
+          metadata is only available for signatures with approved reports.
+          We're using this as a proxy flag rather than using a separate one.
+        -->
+        {% if metadata %}
+            <div id='custom-report-builder'>
+                <div class='description'>
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <h4>Build a custom report</h4>
+                            <ol>
+                                <li>Using the checkboxes in the right-most column, select gene signatures.</li>
+                                <li>Select at least 3 signatures.</li>
+                                <li>Name the report.</li>
+                                <li>(Optional) Select a metadata field upon which to categorize the signatures. The percentage indicates what percentage of gene signatures have values for that metadata field.</li>
+                                <li>Click <em>Build report</em></li>
+                            </ol>
+                            <div>
+                                <select>
+                                    <option>(Select a metadata field)</option>
+                                    {% for name, pct in metadata.iteritems() %}
+                                        <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
+                            </div>
+                            <button class='btn btn-info'>Build report</button>
                         </div>
-                        <div>
-                            <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
-                        </div>
-                        <button class='btn btn-info'>Build report</button>
                     </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <p>
+                <a class='btn btn-info'
+                   href='{{ config.TAG_URL }}/{{ tag.name }}'>
+                    All gene signatures
+                </a>
+            </p>
+        {% endif %}
 
         <div class='table-responsive'>
             <table class='table data-table responsive'>
@@ -55,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for gene_signature in tag.gene_signatures %}
+                    {% for gene_signature in gene_signatures %}
                         <tr>
                             <td class='index'>{{ loop.index }}</td>
                             <td class='title'>

@@ -54,14 +54,21 @@
                 <p>Categorized using metadata field <strong>{{ report.category }}</strong></p>
             {% endif %}
             <p>
-                <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">Back to reports for {{ tag.name }}</a>
+                <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">All reports for {{ tag.name }}</a>
             </p>
         </div>
 
         <!-- Gene signatures -->
         <div id="gene-signatures-table" class="section">
             <h2>Gene signatures</h2>
-
+            {% if report.is_approved %}
+                {% set more_signatures_url = config.TAG_URL ~ '/' ~ tag.name %}
+            {% else %}
+                {% set more_signatures_url = config.TAG_URL ~ '/' ~ report.id %}
+            {% endif %}
+            <a href="{{ more_signatures_url }}" class="btn btn-primary" id="more-signatures-btn">
+                Gene Signatures ({{ report.gene_signatures|length }})
+            </a>
             <div class="table-responsive">
                 <table class="table data-table responsive">
                     <thead>

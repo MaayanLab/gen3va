@@ -135,6 +135,9 @@
 #report-page #gene-signatures-table .download-link {
   margin-bottom: 20px;
 }
+#report-page #gene-signatures-table #more-signatures-btn {
+  margin-bottom: 10px;
+}
 #report-page iframe {
   border: none;
   height: 800px;
@@ -217,12 +220,15 @@
   padding-right: 10px;
   width: 30%;
 }
+#tag-page #all-reports-btn {
+  margin-bottom: 5px;
+}
 #tag-page #custom-report-builder {
   margin-bottom: 20px;
 }
 #tag-page #custom-report-builder .description {
   background: #f9f9f9;
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 10px;
 }
 #tag-page #custom-report-builder .description h4 {

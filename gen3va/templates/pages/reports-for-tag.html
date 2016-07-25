@@ -12,16 +12,11 @@
         <div class='signatures-and-approved-report'>
             {% if tag.approved_report %}
                 <div class='section'>
-                    <a class='btn btn-primary' href='{{ config.REPORT_URL }}/approved/{{ tag.name }}'>
+                    <a class='btn btn-primary' href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>
                         Approved Report
                     </a>
                 </div>
             {% endif %}
-            <div class='section'>
-                <a class='btn btn-info' href='{{ config.TAG_URL }}/{{ tag.name }}'>
-                    Gene Signatures ({{ tag.gene_signatures|length }})
-                </a>
-            </div>
         </div>
 
         {% if tag.custom_reports|length > 0 %}

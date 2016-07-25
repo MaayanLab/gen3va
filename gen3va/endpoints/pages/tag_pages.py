@@ -1,9 +1,9 @@
 """Renders tag pages.
 """
 
-from flask import Blueprint, render_template
+from flask import abort, Blueprint, render_template
 
-from substrate import Tag
+from substrate import Report, Tag
 from gen3va.config import Config
 from gen3va import database
 
@@ -20,25 +20,38 @@ def view_all_tags():
                            tags=tags)
 
 
-@tag_pages.route('/<tag_name>', methods=['GET'])
-def view_individual_tag(tag_name):
+@tag_pages.route('/<string:tag_name>', methods=['GET'])
+def view_approved_tag(tag_name):
     tag = database.get(Tag, tag_name, key='name')
     if tag is None:
-        message = 'No gene signatures with tag "%s" found' % tag_name
-        return render_template('pages/404.html', message=message)
+        abort(404)
     else:
-        metadata = _get_metadata_names_and_percentages(tag)
-        return render_template('pages/tag.html', tag=tag, metadata=metadata)
+        signatures = tag.gene_signatures
+        metadata = _get_metadata_names_and_percentages(signatures)
+        return render_template('pages/tag.html', tag=tag,
+                               gene_signatures=signatures,
+                               metadata=metadata)
 
 
-def _get_metadata_names_and_percentages(tag):
+@tag_pages.route('/<int:report_id>', methods=['GET'])
+def view_custom_tag(report_id):
+    report = database.get(Report, report_id)
+    if report is None:
+        return abort(404)
+    else:
+        signatures = report.gene_signatures
+        return render_template('pages/tag.html', tag=report.tag,
+                               gene_signatures=signatures)
+
+
+def _get_metadata_names_and_percentages(signatures):
     metadata = {}
-    for sig in tag.gene_signatures:
+    for sig in signatures:
         for meta in sig.filtered_optional_metadata:
             if meta.name not in metadata:
                 metadata[meta.name] = 0
             metadata[meta.name] += 1
-    num_sigs = len(tag.gene_signatures)
+    num_sigs = len(signatures)
     for name, count in metadata.iteritems():
         metadata[name] = round((float(count) / num_sigs) * 100, 2)
     return metadata
