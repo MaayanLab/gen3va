@@ -38,9 +38,9 @@ def build_custom(tag, gene_signatures, report_name, category):
     """Builds a custom report.
     """
     with session_scope() as session:
-        if gene_signatures:
-            report = Report(tag, _gene_signatures=gene_signatures,
-                            is_approved=False, name=report_name)
+        report = Report(tag, _gene_signatures=gene_signatures,
+                        is_approved=False, name=report_name,
+                        category=category)
         session.add(report)
         session.commit()
     _build(report.id, category)

@@ -16,7 +16,6 @@ $(function() {
     function setupSelectAll() {
         var $allCheckboxes = $($dataTable.cells().nodes()).find('input.consensus');
 
-
         $('#select-all').click(function(evt) {
             var searchText = $('.dataTables_filter input').val();
             if ($(evt.target).prop('checked')) {
@@ -42,6 +41,7 @@ $(function() {
     function setupBuildReportListener() {
         $('#custom-report-builder button').click(function() {
             var chbxs = getSelectedCheckboxes(),
+                metadataField = getMetadataField(),
                 reportName = $('input[name="report-name"]').val();
             if (!isValidSelection(chbxs)) {
                 return;
@@ -52,21 +52,25 @@ $(function() {
             }
             var parts = window.location.href.split('/'),
                 tag = parts[parts.length-1];
-            requestReport(chbxs, tag, reportName);
+            requestReport(chbxs, tag, reportName, metadataField);
         });
     }
 
     /* Kicks off custom report builder and redirects user.
      */
-    function requestReport(chbxs, tag, reportName) {
+    function requestReport(chbxs, tag, reportName, category) {
+        var payload = {
+            gene_signatures: chbxs,
+            report_name: reportName
+        };
+        if (category) {
+            payload['category'] = category
+        }
         $.ajax({
             url: 'report/custom/' + tag,
             type: 'POST',
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({
-                gene_signatures: chbxs,
-                report_name: reportName
-            }),
+            data: JSON.stringify(payload),
             success: function(data) {
                 window.location = data.new_url;
             }
@@ -99,5 +103,16 @@ $(function() {
             return false;
         }
         return true;
+    }
+
+    /* Helper function that returns the metadata field if one has been
+     * selected.
+     */
+    function getMetadataField() {
+        var value = $('#custom-report-builder select').val();
+        if (value === '(Select a metadata field)') {
+            return;
+        }
+        return value
     }
 });

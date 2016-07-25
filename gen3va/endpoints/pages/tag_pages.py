@@ -27,4 +27,18 @@ def view_individual_tag(tag_name):
         message = 'No gene signatures with tag "%s" found' % tag_name
         return render_template('pages/404.html', message=message)
     else:
-        return render_template('pages/tag.html', tag=tag)
+        metadata = _get_metadata_names_and_percentages(tag)
+        return render_template('pages/tag.html', tag=tag, metadata=metadata)
+
+
+def _get_metadata_names_and_percentages(tag):
+    metadata = {}
+    for sig in tag.gene_signatures:
+        for meta in sig.filtered_optional_metadata:
+            if meta.name not in metadata:
+                metadata[meta.name] = 0
+            metadata[meta.name] += 1
+    num_sigs = len(tag.gene_signatures)
+    for name, count in metadata.iteritems():
+        metadata[name] = round((float(count) / num_sigs) * 100, 2)
+    return metadata

@@ -256,6 +256,9 @@
 #tag-page #custom-report-builder #pca-container {
   margin-top: 20px;
 }
+#tag-page #custom-report-builder select {
+  margin-bottom: 10px;
+}
 #collections-page #instructions {
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;

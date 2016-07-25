@@ -46,6 +46,7 @@ def view_custom_report(report_id, tag_name):
     """
     tag = database.get(Tag, tag_name, 'name')
     report = database.get(Report, report_id)
+    print(report.category)
     if not tag or not report:
         return render_template('pages/404.html')
     if report.pca_plot:
@@ -62,7 +63,7 @@ def view_custom_report(report_id, tag_name):
 def build_custom_report(tag_name):
     """Builds a custom report.
     """
-    category = request.args.get('category')
+    category = request.json.get('category')
     report_name = request.json.get('report_name')
     tag = database.get(Tag, tag_name, 'name')
     if not tag:

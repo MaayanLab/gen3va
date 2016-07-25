@@ -20,8 +20,17 @@
                             <li>Using the checkboxes in the right-most column, select gene signatures.</li>
                             <li>Select at least 3 signatures.</li>
                             <li>Name the report.</li>
+                            <li>(Optional) Select a metadata field upon which to cluster. The </li>
                             <li>Click <em>Build report</em></li>
                         </ol>
+                        <div>
+                            <select>
+                                <option>(Select a metadata field)</option>
+                                {% for name, pct in metadata.iteritems() %}
+                                    <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         <div>
                             <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
                         </div>
