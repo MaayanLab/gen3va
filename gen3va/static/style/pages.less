@@ -317,12 +317,37 @@
   input {
     border-radius: 0;
   }
-  //#tag-list {
-  //  margin-top: 30px;
-  //  & > li {
-  //    border-bottom: 1px solid @color-gray-light;
-  //    margin-top: 5px;
-  //    padding-bottom: 5px;
-  //  }
-  //}
+}
+
+#docs-page {
+  h1.selected {
+    background-color: @color-yellow;
+  }
+
+  #doc-nav {
+    background-color: @color-gray-light;
+    padding: 10px;
+
+    ol {
+      margin-bottom: 0;
+      padding-left: 30px;
+
+      li,
+      li a {
+        font-family: @font-family-accent;
+        font-size: 20px;
+        font-weight: 200;
+      }
+      li {
+        margin: 5px 0;
+
+        a {
+          color: black;
+          &:hover {
+            color: @color-blue;
+          }
+        }
+      }
+    }
+  }
 }

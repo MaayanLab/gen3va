@@ -1,0 +1,15 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Documentation{% endblock %}
+
+{% block body %}
+
+    <div class="page" id="upload-page">
+        <h1>Upload</h1>
+        <form action="api/1.0/upload" method="post">
+            <input name="foo" value="bar"/>
+            <input type="submit"/>
+        </form>
+    </div>
+
+{% endblock %}

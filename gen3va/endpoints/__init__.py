@@ -2,7 +2,7 @@
 """
 
 from api.download_api import download_api
-from api.signature_search_api import signature_search_api
+from api.upload_api import upload_api
 
 from pages.admin_pages import admin_pages
 from pages.auth_pages import auth_pages

@@ -45,9 +45,14 @@ def collections():
                            tags=tags)
 
 
-@menu_pages.route('/documentation', methods=['GET'])
-def documentation():
-    return render_template('pages/documentation.html')
+@menu_pages.route('/upload', methods=['GET'])
+def upload():
+    return render_template('pages/upload.html')
+
+
+@menu_pages.route('/docs', methods=['GET'])
+def docs():
+    return render_template('pages/docs.html')
 
 
 @menu_pages.route('/statistics', methods=['GET'])

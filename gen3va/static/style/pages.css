@@ -277,3 +277,29 @@
 #collections-page input {
   border-radius: 0;
 }
+#docs-page h1.selected {
+  background-color: #fff169;
+}
+#docs-page #doc-nav {
+  background-color: #eeeeee;
+  padding: 10px;
+}
+#docs-page #doc-nav ol {
+  margin-bottom: 0;
+  padding-left: 30px;
+}
+#docs-page #doc-nav ol li,
+#docs-page #doc-nav ol li a {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+}
+#docs-page #doc-nav ol li {
+  margin: 5px 0;
+}
+#docs-page #doc-nav ol li a {
+  color: black;
+}
+#docs-page #doc-nav ol li a:hover {
+  color: #1689E5;
+}

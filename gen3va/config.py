@@ -27,6 +27,7 @@ class Config(object):
     TAG_URL = BASE_URL + '/tag'
     METADATA_URL = BASE_URL + '/metadata'
     DOWNLOAD_URL = BASE_URL + '/download'
+    UPLOAD_URL = BASE_API_URL + '/upload'
 
     SQLALCHEMY_DATABASE_URI = lines[0]
 
