@@ -40,7 +40,10 @@ def view_custom_tag(report_id):
         return abort(404)
     else:
         signatures = report.gene_signatures
-        return render_template('pages/tag.html', tag=report.tag,
+        # The signatures for a custom report are a subset of signatures for
+        # the main report. We show "tag-custom.html" because we do not want
+        # users to build custom reports from these subsets.
+        return render_template('pages/tag-custom.html', tag=report.tag,
                                gene_signatures=signatures)
 
 

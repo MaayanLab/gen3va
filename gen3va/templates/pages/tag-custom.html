@@ -4,8 +4,6 @@
 
 {% block body %}
 
-    <script src='static/js/custom-report-builder.js'></script>
-
     <div class='page' id='tag-page'>
 
         <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
@@ -15,34 +13,12 @@
             All reports
         </a>
 
-        <div id='custom-report-builder'>
-            <div class='description'>
-                <div class='row'>
-                    <div class='col-md-12'>
-                        <h4>Build a custom report</h4>
-                        <ol>
-                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
-                            <li>Select at least 3 signatures.</li>
-                            <li>Name the report.</li>
-                            <li>(Optional) Select a metadata field upon which to categorize the signatures. The percentage indicates what percentage of gene signatures have values for that metadata field.</li>
-                            <li>Click <em>Build report</em></li>
-                        </ol>
-                        <div>
-                            <select>
-                                <option>(Select a metadata field)</option>
-                                {% for name, pct in metadata.iteritems() %}
-                                    <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div>
-                            <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
-                        </div>
-                        <button class='btn btn-info'>Build report</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p>
+            <a class='btn btn-info'
+               href='{{ config.TAG_URL }}/{{ tag.name }}'>
+                All gene signatures
+            </a>
+        </p>
 
         <div class='table-responsive'>
             <table class='table data-table responsive'>
@@ -53,9 +29,6 @@
                         <th>Organism</th>
                         <th>Platform</th>
                         <th>Optional Metadata</th>
-                        <th>
-                            <input type='checkbox' id='select-all'/>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,9 +59,6 @@
                                         </table>
                                     </div>
                                 {% endif %}
-                            </td>
-                            <td class='select-box'>
-                                <input type='checkbox' class='consensus' name='{{ gene_signature.extraction_id }}'>
                             </td>
                         </tr>
                     {% endfor %}

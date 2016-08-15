@@ -12,8 +12,8 @@
         <h1><strong>{{ tag.name|upper }}</strong> reports ({{ report_count }})</h1>
 
         <div>
-            <a href='{{ config.TAG_URL }}/{{ tag.name }}' class='btn btn-primary'>
-                View signatures ({{ tag.gene_signatures|length }})
+            <a href='{{ config.TAG_URL }}/{{ tag.name }}' class='btn btn-info'>
+                All gene signatures ({{ tag.gene_signatures|length }})
             </a>
         </div>
 
