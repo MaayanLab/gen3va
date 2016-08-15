@@ -44,7 +44,7 @@ def view_custom_tag(report_id):
         # the main report. We show "tag-custom.html" because we do not want
         # users to build custom reports from these subsets.
         return render_template('pages/tag-custom.html', tag=report.tag,
-                               gene_signatures=signatures)
+                               report=report, gene_signatures=signatures)
 
 
 def _get_metadata_names_and_percentages(signatures):

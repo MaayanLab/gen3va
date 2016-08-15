@@ -7,12 +7,20 @@
     <div class='page' id='tag-page'>
 
         <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
-        <a id='all-reports-btn'
-           class='btn btn-primary'
-           href='{{ config.REPORT_URL }}/{{ tag.name }}'>
-            All reports
-        </a>
 
+        <p>
+            <a class='btn btn-primary'
+               href='{{ config.REPORT_URL }}/{{ report.id }}/{{ tag.name }}'>
+                Back to custom report
+            </a>
+        </p>
+        <p>
+            <a id='all-reports-btn'
+               class='btn btn-primary'
+               href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                All reports
+            </a>
+        </p>
         <p>
             <a class='btn btn-info'
                href='{{ config.TAG_URL }}/{{ tag.name }}'>
