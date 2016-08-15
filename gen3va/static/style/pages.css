@@ -98,6 +98,9 @@
 #reports-for-tag-page .custom-reports ul li {
   margin-bottom: 10px;
 }
+#reports-for-tag-page #build-report-btn {
+  margin-top: 5px;
+}
 @media (max-width: 992px) {
   #index-page .bio-category-column {
     width: 100%;

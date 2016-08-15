@@ -24,6 +24,7 @@ class Config(object):
 
     REPORT_URL = BASE_URL + '/report'
     APPROVED_REPORT_URL = REPORT_URL + '/approved'
+    CUSTOM_REPORT_URL = REPORT_URL + '/custom'
     TAG_URL = BASE_URL + '/tag'
     METADATA_URL = BASE_URL + '/metadata'
     DOWNLOAD_URL = BASE_URL + '/download'
