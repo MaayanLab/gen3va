@@ -267,8 +267,7 @@ caption {
     border: none;
     color: white;
     font-family: @font-family-accent;
-    font-size: 16px;
-    font-weight: 300;
+    font-weight: 200;
     text-decoration: none;
     text-transform: uppercase;
     &:hover {
@@ -389,6 +388,17 @@ caption {
     background-color: @color-green;
     &:hover {
       background-color: #4C6E00;
+      -webkit-transition: @background-transition;
+      -moz-transition: @background-transition;
+      -o-transition: @background-transition;
+      -ms-transition: @background-transition;
+      transition: @background-transition;
+    }
+  }
+  &.btn-warning {
+    background-color: @color-yellow-warning;
+    &:hover {
+      background-color: #cc9000;
       -webkit-transition: @background-transition;
       -moz-transition: @background-transition;
       -o-transition: @background-transition;

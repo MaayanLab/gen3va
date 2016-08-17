@@ -1,15 +1,44 @@
 {% extends 'wrapper.html' %}
 
-{% block title %}Documentation{% endblock %}
+{% block title %}Upload{% endblock %}
 
 {% block body %}
 
-    <div class="page" id="upload-page">
+    <script src="static/js/MetadataField.js"></script>
+    <script src="static/js/upload.js"></script>
+
+    <div class='page' id='upload-page'>
         <h1>Upload</h1>
-        <form action="api/1.0/upload" method="post">
-            <input name="foo" value="bar"/>
-            <input type="submit"/>
-        </form>
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    Use this upload form to upload gene signatures one at a time. This is useful if you have just a handful of signatures or if you want to quickly see how GEN3VA works. If you have many gene signatures, please use <a href="http://localhost:8084/gen3va/docs#api">GEN3VA's API</a>.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <form action='api/1.0/upload/form' method='post'>
+                    <div class='form-group'>
+                        <label>Gene signature</label>
+                        <p>Paste in a list of gene symbols optionally followed by a comma and levels of membership.</p>
+                        <button id="example-btn" class="btn btn-info">Example</button>
+                        <textarea name='genes' class='form-control'></textarea>
+                    </div>
+                    <div class='form-group'>
+                        <label>Tag</label>
+                        <p>Add tag(s) by typing a comma-separated list of tag names. Tags should not contain spaces or special characters and are case insensitive.</p>
+                        <input name='tags' type='text' class='form-control' />
+                    </div>
+                    <div id='optional-metadata' class="form-group">
+                        <label>Metadata</label>
+                        <div id="fields"></div>
+                        <button id="add-metadata-btn" class='btn btn-info'>Add metadata field</button>
+                    </div>
+                    <div id='submit-btn-wrapper' class='form-group'>
+                        <input type='submit' class='form-control btn btn-primary' />
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

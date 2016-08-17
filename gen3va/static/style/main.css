@@ -250,8 +250,7 @@ caption {
   border: none;
   color: white;
   font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 300;
+  font-weight: 200;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -365,6 +364,17 @@ caption {
 }
 .btn.btn-info:hover {
   background-color: #4C6E00;
+  -webkit-transition: background-color 200ms linear;
+  -moz-transition: background-color 200ms linear;
+  -o-transition: background-color 200ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+}
+.btn.btn-warning {
+  background-color: #ffb400;
+}
+.btn.btn-warning:hover {
+  background-color: #cc9000;
   -webkit-transition: background-color 200ms linear;
   -moz-transition: background-color 200ms linear;
   -o-transition: background-color 200ms linear;

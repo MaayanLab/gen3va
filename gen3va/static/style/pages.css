@@ -303,3 +303,29 @@
 #docs-page #doc-nav ol li a:hover {
   color: #1689E5;
 }
+#upload-page p,
+#upload-page label {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+}
+#upload-page p {
+  font-weight: 200;
+}
+#upload-page label {
+  font-weight: bold;
+}
+#upload-page textarea {
+  height: 300px;
+  margin-top: 10px;
+}
+#upload-page .metadata input {
+  margin-bottom: 10px;
+}
+#upload-page #add-metadata-btn {
+  display: block;
+  margin-bottom: 10px;
+}
+#upload-page #submit-btn-wrapper {
+  border-top: 1px solid #eeeeee;
+  padding-top: 14px;
+}
