@@ -2,7 +2,7 @@
 """
 
 import requests
-from flask import Blueprint, jsonify, request, redirect, url_for
+from flask import Blueprint, flash, jsonify, request, redirect, url_for
 from flask.ext.cors import cross_origin
 
 from substrate import GeneSignature, Gene, GeneList, RequiredMetadata, \
@@ -39,39 +39,67 @@ def upload_gene_list():
 def upload_gene_list_form():
     """
     """
-    gene_list = _get_gene_list()
-    tags = _get_tags()
-    soft_file = None
-    gene_lists = [gene_list]
-    required_metadata = _get_required_metadata()
-    optional_metadata = _get_optional_metadata()
-    resource = utils.get_or_create(Resource,
-                                   code='upload',
-                                   name='User uploaded gene list')
-    signature = GeneSignature(soft_file,
-                              gene_lists,
-                              required_metadata,
-                              optional_metadata,
-                              tags,
-                              resource)
-    database.add_object(signature)
-    return redirect(
-        url_for('tag_pages.view_approved_tag', tag_name=tags[0].name)
-    )
-    #return 'hello'
+    try:
+        name = request.form.get('name')
+        if not name:
+            flash('Gene signature name is required.', 'error')
+            return redirect(url_for('menu_pages.upload'))
 
+        gene_list = _get_gene_list()
+        if not gene_list:
+            flash('Gene list is required.', 'error')
+            return redirect(url_for('menu_pages.upload'))
+
+        tags = _get_tags()
+        soft_file = None
+        gene_lists = [gene_list]
+        required_metadata = _get_required_metadata()
+        optional_metadata = _get_optional_metadata()
+        resource = utils.get_or_create(Resource,
+                                       code='upload',
+                                       name='User uploaded gene list')
+        signature = GeneSignature(soft_file,
+                                  gene_lists,
+                                  required_metadata,
+                                  optional_metadata,
+                                  tags,
+                                  resource,
+                                  name)
+        database.add_object(signature)
+        return redirect(
+            url_for('tag_pages.view_approved_tag', tag_name=tags[0].name)
+        )
+    except ValueError as e:
+        flash(e.message, 'error')
+        return redirect(url_for('menu_pages.upload'))
 
 def _get_gene_list():
     """
     """
     gene_symbols = request.form.get('genes', '')
+    if not gene_symbols.strip():
+        return None
+
     # New lines in textareas are separated by "\r\n":
     # http://stackoverflow.com/a/14217315
     gene_symbols = gene_symbols.split('\r\n')
     ranked_genes = []
     for symbol in gene_symbols:
-        g = utils.get_or_create(Gene, name=symbol)
-        rg = RankedGene(g, 1)
+        if ',' in symbol:
+            try:
+                parts = symbol.split(',')
+                symbol = parts[0]
+                weight = int(parts[1])
+                rg = RankedGene(symbol, weight)
+            except (IndexError, ValueError, AttributeError):
+                # IndexError: Accessing the `parts` list.
+                # ValueError: Casting a string to an integer.
+                # AttributeError: Passing in the incorrect arguments to `
+                #   RankedGene`.
+                raise ValueError('Error parsing gene list.')
+        else:
+            g = utils.get_or_create(Gene, name=symbol)
+            rg = RankedGene(g, 1)
         ranked_genes.append(rg)
 
     direction = 0

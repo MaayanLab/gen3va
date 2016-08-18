@@ -442,3 +442,16 @@ div.dataTables_wrapper .pagination > .active > span:hover {
     font-size: 20px;
   }
 }
+/* User messages
+ * ----------------- */
+.flashes #error-message {
+  background-color: #F15A5A;
+  color: white;
+  font-size: 16px;
+  padding: 10px 0;
+}
+.flashes #error-message p {
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 100;
+  margin-bottom: 0;
+}

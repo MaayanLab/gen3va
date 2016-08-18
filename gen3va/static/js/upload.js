@@ -31,6 +31,7 @@ $(function() {
         }
         var id = addMetadataField();
         fields[id].setKeyVal('gene', 'STAT3');
+        $('input[name="name"]').val('My test signature');
     }
 
     genes = [

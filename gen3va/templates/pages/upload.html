@@ -7,12 +7,29 @@
     <script src='static/js/MetadataField.js'></script>
     <script src='static/js/upload.js'></script>
 
+    {% with messages = get_flashed_messages(category_filter=['error']) %}
+        {% if messages %}
+        <div class='flashes'>
+            <div id='error-message' class='container-full'>
+                <div class='container'>
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endwith %}
+
     <div class='page' id='upload-page'>
         <div class='ribbon'>
             <div class='container'>
                 <h1>Upload</h1>
                 <p>
                     Use this upload form to upload gene signatures one at a time. This is useful if you have just a handful of signatures or if you want to quickly see how GEN3VA works. If you have many gene signatures, please use <a href='http://localhost:8084/gen3va/docs#api'>GEN3VA's API</a>.
+                </p>
+                <p>
+                    <strong>* Required field</strong>
                 </p>
             </div>
         </div>
@@ -22,7 +39,15 @@
                 <div class='row'>
                     <div class='col-md-4'>
                         <div class='form-group'>
-                            <label>Gene signature</label>
+                            <label>Signature name*</label>
+                            <input type='text' name='name' class='form-control' />
+                        </div>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <div class='form-group'>
+                            <label>Gene list*</label>
                             <p>Paste in a list of gene symbols optionally followed by a comma and levels of membership.</p>
                             <button id='example-btn' class='btn btn-info'>Example</button>
                             <textarea name='genes' class='form-control'></textarea>
