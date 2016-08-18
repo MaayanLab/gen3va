@@ -4,19 +4,19 @@
 
 {% block body %}
 
-    <script src="static/lib/highcharts/highcharts.js"></script>
-    <script src="static/lib/highcharts/highcharts-3d.js"></script>
-    <script src="static/lib/highcharts/highcharts-exporting.js"></script>
+    <script src='static/lib/highcharts/highcharts.js'></script>
+    <script src='static/lib/highcharts/highcharts-3d.js'></script>
+    <script src='static/lib/highcharts/highcharts-exporting.js'></script>
 
-    <link href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
-    <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+    <link href='https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css' rel='stylesheet'/>
+    <script src='https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js'></script>
 
-    <script src="static/lib/d3/d3.js"></script>
-    <script src="static/lib/underscore/underscore.js"></script>
+    <script src='static/lib/d3/d3.js'></script>
+    <script src='static/lib/underscore/underscore.js'></script>
 
-    <script src="static/js/clustergrammer.js"></script>
-    <script src="static/js/report.js"></script>
+    <script src='static/js/clustergrammer.js'></script>
+    <script src='static/js/report.js'></script>
     <script>
         createAndManageVisualizations({
             pcaPlot: {{
@@ -40,142 +40,148 @@
         });
     </script>
 
-    <div class="page" id="report-page">
+    <div class='page' id='report-page'>
 
-        <div class="report-metadata">
-            <h1>
-            {% if report.is_approved %}
-                <strong>{{ tag.name|upper }}</strong> <span>report</span>
-            {% else %}
-                <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
-            {% endif %}
-            </h1>
-            {% if report.category %}
-                <p>Categorized using metadata field <strong>{{ report.category }}</strong></p>
-            {% endif %}
-            <p>
-                <a class="btn btn-primary" href="{{ config.REPORT_URL }}/{{ tag.name }}">
-                    All reports
+        <div class='ribbon'>
+            <div class='container'>
+                <div class='report-metadata'>
+                    <h1>
+                    {% if report.is_approved %}
+                        <strong>{{ tag.name|upper }}</strong> <span>report</span>
+                    {% else %}
+                        <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
+                    {% endif %}
+                    </h1>
+                    {% if report.category %}
+                        <p>Categorized using metadata field <strong>{{ report.category }}</strong></p>
+                    {% endif %}
+                    <p>
+                        <a class='btn btn-primary' href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                            All reports
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class='container'>
+            <!-- Gene signatures -->
+            <div id='gene-signatures-table' class='section'>
+                <h2>Gene signatures</h2>
+                {% if report.is_approved %}
+                    {% set more_signatures_url = config.TAG_URL ~ '/' ~ tag.name %}
+                {% else %}
+                    {% set more_signatures_url = config.TAG_URL ~ '/' ~ report.id %}
+                {% endif %}
+                <a href='{{ more_signatures_url }}' class='btn btn-info' id='more-signatures-btn'>
+                    Gene Signatures ({{ report.gene_signatures|length }})
                 </a>
-            </p>
-        </div>
-
-        <!-- Gene signatures -->
-        <div id="gene-signatures-table" class="section">
-            <h2>Gene signatures</h2>
-            {% if report.is_approved %}
-                {% set more_signatures_url = config.TAG_URL ~ '/' ~ tag.name %}
-            {% else %}
-                {% set more_signatures_url = config.TAG_URL ~ '/' ~ report.id %}
-            {% endif %}
-            <a href="{{ more_signatures_url }}" class="btn btn-info" id="more-signatures-btn">
-                Gene Signatures ({{ report.gene_signatures|length }})
-            </a>
-            <div class="table-responsive">
-                <table class="table data-table responsive">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Title</th>
-                            <th>Organism</th>
-                            <th>Platform</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for gene_signature in report.gene_signatures %}
-                            {% set dataset = gene_signature.soft_file.dataset %}
+                <div class='table-responsive'>
+                    <table class='table data-table responsive'>
+                        <thead>
                             <tr>
-                                <td class="index">{{ loop.index }}</td>
-                                <td class="title">
-                                    {% if gene_signature.is_from_geo %}
-                                        <a data-toggle="tooltip"
-                                           title="Results page for the processed gene signature"
-                                           href="{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}">
-                                             {{ gene_signature.name }}
-                                        </a>
-                                    {% else %}
-                                        {{ gene_signature.name }}
-                                    {% endif %}
-                                </td>
-                                <td class="organism">
-                                    {{ gene_signature.organism|c_filter_empty }}
-                                </td>
-                                <td class="platform">
-                                    {{ gene_signature.platform|c_filter_empty }}
-                                </td>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Organism</th>
+                                <th>Platform</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for gene_signature in report.gene_signatures %}
+                                {% set dataset = gene_signature.soft_file.dataset %}
+                                <tr>
+                                    <td class='index'>{{ loop.index }}</td>
+                                    <td class='title'>
+                                        {% if gene_signature.is_from_geo %}
+                                            <a data-toggle='tooltip'
+                                               title='Results page for the processed gene signature'
+                                               href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
+                                                 {{ gene_signature.name }}
+                                            </a>
+                                        {% else %}
+                                            {{ gene_signature.name }}
+                                        {% endif %}
+                                    </td>
+                                    <td class='organism'>
+                                        {{ gene_signature.organism|c_filter_empty }}
+                                    </td>
+                                    <td class='platform'>
+                                        {{ gene_signature.platform|c_filter_empty }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <div id="heat-maps"></div>
+            <div id='heat-maps'></div>
 
-        <!-- Principal Component Analysis -->
-        <div class="section">
-            <h2>PCA</h2>
-            <div class="description">
-                <p>
-                    Interactive 3D principal component analysis of gene
-                    signatures. You can rotate the visualization and mouse
-                    over the data points.
-                </p>
+            <!-- Principal Component Analysis -->
+            <div class='section'>
+                <h2>PCA</h2>
+                <div class='description'>
+                    <p>
+                        Interactive 3D principal component analysis of gene
+                        signatures. You can rotate the visualization and mouse
+                        over the data points.
+                    </p>
+                </div>
+                <div id='pca-plot'></div>
             </div>
-            <div id="pca-plot"></div>
-        </div>
 
-        <!-- Genes hierarchical clusterings -->
-        <div class="section">
-            <h2>Genes</h2>
-            <div class="description">
-                <p>
-                    Hierarchical clustering of genes based on weights from the
-                    differential expression method.
-                </p>
+            <!-- Genes hierarchical clusterings -->
+            <div class='section'>
+                <h2>Genes</h2>
+                <div class='description'>
+                    <p>
+                        Hierarchical clustering of genes based on weights from the
+                        differential expression method.
+                    </p>
+                </div>
+                <div id='genes-heat-map' class='heat-map'></div>
             </div>
-            <div id="genes-heat-map" class="heat-map"></div>
-        </div>
 
-        <!-- Enrichr hierarchical clusterings -->
-        <div id="enrichr-heat-maps" class="section">
-            <h2>Enrichr</h2>
-            <div class="description">
-                <p>
-                    <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">
-                    Enrichr</a> is a web tool that performs gene set enrichment
-                    analysis. To generate the hierarchical clusterings below,
-                    GEN3VA enriched each gene signature using Enrichr and then
-                    clustered the terms. Use the <strong>select</strong> button
-                    to change Enrichr's background library.
-                </p>
-                <p>
-                    Hierarchical clustering of enriched terms from
-                    <select>
-                        {% for heat_map in report.enrichr_heat_maps %}
-                            <option>{{ heat_map.enrichr_library }}</option>
-                        {% endfor %}
-                    </select>
-                </p>
+            <!-- Enrichr hierarchical clusterings -->
+            <div id='enrichr-heat-maps' class='section'>
+                <h2>Enrichr</h2>
+                <div class='description'>
+                    <p>
+                        <a href='http://amp.pharm.mssm.edu/Enrichr/' target='_blank'>
+                        Enrichr</a> is a web tool that performs gene set enrichment
+                        analysis. To generate the hierarchical clusterings below,
+                        GEN3VA enriched each gene signature using Enrichr and then
+                        clustered the terms. Use the <strong>select</strong> button
+                        to change Enrichr's background library.
+                    </p>
+                    <p>
+                        Hierarchical clustering of enriched terms from
+                        <select>
+                            {% for heat_map in report.enrichr_heat_maps %}
+                                <option>{{ heat_map.enrichr_library }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                </div>
             </div>
-        </div>
 
-        <!-- L1000CD2 hierarchical clusterings -->
-        <div class="section">
-            <h2>L1000CDS2</h2>
-            <div class="description">
-                <p>
-                    <a href="http://amp.pharm.mssm.edu/L1000CDS2" target="_blank">
-                    L1000CDS2</a> is a web tool that queries the LINCS L1000
-                    dataset to identify small molecules that can reverse or
-                    mimic the observed input expression pattern. To generate
-                    the hierarchical clustering below, GEN3VA enriched each
-                    gene signature using L1000CDS2 to generate a list of
-                    perturbations that either mimic (red) and reverse (blue)
-                    expression.
-                </p>
+            <!-- L1000CD2 hierarchical clusterings -->
+            <div class='section'>
+                <h2>L1000CDS2</h2>
+                <div class='description'>
+                    <p>
+                        <a href='http://amp.pharm.mssm.edu/L1000CDS2' target='_blank'>
+                        L1000CDS2</a> is a web tool that queries the LINCS L1000
+                        dataset to identify small molecules that can reverse or
+                        mimic the observed input expression pattern. To generate
+                        the hierarchical clustering below, GEN3VA enriched each
+                        gene signature using L1000CDS2 to generate a list of
+                        perturbations that either mimic (red) and reverse (blue)
+                        expression.
+                    </p>
+                </div>
+                <div id='l1000cds2-heat-map' class='heat-map'></div>
             </div>
-            <div id="l1000cds2-heat-map" class="heat-map"></div>
         </div>
     </div>
 

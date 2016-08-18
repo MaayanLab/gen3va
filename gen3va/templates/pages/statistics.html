@@ -4,50 +4,56 @@
 
 {% block body %}
 
-    <script src="static/lib/highcharts/highcharts.js"></script>
-    <script src="static/js/statistics.js"></script>
+    <script src='static/lib/highcharts/highcharts.js'></script>
+    <script src='static/js/statistics.js'></script>
     <script>
         $(function() {
             buildStats({{ stats_json|safe }});
         });
     </script>
 
-    <div class="page" id="statistics-page">
-        <h1>Statistics</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <h4>Gene signatures by platform</h4>
-                <p>Log10 scale (1 rendered as 0.175)</p>
-                <div id="platforms-bar-chart"></div>
+    <div class='page' id='statistics-page'>
+        <div class='ribbon'>
+            <div class='container'>
+                <h1>Statistics</h1>
             </div>
-            <div class="col-md-6">
-                <h4>Counts</h4>
-                <table class="table">
-                    <tr>
-                        <td>Gene signatures</td>
-                        <td>{{ stats.num_gene_signatures }}</td>
-                    </tr>
-                    <tr>
-                        <td>Gene lists</td>
-                        <td>{{ stats.num_gene_lists }}</td>
-                    </tr>
-                    <tr>
-                        <td>Tags</td>
-                        <td>
-                            <a href="tag">{{ stats.num_tags }}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Reports</td>
-                        <td>
-                            <a href="report">{{ stats.num_reports }}</a>
-                        </td>
-                    </tr>
-                    <tr class="last">
-                        <td>Platforms</td>
-                        <td>{{ stats.num_platforms }}</td>
-                    </tr>
-                </table>
+        </div>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-md-6'>
+                    <h4>Gene signatures by platform</h4>
+                    <p class='instruction'>Log10 scale (1 rendered as 0.175)</p>
+                    <div id='platforms-bar-chart'></div>
+                </div>
+                <div class='col-md-6'>
+                    <h4>Counts</h4>
+                    <table class='table'>
+                        <tr>
+                            <td>Gene signatures</td>
+                            <td>{{ stats.num_gene_signatures }}</td>
+                        </tr>
+                        <tr>
+                            <td>Gene lists</td>
+                            <td>{{ stats.num_gene_lists }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tags</td>
+                            <td>
+                                <a href='tag'>{{ stats.num_tags }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Reports</td>
+                            <td>
+                                <a href='report'>{{ stats.num_reports }}</a>
+                            </td>
+                        </tr>
+                        <tr class='last'>
+                            <td>Platforms</td>
+                            <td>{{ stats.num_platforms }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -11,16 +11,28 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="first">
-                    <a href="collections">All Collections</a>
+                    <a href="collections"
+                       class="{{ 'highlight' if menu_item == 'collections' else '' }}">
+                        All Collections
+                    </a>
                 </li>
                 <li>
-                    <a href="upload">Upload</a>
+                    <a href="upload"
+                       class="{{ 'highlight' if menu_item == 'upload' else '' }}">
+                        Upload
+                    </a>
                 </li>
                 <li>
-                    <a href="docs">Docs</a>
+                    <a href="documentation"
+                       class="{{ 'highlight' if menu_item == 'documentation' else '' }}">
+                        Docs
+                    </a>
                 </li>
                 <li>
-                    <a href="statistics">Stats</a>
+                    <a href="statistics"
+                       class="{{ 'highlight' if menu_item == 'stats' else '' }}">
+                        Stats
+                    </a>
                 </li>
                 {% if config.user and config.user.is_authenticated %}
                     <li>

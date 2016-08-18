@@ -6,72 +6,78 @@
 
     <div class='page' id='tag-page'>
 
-        <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
+        <div class='ribbon'>
+            <div class='container'>
+                <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
+                <p>
+                    <a class='btn btn-primary'
+                       href='{{ config.REPORT_URL }}/{{ report.id }}/{{ tag.name }}'>
+                        Back to custom report
+                    </a>
+                </p>
+                <p>
+                    <a id='all-reports-btn'
+                       class='btn btn-primary'
+                       href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                        All reports
+                    </a>
+                </p>
+            </div>
+        </div>
 
-        <p>
-            <a class='btn btn-primary'
-               href='{{ config.REPORT_URL }}/{{ report.id }}/{{ tag.name }}'>
-                Back to custom report
-            </a>
-        </p>
-        <p>
-            <a id='all-reports-btn'
-               class='btn btn-primary'
-               href='{{ config.REPORT_URL }}/{{ tag.name }}'>
-                All reports
-            </a>
-        </p>
-        <p>
-            <a class='btn btn-info'
-               href='{{ config.TAG_URL }}/{{ tag.name }}'>
-                All gene signatures
-            </a>
-        </p>
+        <div class='container'>
+            <p>
+                <a class='btn btn-info'
+                   href='{{ config.TAG_URL }}/{{ tag.name }}'>
+                    All gene signatures
+                </a>
+            </p>
 
-        <div class='table-responsive'>
-            <table class='table data-table responsive'>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Organism</th>
-                        <th>Platform</th>
-                        <th>Optional Metadata</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gene_signature in gene_signatures %}
+            <div class='table-responsive'>
+                <table class='table data-table responsive'>
+                    <thead>
                         <tr>
-                            <td class='index'>{{ loop.index }}</td>
-                            <td class='title'>
-                                <a data-toggle='tooltip'
-                                   title='Results page for the processed gene signature'
-                                   href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
-                                     {{ gene_signature.name|truncate(50) }}
-                                </a>
-                            </td>
-                            <td class='organism'>
-                                {{ gene_signature.organism|c_filter_empty }}
-                            </td>
-                            <td class='platform'>{{ gene_signature.platform|c_filter_empty }}</td>
-                            <td class='optional-metadata'>
-                                {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                    <div class='optional-metadata-content'>
-                                        <table>
-                                        {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                            <tr>
-                                                <td>{{ opt_meta.name|capitalize }}</td>
-                                                <td>{{ opt_meta.value|truncate(25) }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            </td>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Organism</th>
+                            <th>Platform</th>
+                            <th>Optional Metadata</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for gene_signature in gene_signatures %}
+                            <tr>
+                                <td class='index'>{{ loop.index }}</td>
+                                <td class='title'>
+                                    <a data-toggle='tooltip'
+                                       title='Results page for the processed gene signature'
+                                       href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
+                                         {{ gene_signature.name|truncate(50) }}
+                                    </a>
+                                </td>
+                                <td class='organism'>
+                                    {{ gene_signature.organism|c_filter_empty }}
+                                </td>
+                                <td class='platform'>{{ gene_signature.platform|c_filter_empty }}</td>
+                                <td class='optional-metadata'>
+                                    {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                        <div class='optional-metadata-content'>
+                                            <table>
+                                            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                                <tr>
+                                                    <td>{{ opt_meta.name|capitalize }}</td>
+                                                    <td>{{ opt_meta.value|truncate(25) }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </table>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

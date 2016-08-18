@@ -4,27 +4,33 @@
 
 {% block body %}
 
-    <div class="page" id="reports-all-page">
-        <h1>Reports <span class="note">{{ reports|length }} reports</span></h1>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Report</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for report in reports %}
+    <div class='page' id='reports-all-page'>
+        <div class='ribbon'>
+            <div class='container'>
+                <h1>Reports <span class='note'>{{ reports|length }} reports</span></h1>
+            </div>
+        </div>
+        <div class='container'>
+            <div class='table-responsive'>
+                <table class='table'>
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="{{ report_url }}/{{ report.tag.name }}">
-                                    {{ report.tag.name|upper }}
-                                </a>
-                            </td>
+                            <th>Report</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                            <tr>
+                                <td>
+                                    <a href='{{ report_url }}/{{ report.tag.name }}'>
+                                        {{ report.tag.name|upper }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

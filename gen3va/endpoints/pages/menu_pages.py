@@ -28,7 +28,7 @@ def index():
         # to see only signatures by a specific curator.
         curators = None
     else:
-        bio_categories = database.get_all(BioCategory)
+        bio_categories = database.get_bio_categories()
         curators = _curators_with_approved_reports()
     bio_category_names = json.dumps([cat.name for cat in bio_categories])
     return render_template('index.html',
@@ -42,17 +42,20 @@ def index():
 def collections():
     tags = database.get_all(Tag)
     return render_template('pages/collections.html',
-                           tags=tags)
+                           tags=tags,
+                           menu_item='collections')
 
 
 @menu_pages.route('/upload', methods=['GET'])
 def upload():
-    return render_template('pages/upload.html')
+    return render_template('pages/upload.html',
+                           menu_item='upload')
 
 
-@menu_pages.route('/docs', methods=['GET'])
-def docs():
-    return render_template('pages/docs.html')
+@menu_pages.route('/documentation', methods=['GET'])
+def documentation():
+    return render_template('pages/documentation.html',
+                           menu_item='documentation')
 
 
 @menu_pages.route('/statistics', methods=['GET'])
@@ -61,7 +64,8 @@ def statistics():
     stats_json = json.dumps(stats)
     return render_template('pages/statistics.html',
                            stats=stats,
-                           stats_json=stats_json)
+                           stats_json=stats_json,
+                           menu_item='stats')
 
 
 # Utility methods

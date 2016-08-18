@@ -9,55 +9,60 @@
         {% set num_custom_reports = tag.custom_reports|length %}
         {% set report_count = 1+num_custom_reports if tag.approved_report else num_custom_reports %}
 
-        <h1><strong>{{ tag.name|upper }}</strong> reports ({{ report_count }})</h1>
-
-        <div>
-            <a href='{{ config.TAG_URL }}/{{ tag.name }}' class='btn btn-info'>
-                All gene signatures ({{ tag.gene_signatures|length }})
-            </a>
+        <div class='ribbon'>
+            <div class='container'>
+                <h2><strong>{{ tag.name|upper }}</strong> reports ({{ report_count }})</h2>
+            </div>
         </div>
 
-        {% if tag.approved_report %}
-            <div class='signatures-and-approved-report'>
-                <div class='section'>
-                    <a class='btn btn-primary' href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>
-                        Approved Report
-                    </a>
+        <div class='container'>
+            <div>
+                <a href='{{ config.TAG_URL }}/{{ tag.name }}' class='btn btn-info'>
+                    All gene signatures ({{ tag.gene_signatures|length }})
+                </a>
+            </div>
+
+            {% if tag.approved_report %}
+                <div class='signatures-and-approved-report'>
+                    <div class='section'>
+                        <a class='btn btn-primary' href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>
+                            Approved Report
+                        </a>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
 
-        {% if has_no_reports and has_enough_signatures %}
-            <p id='build-report-btn'>
-                <form action='{{ config.CUSTOM_REPORT_URL }}/all/{{ tag.name }}' method='post'>
-                    <button type='submit' class='btn btn-primary'>
-                        Build a report from all signatures
-                    </button>
-                </form>
-            </p>
-        {% endif %}
+            {% if has_no_reports and has_enough_signatures %}
+                <p id='build-report-btn'>
+                    <form action='{{ config.CUSTOM_REPORT_URL }}/all/{{ tag.name }}' method='post'>
+                        <button type='submit' class='btn btn-primary'>
+                            Build a report from all signatures
+                        </button>
+                    </form>
+                </p>
+            {% endif %}
 
-        {% if not has_enough_signatures %}
-            <p>This tag does not have enough signatures (n &ge; 3) to build a report.</p>
-        {% endif %}
+            {% if not has_enough_signatures %}
+                <p>This tag does not have enough signatures (n &ge; 3) to build a report.</p>
+            {% endif %}
 
-        {% if tag.custom_reports|length > 0 %}
-            <div class='custom-reports'>
-                <h3>Custom Reports</h3>
-                <ul class='list-unstyled'>
-                    {% for report in tag.custom_reports %}
-                        <li>
-                            <a class='btn btn-primary'
-                               href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'
-                            >
-                                Report {{ report.id }} - {{ report.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
+            {% if tag.custom_reports|length > 0 %}
+                <div class='custom-reports'>
+                    <h3>Custom Reports</h3>
+                    <ul class='list-unstyled'>
+                        {% for report in tag.custom_reports %}
+                            <li>
+                                <a class='btn btn-primary'
+                                   href='{{ config.REPORT_URL }}/{{ report.id }}/{{ report.tag.name }}'
+                                >
+                                    Report {{ report.id }} - {{ report.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
 {% endblock %}

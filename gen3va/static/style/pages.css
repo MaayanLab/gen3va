@@ -8,34 +8,67 @@
 /* Misc.
  * ------------------------------------------------------------------------ */
 .page {
-  margin-top: 40px;
+  padding-bottom: 50px;
 }
-.page h1 {
-  border-bottom: 1px solid #aaaaaa;
+.page .ribbon {
+  background-color: #f9f9f9;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  padding: 10px 0 20px 0;
+  margin-bottom: 20px;
+}
+.page .ribbon h1 {
   padding-bottom: 5px;
 }
-#index-page {
-  margin-top: 30px;
+.page .dataTables_filter {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
 }
 #index-page button {
   background-color: #f9f9f9;
 }
-#index-page #introduction {
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 200;
-  margin-bottom: 30px;
+#index-page .ribbon input {
+  height: 45px;
+  margin-top: 20px;
+  padding: 6px 12px 4px 12px;
 }
-#index-page #introduction h1 {
-  font-weight: 500;
+#index-page .ribbon input::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+}
+#index-page .ribbon input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+#index-page .ribbon input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+#index-page .ribbon input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
 }
 #index-page #filters button.curated {
   color: white;
 }
 #index-page #bio-categories-wrapper #bio-categories {
-  background-color: #f9f9f9;
   border: 1px solid #eeeeee;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   padding-bottom: 20px;
 }
@@ -50,13 +83,9 @@
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category {
   padding: 0 10px;
 }
-#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category a {
-  font-size: 14px;
-}
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category h3 {
-  background-color: #1689E5;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);
-  color: white;
+  border-bottom: 2px solid #1689E5;
+  font-weight: 500;
   padding: 5px 10px;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul {
@@ -67,11 +96,13 @@
   margin-bottom: 3px;
   padding-bottom: 3px;
 }
-#index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p,
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li a {
-  font-size: 13px;
+  font-size: 18px;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 300;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p {
+  font-size: 13px;
   margin: 0;
 }
 #index-page #bio-categories-wrapper #bio-categories .bio-category-column .bio-category ul li p.name {
@@ -115,7 +146,7 @@
 #statistics-page table {
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
-  font-weight: 200;
+  font-weight: 100;
 }
 #report-page h2 {
   border-bottom: 1px solid #eeeeee;
@@ -192,13 +223,18 @@
   margin: -1px 0 0 0;
   top: 100%;
 }
-#tag-page .note,
 #tags-all-page .note,
-#report-page .note,
 #reports-all-page .note {
-  font-size: 12px;
-  font-weight: normal;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
   margin-left: 15px;
+}
+#tags-all-page table a,
+#reports-all-page table a {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 18px;
+  font-weight: 100;
 }
 #tag-page table {
   margin-top: 30px;
@@ -224,17 +260,16 @@
   width: 30%;
 }
 #tag-page #custom-report-builder {
-  margin-bottom: 20px;
+  border-top: 1px solid #aaaaaa;
+  margin-top: 20px;
 }
 #tag-page #custom-report-builder .description {
-  background: #f9f9f9;
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 20px;
 }
 #tag-page #custom-report-builder .description h4 {
   margin: 0;
 }
-#tag-page #custom-report-builder input.form-control {
+#tag-page #custom-report-builder input {
   margin-bottom: 10px;
 }
 #tag-page #custom-report-builder .options button {
@@ -245,73 +280,104 @@
   margin-top: 10px;
   padding-left: 20px;
 }
-#tag-page #custom-report-builder #pca-container,
-#tag-page #custom-report-builder #clustergrammer-preview,
-#tag-page #custom-report-builder #l1000cds2-preview,
-#tag-page #custom-report-builder #enrichr-preview {
-  display: none;
-}
-#tag-page #custom-report-builder #clustergrammer-preview iframe,
-#tag-page #custom-report-builder #enrichr-preview iframe,
-#tag-page #custom-report-builder #l1000cds2-preview iframe {
-  border: 1px solid #eeeeee;
-  height: 1000px;
-  margin-top: 20px;
-  width: 100%;
-}
-#tag-page #custom-report-builder #pca-container {
-  margin-top: 20px;
-}
 #tag-page #custom-report-builder select {
+  background-color: white;
   margin-bottom: 10px;
 }
 #collections-page #instructions {
   font-family: 'Roboto', arial, sans-serif;
   font-size: 16px;
-  font-weight: 200;
+  font-weight: 100;
   margin-bottom: 30px;
 }
 #collections-page #instructions h1 {
   font-weight: 500;
 }
+#collections-page table td,
+#collections-page table th,
+#collections-page table a {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 18px;
+  font-weight: 100;
+}
+#collections-page table th {
+  font-weight: 500;
+}
 #collections-page input {
-  border-radius: 0;
+  height: 45px;
+  margin-top: 20px;
+  padding: 6px 12px 4px 12px;
 }
-#docs-page h1.selected {
-  background-color: #fff169;
-}
-#docs-page #doc-nav {
-  background-color: #eeeeee;
-  padding: 10px;
-}
-#docs-page #doc-nav ol {
-  margin-bottom: 0;
-  padding-left: 30px;
-}
-#docs-page #doc-nav ol li,
-#docs-page #doc-nav ol li a {
+#collections-page input::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
   font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 200;
+  font-weight: 100;
+  color: #aaaaaa;
 }
-#docs-page #doc-nav ol li {
+#collections-page input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+#collections-page input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+#collections-page input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+  color: #aaaaaa;
+}
+#documentation-page #documentation-nav ol {
+  margin-bottom: 0;
+  padding-left: 23px;
+}
+#documentation-page #documentation-nav ol li,
+#documentation-page #documentation-nav ol li a {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
+}
+#documentation-page #documentation-nav ol li {
   margin: 5px 0;
 }
-#docs-page #doc-nav ol li a {
+#documentation-page #documentation-nav ol li a {
   color: black;
 }
-#docs-page #doc-nav ol li a:hover {
+#documentation-page #documentation-nav ol li a:hover {
   color: #1689E5;
+}
+#documentation-page #sections h2 {
+  border-bottom: 1px solid #aaaaaa;
+}
+#documentation-page #sections h2.selected {
+  background-color: #fff169;
+}
+#documentation-page #sections p {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 100;
 }
 #upload-page p,
 #upload-page label {
   font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
 }
 #upload-page p {
-  font-weight: 200;
+  font-size: 16px;
+  font-weight: 300;
 }
 #upload-page label {
+  font-size: 18px;
   font-weight: bold;
 }
 #upload-page textarea {
@@ -328,4 +394,7 @@
 #upload-page #submit-btn-wrapper {
   border-top: 1px solid #eeeeee;
   padding-top: 14px;
+}
+#four-zero-four-page {
+  margin-top: 20px;
 }

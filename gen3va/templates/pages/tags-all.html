@@ -5,26 +5,34 @@
 {% block body %}
 
     <div class="page" id="tags-all-page">
-        <h1>Tags <span class="note">{{ tags|length }} metadata tags</span></h1>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Tag</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tag in tags %}
-                        {% if tag.name|c_filter_empty %}
-                            <tr>
-                                <td>
-                                    <a href="{{ config.TAG_URL }}/{{ tag.name }}">{{ tag.name|upper }}</a>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class='ribbon'>
+            <div class='container'>
+                <h1>Tags <span class="note">{{ tags|length }} metadata tags</span></h1>
+            </div>
+        </div>
+        <div class='container'>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tag</th>
+                            <th>Gene Signatures</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tag in tags %}
+                            {% if tag.name|c_filter_empty %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ config.TAG_URL }}/{{ tag.name }}">{{ tag.name|upper }}</a>
+                                    </td>
+                                    <td>{{ tag.gene_signatures|length }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

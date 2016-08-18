@@ -7,37 +7,44 @@
     <script src="static/js/collections.js"></script>
 
     <div class='page' id='collections-page'>
-        <h1>All Collections</h1>
-        <div id="instructions">
-            <p>
-                This area lists all collections of gene signatures, both approved and not. An <em>approved</em> report is one for which the Ma'ayan Lab either collected the signatures or quality controlled the collection in some way.
-            </p>
+
+        <div class='ribbon'>
+            <div class='container'>
+                <h1>Collections</h1>
+                <div id="instructions">
+                    <p>
+                        This area lists all collections of gene signatures, both approved and not. An <em>approved</em> report is one for which the Ma'ayan Lab either collected the signatures or quality controlled the collection in some way.
+                    </p>
+                </div>
+                <input id='search-box' class='form-control' placeholder='Search collections'/>
+            </div>
         </div>
-        <input id='search-box' class='form-control' placeholder='Search collections'/>
-        <table class='table'>
-            <thead>
-                <tr>
-                    <th>Tag</th>
-                    <th>Signatures</th>
-                    <th>Approved</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for tag in tags %}
-                <tr>
-                    <td>
-                        <a href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
-                    </td>
-                    <td>{{ tag.gene_signatures|length }}</td>
-                    <td>
-                        {% if (tag.approved_report and tag.approved_report.ready) %}
-                            Yes
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class='container'>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Signatures</th>
+                        <th>Approved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <td>
+                            <a href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
+                        </td>
+                        <td>{{ tag.gene_signatures|length }}</td>
+                        <td>
+                            {% if (tag.approved_report and tag.approved_report.ready) %}
+                                Yes
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 {% endblock %}

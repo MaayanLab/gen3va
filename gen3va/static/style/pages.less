@@ -1,25 +1,66 @@
 @import 'variable.less';
 
 .page {
-  margin-top: 40px;
-  h1 {
-    border-bottom: 1px solid @color-gray;
-    padding-bottom: 5px;
+  padding-bottom: 50px;
+
+  .ribbon {
+    background-color: @color-page-ribbon;
+    font-family: @font-family-accent;
+    font-size: 18px;
+    font-weight: 300;
+    padding: 10px 0 20px 0;
+    margin-bottom: 20px;
+
+    h1 {
+      padding-bottom: 5px;
+    }
+  }
+
+  .dataTables_filter {
+    font-family: @font-family-accent;
+    font-size: 16px;
   }
 }
 
 #index-page {
-  margin-top: 30px;
+
   button {
     background-color: @color-gray-very-light;
   }
-  #introduction {
-    font-family: @font-family-accent;
-    font-size: 16px;
-    font-weight: 200;
-    margin-bottom: 30px;
-    h1 {
-      font-weight: 500;
+
+  .ribbon {
+
+    input {
+      height: 45px;
+      margin-top: 20px;
+      padding: 6px 12px 4px 12px;
+
+      &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        font-family: @font-family-accent;
+        font-size: 20px;
+        font-weight: 100;
+        color: @color-gray;
+      }
+      &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        font-family: @font-family-accent;
+        font-size: 20px;
+        font-weight: 100;
+        color: @color-gray;
+        opacity: 1;
+      }
+      &::-moz-placeholder { /* Mozilla Firefox 19+ */
+        font-family: @font-family-accent;
+        font-size: 20px;
+        font-weight: 100;
+        color: @color-gray;
+        opacity: 1;
+      }
+      &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        font-family: @font-family-accent;
+        font-size: 20px;
+        font-weight: 100;
+        color: @color-gray;
+      }
     }
   }
   #filters {
@@ -31,48 +72,53 @@
   }
   #bio-categories-wrapper {
     #bio-categories {
-      background-color: #f9f9f9;
       border: 1px solid @color-gray-light;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.10);
       margin-top: 20px;
       padding-bottom: 20px;
+
       #filters {
         padding-left: 15px;
         padding-top: 20px;
       }
+
       .bio-category-column {
         float: left;
         width: 33%;
+
         .bio-category {
           padding: 0 10px;
-          a {
-            font-size: 14px;
-          }
+
           h3 {
-            background-color: @color-blue;
-            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);
-            color: white;
+            border-bottom: 2px solid @color-blue;
+            font-weight: 500;
             padding: 5px 10px;
           }
+
           ul {
             margin-left: 10px;
             li {
               border-bottom: 1px solid #eee;
               margin-bottom: 3px;
               padding-bottom: 3px;
-              p, a {
-                font-size: 13px;
+              a {
+                font-size: 18px;
+                font-family: @font-family-accent;
+                font-weight: 300;
               }
               p {
+                font-size: 13px;
                 margin: 0;
+
                 &.name {
                   font-weight: bold;
                   word-wrap: break-word;
                 }
+
                 &.highlight {
-                  color: @color-palette-red;
+                  color: @color-red;
                   a {
-                    color: @color-palette-red;
+                    color: @color-red;
                     text-decoration: underline;
                     &:hover {
                       text-decoration: none;
@@ -131,7 +177,7 @@
   table {
     font-family: @font-family-accent;
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 100;
   }
 }
 
@@ -141,7 +187,7 @@
     font-weight: 400;
   }
   .notification {
-    color: @color-palette-red;
+    color: @color-red;
     font-size: 14px;
     font-weight: bold;
   }
@@ -221,14 +267,22 @@
   top: 100%;
 }
 
-#tag-page,
 #tags-all-page,
-#report-page,
 #reports-all-page {
+
   .note {
-    font-size: 12px;
-    font-weight: normal;
+    font-family: @font-family-accent;
+    font-size: 20px;
+    font-weight: 100;
     margin-left: 15px;
+  }
+
+  table {
+    a {
+      font-family: @font-family-accent;
+      font-size: 18px;
+      font-weight: 100;
+    }
   }
 }
 
@@ -256,87 +310,115 @@
       }
     }
   }
+
   #custom-report-builder {
-    margin-bottom: 20px;
+    border-top: 1px solid @color-gray;
+    margin-top: 20px;
+
     .description {
-      background: @color-gray-very-light;
-      margin-top: 10px;
-      padding: 10px;
+      margin-top: 20px;
       h4 {
         margin: 0;
       }
     }
-    input.form-control {
+
+    input {
       margin-bottom: 10px;
     }
+
     .options {
       button {
         display: block;
         margin-top: 5px;
       }
     }
+
     ol {
       margin-top: 10px;
       padding-left: 20px;
     }
-    #pca-container,
-    #clustergrammer-preview,
-    #l1000cds2-preview,
-    #enrichr-preview {
-      display: none;
-    }
-    #clustergrammer-preview,
-    #enrichr-preview,
-    #l1000cds2-preview {
-      iframe {
-        border: 1px solid @color-gray-light;
-        height: @dim-page-width;
-        margin-top: 20px;
-        width: 100%;
-      }
-    }
-    #pca-container {
-      margin-top: 20px;
-    }
+
     select {
+      background-color: white;
       margin-bottom: 10px;
     }
   }
 }
 
 #collections-page {
+
   #instructions {
     font-family: @font-family-accent;
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 100;
     margin-bottom: 30px;
+
     h1 {
       font-weight: 500;
     }
   }
+
+  table {
+    td,
+    th,
+    a {
+      font-family: @font-family-accent;
+      font-size: 18px;
+      font-weight: 100;
+    }
+
+    th {
+      font-weight: 500;
+    }
+  }
+
   input {
-    border-radius: 0;
+    height: 45px;
+    margin-top: 20px;
+    padding: 6px 12px 4px 12px;
+
+    &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      font-family: @font-family-accent;
+      font-size: 20px;
+      font-weight: 100;
+      color: @color-gray;
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      font-family: @font-family-accent;
+      font-size: 20px;
+      font-weight: 100;
+      color: @color-gray;
+      opacity: 1;
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      font-family: @font-family-accent;
+      font-size: 20px;
+      font-weight: 100;
+      color: @color-gray;
+      opacity: 1;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      font-family: @font-family-accent;
+      font-size: 20px;
+      font-weight: 100;
+      color: @color-gray;
+    }
   }
 }
 
-#docs-page {
-  h1.selected {
-    background-color: @color-yellow;
-  }
+#documentation-page {
 
-  #doc-nav {
-    background-color: @color-gray-light;
-    padding: 10px;
+  #documentation-nav {
 
     ol {
       margin-bottom: 0;
-      padding-left: 30px;
+      padding-left: 23px;
 
       li,
       li a {
         font-family: @font-family-accent;
         font-size: 20px;
-        font-weight: 200;
+        font-weight: 100;
       }
       li {
         margin: 5px 0;
@@ -350,18 +432,35 @@
       }
     }
   }
+
+  #sections {
+    h2 {
+      border-bottom: 1px solid @color-gray;
+
+      &.selected {
+        background-color: @color-yellow;
+      }
+    }
+
+    p {
+      font-family: @font-family-accent;
+      font-size: 16px;
+      font-weight: 100;
+    }
+  }
 }
 
 #upload-page {
   p,
   label {
     font-family: @font-family-accent;
-    font-size: 16px;
   }
   p {
-    font-weight: 200;
+    font-size: 16px;
+    font-weight: 300;
   }
   label {
+    font-size: 18px;
     font-weight: bold;
   }
   textarea {
@@ -381,4 +480,8 @@
     border-top: 1px solid @color-gray-light;
     padding-top: 14px;
   }
+}
+
+#four-zero-four-page {
+  margin-top: 20px;
 }

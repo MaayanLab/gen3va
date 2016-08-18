@@ -8,92 +8,99 @@
 
     <div class='page' id='tag-page'>
 
-        <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
-        <a id='all-reports-btn'
-           class='btn btn-primary'
-           href='{{ config.REPORT_URL }}/{{ tag.name }}'>
-            All reports
-        </a>
+        <div class='ribbon'>
+            <div class='container'>
+                <h1><strong>{{ tag.name|upper }}</strong> gene signatures ({{ gene_signatures|length }})</h1>
 
-        <div id='custom-report-builder'>
-            <div class='description'>
-                <div class='row'>
-                    <div class='col-md-12'>
-                        <h4>Build a custom report</h4>
-                        <ol>
-                            <li>Using the checkboxes in the right-most column, select gene signatures.</li>
-                            <li>Select at least 3 signatures.</li>
-                            <li>Name the report.</li>
-                            <li>(Optional) Select a metadata field upon which to categorize the signatures. The percentage indicates what percentage of gene signatures have values for that metadata field.</li>
-                            <li>Click <em>Build report</em></li>
-                        </ol>
-                        <div>
-                            <select>
-                                <option>(Select a metadata field)</option>
-                                {% for name, pct in metadata.iteritems() %}
-                                    <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
-                                {% endfor %}
-                            </select>
+                <a id='all-reports-btn'
+                   class='btn btn-primary'
+                   href='{{ config.REPORT_URL }}/{{ tag.name }}'>
+                    All reports
+                </a>
+
+                <div id='custom-report-builder'>
+                    <div class='description'>
+                        <div class='row'>
+                            <div class='col-md-12'>
+                                <h4>Build a custom report</h4>
+                                <ol>
+                                    <li>Using the checkboxes in the right-most column, select gene signatures.</li>
+                                    <li>Select at least 3 signatures.</li>
+                                    <li>Name the report.</li>
+                                    <li>(Optional) Select a metadata field upon which to categorize the signatures. The percentage indicates what percentage of gene signatures have values for that metadata field.</li>
+                                    <li>Click <em>Build report</em></li>
+                                </ol>
+                                <div>
+                                    <select>
+                                        <option>(Select a metadata field)</option>
+                                        {% for name, pct in metadata.iteritems() %}
+                                            <option value="{{ name }}">{{ name }} - {{ pct }}%</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
+                                </div>
+                                <button class='btn btn-info'>Build report</button>
+                            </div>
                         </div>
-                        <div>
-                            <input type='text' class='form-control' name='report-name' placeholder='Report name'/>
-                        </div>
-                        <button class='btn btn-info'>Build report</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class='table-responsive'>
-            <table class='table data-table responsive'>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Organism</th>
-                        <th>Platform</th>
-                        <th>Optional Metadata</th>
-                        <th>
-                            <input type='checkbox' id='select-all'/>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gene_signature in gene_signatures %}
+        <div class='container'>
+            <div class='table-responsive'>
+                <table class='table data-table responsive'>
+                    <thead>
                         <tr>
-                            <td class='index'>{{ loop.index }}</td>
-                            <td class='title'>
-                                <a data-toggle='tooltip'
-                                   title='Results page for the processed gene signature'
-                                   href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
-                                     {{ gene_signature.name|truncate(50) }}
-                                </a>
-                            </td>
-                            <td class='organism'>
-                                {{ gene_signature.organism|c_filter_empty }}
-                            </td>
-                            <td class='platform'>{{ gene_signature.platform|c_filter_empty }}</td>
-                            <td class='optional-metadata'>
-                                {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                    <div class='optional-metadata-content'>
-                                        <table>
-                                        {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                            <tr>
-                                                <td>{{ opt_meta.name|capitalize }}</td>
-                                                <td>{{ opt_meta.value|truncate(25) }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            </td>
-                            <td class='select-box'>
-                                <input type='checkbox' class='consensus' name='{{ gene_signature.extraction_id }}'>
-                            </td>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Organism</th>
+                            <th>Platform</th>
+                            <th>Optional Metadata</th>
+                            <th>
+                                <input type='checkbox' id='select-all'/>
+                            </th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for gene_signature in gene_signatures %}
+                            <tr>
+                                <td class='index'>{{ loop.index }}</td>
+                                <td class='title'>
+                                    <a data-toggle='tooltip'
+                                       title='Results page for the processed gene signature'
+                                       href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
+                                         {{ gene_signature.name|truncate(50) }}
+                                    </a>
+                                </td>
+                                <td class='organism'>
+                                    {{ gene_signature.organism|c_filter_empty }}
+                                </td>
+                                <td class='platform'>{{ gene_signature.platform|c_filter_empty }}</td>
+                                <td class='optional-metadata'>
+                                    {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                        <div class='optional-metadata-content'>
+                                            <table>
+                                            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                                <tr>
+                                                    <td>{{ opt_meta.name|capitalize }}</td>
+                                                    <td>{{ opt_meta.value|truncate(25) }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </table>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td class='select-box'>
+                                    <input type='checkbox' class='consensus' name='{{ gene_signature.extraction_id }}'>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

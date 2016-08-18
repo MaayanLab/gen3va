@@ -76,6 +76,16 @@ def get_tags_by_curator(curator):
             .all()
 
 
+def get_bio_categories():
+    """Returns all bio categories which have tags from particular curators.
+    """
+    with session_scope() as session:
+        return session\
+            .query(BioCategory)\
+            .order_by(BioCategory.order)\
+            .all()
+
+
 def get_bio_categories_by_curator(curator):
     """Returns all bio categories which have tags from particular curators.
     """

@@ -6,73 +6,75 @@
     <script src="static/js/index.js"></script>
 
     <div class="page" id="index-page">
-        <div id="introduction">
-            <h1>What is GEN3VA?</h1>
 
-            <p>The <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
-                <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures
-                extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a> by the crowd using <a
-                        href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. Clicking on a tag below,
-                you can view an aggregated report that provides global, interactive views, including enrichment
-                analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
-            <p>Below are <em>approved</em> reports. An approved report is one for which the Ma'ayan Lab either collected
-                the signatures or quality controlled the collection in some way. If you created your own collection
-                using GEO2Enrichr, your collection will not be visible here. Please see <a href="collections">All
-                    Collections.</a></p>
+        <div class="ribbon">
+            <div class="container">
+                <h1>Welcome</h1>
+                <p>The <strong>GENE E</strong>xpression and <strong>E</strong>nrichment
+                    <strong>V</strong>ector <strong>A</strong>nalyzer aggregates and analyzes gene expression signatures
+                    extracted from <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">GEO</a> by the crowd using <a
+                            href="http://amp.pharm.mssm.edu/g2e/" target="_blank">GEO2Enrichr</a>. Clicking on a tag below,
+                    you can view an aggregated report that provides global, interactive views, including enrichment
+                    analyses, for collections of signatures from multiple studies sharing a biological theme.</p>
+                <p>Below are <em>approved</em> reports. An approved report is one for which the Ma'ayan Lab either collected
+                    the signatures or quality controlled the collection in some way. If you created your own collection
+                    using GEO2Enrichr, your collection will not be visible here. Please see <a href="collections">All
+                        Collections.</a></p>
+                <div>
+                    <input class='tag-search form-control' placeholder='Search approved collections'/>
+                </div>
+            </div>
         </div>
 
-        <div id='bio-categories-wrapper'>
-
-            <div>
-                <input class='tag-search form-control' placeholder='Search approved collections'/>
-            </div>
-
-            <div id='bio-categories'>
-                <div id="filters">
-                    {% if curators %}
-                        <p class="instruction">Select below to see collections only by a specific curator.</p>
-                    {% endif %}
-                    <ul class="list-inline">
+        <div class="container">
+            <div id='bio-categories-wrapper'>
+                <div id='bio-categories'>
+                    <div id="filters">
                         {% if curators %}
-                            {% for curator in curators %}
-                                <li>
-                                    {% set curator_class = curator.name|c_curator_class %}
-                                    <a href='?curator={{ curator.name }}' class="btn btn-info">
-                                        {{ curator.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <li>
-                                <a href='' class="btn btn-info is-check ed">All</a>
-                            </li>
+                            <p class="instruction">Select below to see collections only by a specific curator.</p>
                         {% endif %}
-                    </ul>
-                </div>
-
-                {% for column in bio_categories | slice(3) %}
-                    <div class='bio-category-column'>
-                        {% for cat in column %}
-                            <div id='{{ cat.name|to_css_selector }}' class='bio-category'>
-                                <h3>{{ cat.name|capitalize }}</h3>
-                                <ul class='list list-unstyled'>
-                                    {% for tag in cat.tags|sort(attribute='name') %}
-                                        {% if (not curator_name or tag.curator.name == curator_name) and (tag.approved_report and tag.approved_report.ready) %}
-                                            <li>
-                                                <p class='name'>
-                                                    <a class='name'
-                                                       href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
-                                                </p>
-                                                <p>{{ tag.gene_signatures|length }} signatures</p>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endfor %}
+                        <ul class="list-inline">
+                            {% if curators %}
+                                {% for curator in curators %}
+                                    <li>
+                                        {% set curator_class = curator.name|c_curator_class %}
+                                        <a href='?curator={{ curator.name }}' class="btn btn-info">
+                                            {{ curator.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li>
+                                    <a href='' class="btn btn-info is-check ed">All</a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                {% endfor %}
-                <div class='clear'></div>
+
+                    {% for column in bio_categories | slice(3) %}
+                        <div class='bio-category-column'>
+                            {% for cat in column %}
+                                <div id='{{ cat.name|to_css_selector }}' class='bio-category'>
+                                    <h3>{{ cat.name|capitalize }}</h3>
+                                    <ul class='list list-unstyled'>
+                                        {% for tag in cat.tags|sort(attribute='name') %}
+                                            {% if (not curator_name or tag.curator.name == curator_name) and (tag.approved_report and tag.approved_report.ready) %}
+                                                <li>
+                                                    <p class='name'>
+                                                        <a class='name'
+                                                           href='{{ config.APPROVED_REPORT_URL }}/{{ tag.name }}'>{{ tag.name|upper }}</a>
+                                                    </p>
+                                                    <p>{{ tag.gene_signatures|length }} signatures</p>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class='clear'></div>
+                </div>
             </div>
         </div>
     </div>
