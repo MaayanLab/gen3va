@@ -2,9 +2,8 @@
 """
 
 import json
-import random
 
-from flask import Blueprint, render_template, request
+from flask import abort, Blueprint, render_template, request
 
 from substrate import BioCategory, Curator, Tag
 from gen3va.database import database
@@ -46,10 +45,16 @@ def collections():
                            menu_item='collections')
 
 
-@menu_pages.route('/upload', methods=['GET'])
-def upload():
-    return render_template('pages/upload.html',
-                           menu_item='upload')
+@menu_pages.route('/upload/<string:type_>', methods=['GET'])
+def upload(type_):
+    if type_ == 'combined':
+        return render_template('pages/upload-combined.html',
+                               menu_item='upload')
+    elif type_ == 'up-down':
+        return render_template('pages/upload-up-down.html',
+                               menu_item='upload')
+    else:
+        abort(404)
 
 
 @menu_pages.route('/documentation', methods=['GET'])

@@ -11,7 +11,7 @@
   padding-bottom: 50px;
 }
 .page .ribbon {
-  background-color: #f9f9f9;
+  background-color: #f6f6f6;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 18px;
   font-weight: 300;
@@ -35,33 +35,19 @@
 }
 #index-page .ribbon input::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
 }
 #index-page .ribbon input:-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
 }
 #index-page .ribbon input::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
 }
 #index-page .ribbon input:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
 }
 #index-page #filters button.curated {
   color: white;
@@ -150,7 +136,7 @@
 }
 #report-page h2 {
   border-bottom: 1px solid #eeeeee;
-  font-weight: 400;
+  font-weight: 100;
 }
 #report-page .notification {
   color: #F15A5A;
@@ -237,6 +223,9 @@
   font-weight: 100;
 }
 #tag-page table {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 15px;
+  font-weight: 100;
   margin-top: 30px;
 }
 #tag-page table th {
@@ -310,33 +299,19 @@
 }
 #collections-page input::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
 }
 #collections-page input:-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
 }
 #collections-page input::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
 }
 #collections-page input:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 20px;
-  font-weight: 100;
-  color: #aaaaaa;
 }
 #documentation-page #documentation-nav ol {
   margin-bottom: 0;
@@ -368,33 +343,45 @@
   font-size: 16px;
   font-weight: 100;
 }
-#upload-page p,
-#upload-page label {
+#upload-page #example-btn {
+  margin-bottom: 10px;
+}
+#upload-page form p,
+#upload-page form label {
   font-family: 'Roboto', arial, sans-serif;
 }
-#upload-page p {
-  font-size: 16px;
+#upload-page form p {
+  font-size: 14px;
   font-weight: 300;
 }
-#upload-page label {
-  font-size: 18px;
-  font-weight: bold;
+#upload-page form label {
+  font-size: 20px;
+  font-weight: 100;
 }
-#upload-page textarea {
+#upload-page form textarea {
   height: 300px;
   margin-top: 10px;
 }
-#upload-page .metadata input {
+#upload-page form .metadata input {
   margin-bottom: 10px;
 }
-#upload-page #add-metadata-btn {
+#upload-page form #add-metadata-btn {
   display: block;
   margin-bottom: 10px;
 }
-#upload-page #submit-btn-wrapper {
+#upload-page form #submit-btn-wrapper {
   border-top: 1px solid #eeeeee;
   padding-top: 14px;
 }
+#upload-page form input.form-control:focus,
+#upload-page form textarea:focus {
+  border-color: #1689E5;
+}
 #four-zero-four-page {
-  margin-top: 20px;
+  margin-top: 40px;
+}
+#four-zero-four-page p {
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 100;
 }

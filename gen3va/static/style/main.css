@@ -36,10 +36,45 @@ body {
   font-family: arial, sans-serif;
   font-size: 13px;
 }
-input,
-input.form-control {
+.form-control {
   font-size: 16px;
   font-family: 'Roboto', arial, sans-serif;
+}
+.form-control::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  color: #aaaaaa;
+}
+.form-control:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+.form-control::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  color: #aaaaaa;
+  opacity: 1;
+}
+.form-control:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  color: #aaaaaa;
+}
+.form-control:focus {
+  border: 1px solid #1689E5;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 a {
   color: #1689E5;

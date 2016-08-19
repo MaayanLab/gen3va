@@ -36,30 +36,16 @@
       padding: 6px 12px 4px 12px;
 
       &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-        font-family: @font-family-accent;
         font-size: 20px;
-        font-weight: 100;
-        color: @color-gray;
       }
       &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-        font-family: @font-family-accent;
         font-size: 20px;
-        font-weight: 100;
-        color: @color-gray;
-        opacity: 1;
       }
       &::-moz-placeholder { /* Mozilla Firefox 19+ */
-        font-family: @font-family-accent;
         font-size: 20px;
-        font-weight: 100;
-        color: @color-gray;
-        opacity: 1;
       }
       &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-        font-family: @font-family-accent;
         font-size: 20px;
-        font-weight: 100;
-        color: @color-gray;
       }
     }
   }
@@ -184,7 +170,7 @@
 #report-page {
   h2 {
     border-bottom: 1px solid @color-gray-light;
-    font-weight: 400;
+    font-weight: 100;
   }
   .notification {
     color: @color-red;
@@ -288,14 +274,20 @@
 
 #tag-page {
   table {
+    font-family: @font-family-accent;
+    font-size: 15px;
+    font-weight: 100;
     margin-top: 30px;
+
     th {
       border-bottom: 2px solid @color-gray-light;
       text-align: left;
     }
+
     td {
       vertical-align: middle !important;
     }
+
     .optional-metadata-content {
       background-color: @color-gray-very-light;
       padding: 10px;
@@ -378,30 +370,16 @@
     padding: 6px 12px 4px 12px;
 
     &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-      font-family: @font-family-accent;
       font-size: 20px;
-      font-weight: 100;
-      color: @color-gray;
     }
     &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      font-family: @font-family-accent;
       font-size: 20px;
-      font-weight: 100;
-      color: @color-gray;
-      opacity: 1;
     }
     &::-moz-placeholder { /* Mozilla Firefox 19+ */
-      font-family: @font-family-accent;
       font-size: 20px;
-      font-weight: 100;
-      color: @color-gray;
-      opacity: 1;
     }
     &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      font-family: @font-family-accent;
       font-size: 20px;
-      font-weight: 100;
-      color: @color-gray;
     }
   }
 }
@@ -451,37 +429,54 @@
 }
 
 #upload-page {
-  p,
-  label {
-    font-family: @font-family-accent;
-  }
-  p {
-    font-size: 16px;
-    font-weight: 300;
-  }
-  label {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  textarea {
-    height: 300px;
-    margin-top: 10px;
-  }
-  .metadata {
-    input {
-      margin-bottom: 10px;
-    }
-  }
-  #add-metadata-btn {
-    display: block;
+  #example-btn {
     margin-bottom: 10px;
   }
-  #submit-btn-wrapper {
-    border-top: 1px solid @color-gray-light;
-    padding-top: 14px;
+  form {
+    p,
+    label {
+      font-family: @font-family-accent;
+    }
+    p {
+      font-size: 14px;
+      font-weight: 300;
+    }
+    label {
+      font-size: 20px;
+      font-weight: 100;
+    }
+    textarea {
+      height: 300px;
+      margin-top: 10px;
+    }
+    .metadata {
+      input {
+        margin-bottom: 10px;
+      }
+    }
+    #add-metadata-btn {
+      display: block;
+      margin-bottom: 10px;
+    }
+    #submit-btn-wrapper {
+      border-top: 1px solid @color-gray-light;
+      padding-top: 14px;
+    }
+    input.form-control,
+    textarea {
+      &:focus {
+        border-color: @color-blue;
+      }
+    }
   }
 }
 
 #four-zero-four-page {
-  margin-top: 20px;
+  margin-top: 40px;
+
+  p {
+    font-family: @font-family-accent;
+    font-size: 20px;
+    font-weight: 100;
+  }
 }

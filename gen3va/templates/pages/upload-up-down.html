@@ -24,18 +24,25 @@
     <div class='page' id='upload-page'>
         <div class='ribbon'>
             <div class='container'>
-                <h1>Upload</h1>
+                {% include 'partial/upload-intro.html' %}
                 <p>
-                    Use this form to upload individual gene signatures. The form is useful if you have a handful of signatures or want to quickly see how GEN3VA works. If you would like to upload gene signatures in bulk, please use <a href='documentation#api'>GEN3VA's API</a>.
-                </p>
-                <p>
-                    <strong>* Required field</strong>
+                    <a id='input-type-toggle'
+                       class='btn btn-primary'
+                       href='upload/combined'
+                    >
+                        Upload combined gene set
+                    </a>
                 </p>
             </div>
         </div>
 
         <div class='container'>
-            <form action='api/1.0/upload/form' method='post'>
+            <form action='api/1.0/upload/form/up-down' method='post'>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <button id='example-btn' class='btn btn-info'>Example</button>
+                    </div>
+                </div>
                 <div class='row'>
                     <div class='col-md-4'>
                         <div class='form-group'>
@@ -47,10 +54,16 @@
                 <div class='row'>
                     <div class='col-md-4'>
                         <div class='form-group'>
-                            <label>Gene list*</label>
+                            <label>Up genes*</label>
                             <p>Paste in a list of gene symbols optionally followed by a comma and levels of membership.</p>
-                            <button id='example-btn' class='btn btn-info'>Example</button>
-                            <textarea name='genes' class='form-control'></textarea>
+                            <textarea name='up-genes' class='form-control'></textarea>
+                        </div>
+                    </div>
+                    <div class='col-md-4'>
+                        <div class='form-group'>
+                            <label>Down genes*</label>
+                            <p>Paste in a list of gene symbols optionally followed by a comma and levels of membership.</p>
+                            <textarea name='down-genes' class='form-control'></textarea>
                         </div>
                     </div>
                     <div class='col-md-4'>
@@ -59,8 +72,6 @@
                             <p>Add tag(s) by typing a comma-separated list of tag names. Tags should not contain spaces or special characters and are case insensitive.</p>
                             <input name='tags' type='text' class='form-control' />
                         </div>
-                    </div>
-                    <div class='col-md-4'>
                         <div id='optional-metadata' class='form-group'>
                             <label>Metadata</label>
                             <p>Add metadata as name-value pairs.</p>

@@ -33,10 +33,43 @@ body {
   font-size: 13px;
 }
 
-input,
-input.form-control {
+.form-control {
   font-size: 16px;
   font-family: @font-family-accent;
+
+  &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 100;
+    color: @color-gray;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 100;
+    color: @color-gray;
+    opacity: 1;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 100;
+    color: @color-gray;
+    opacity: 1;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 100;
+    color: @color-gray;
+  }
+
+  &:focus {
+    border: 1px solid @color-blue;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
 }
 
 a {

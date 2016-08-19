@@ -1,0 +1,89 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block body %}
+
+    <script src='static/js/MetadataField.js'></script>
+    <script src='static/js/upload.js'></script>
+
+    {% with messages = get_flashed_messages(category_filter=['error']) %}
+        {% if messages %}
+        <div class='flashes'>
+            <div id='error-message' class='container-full'>
+                <div class='container'>
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class='page' id='upload-page'>
+        <div class='ribbon'>
+            <div class='container'>
+                {% include 'partial/upload-intro.html' %}
+                <p>
+                    <a id='input-type-toggle'
+                       class='btn btn-primary'
+                       href='upload/up-down'
+                    >
+                        Upload up- and down-gene sets
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class='container'>
+            <form action='api/1.0/upload/form/combined' method='post'>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <button id='example-btn' class='btn btn-info'>Example</button>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <div class='form-group'>
+                            <label>Signature name*</label>
+                            <input type='text' name='name' class='form-control' />
+                        </div>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <div class='form-group'>
+                            <label>Gene list*</label>
+                            <p>A list of gene symbols optionally followed by a comma and levels of membership.</p>
+                            <textarea name='genes' class='form-control'></textarea>
+                        </div>
+                    </div>
+                    <div class='col-md-4'>
+                        <div class='form-group'>
+                            <label>Tag</label>
+                            <p>A comma-separated list of tag names. Tags should not contain spaces or special characters and are case insensitive.</p>
+                            <input name='tags' type='text' class='form-control' />
+                        </div>
+                    </div>
+                    <div class='col-md-4'>
+                        <div id='optional-metadata' class='form-group'>
+                            <label>Metadata</label>
+                            <p>Add metadata as name-value pairs.</p>
+                            <div id='fields'></div>
+                            <button id='add-metadata-btn' class='btn btn-info'>Add metadata field</button>
+                        </div>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4'>
+                        <div id='submit-btn-wrapper' class='form-group'>
+                            <input type='submit' class='form-control btn btn-primary' />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

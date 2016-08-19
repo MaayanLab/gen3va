@@ -21,7 +21,7 @@ def view_all_tags():
 
 
 @tag_pages.route('/<string:tag_name>', methods=['GET'])
-def view_approved_tag(tag_name):
+def view_approved_tag(tag_name, extraction_id=None):
     tag = database.get(Tag, tag_name, key='name')
     if tag is None:
         abort(404)
@@ -30,6 +30,7 @@ def view_approved_tag(tag_name):
         metadata = _get_metadata_names_and_percentages(signatures)
         return render_template('pages/tag.html', tag=tag,
                                gene_signatures=signatures,
+                               extraction_id=extraction_id,
                                metadata=metadata)
 
 
