@@ -68,12 +68,12 @@ def _get_gene_list(request, prop, direction):
             except (IndexError, ValueError, AttributeError):
                 # IndexError: Accessing the `parts` list.
                 # ValueError: Casting a string to an integer.
-                # AttributeError: Passing in the incorrect arguments to `
-                #   RankedGene`.
+                # AttributeError: Passing in the incorrect arguments to
+                #   `RankedGene`.
                 raise UserInputException('Error parsing gene list.')
         else:
             g = utils.get_or_create(Gene, name=symbol)
-            rg = RankedGene(g, direction)
+            rg = RankedGene(g, None if direction == 0 else direction)
         ranked_genes.append(rg)
 
     target_app_links = []
