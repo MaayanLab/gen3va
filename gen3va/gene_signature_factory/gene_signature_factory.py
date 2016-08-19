@@ -1,4 +1,5 @@
-"""
+"""This module handles creating gene signatures through GEN3VA. Most
+gene signatures should be created via GEO2Enrichr.
 """
 
 from substrate import Gene, GeneSignature, GeneList, OptionalMetadata, \
@@ -9,7 +10,7 @@ from gen3va.exceptions import UserInputException
 
 
 def from_upload(request, type_):
-    """
+    """Returns gene signature from user input form.
     """
     name = request.form.get('name')
     if not name:
@@ -48,7 +49,7 @@ def from_upload(request, type_):
 
 
 def _get_gene_list(request, prop, direction):
-    """
+    """Returns gene list from user input form.
     """
     gene_symbols = request.form.get(prop, '')
     if not gene_symbols.strip():
@@ -81,7 +82,7 @@ def _get_gene_list(request, prop, direction):
 
 
 def _get_tags(request):
-    """
+    """Returns tags from user input form.
     """
     tag_names = request.form.get('tags', '')
     tag_names = tag_names.split(',')
@@ -94,7 +95,7 @@ def _get_tags(request):
 
 
 def _get_optional_metadata(request):
-    """
+    """Returns optional metadata from user input form.
     """
     metadata_keys_by_id = {}
     optional_metadata = []
@@ -133,6 +134,7 @@ def _get_optional_metadata(request):
 
 
 def _get_required_metadata():
-    """
+    """Creates required metadata with empty fields since the list was uploaded
+    by a user.
     """
     return RequiredMetadata(None, None, None, None)
