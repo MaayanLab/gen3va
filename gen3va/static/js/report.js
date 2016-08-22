@@ -1,161 +1,200 @@
-$(function() {
+function createAndManageVisualizations(config) {
 
-    var $dataTable,
-        extractionId = getUrlParameter('extraction_id');
-
-    if (extractionId) {
-        setupDataTables(extractionId);
-        highlightSignature(extractionId);
-    } else {
-        setupDataTables();
-    }
-
-    setupBuildReportListener();
-    setupSelectAll();
-
-    function setupDataTables($tr) {
-        var $tr = getRowFromExtractionId(extractionId),
-            idx = parseInt($tr.find('td').first().text()) - 1,
-            firstRow,
-            thisRow;
-        $dataTable = $('.data-table').eq(0).DataTable({
-            bPaginate: true,
-            iDisplayLength: 20
-        });
-        firstRow = $dataTable.row(0).data();
-        thisRow = $dataTable.row(idx).data();
-        $dataTable.row(0).data(thisRow);
-        $dataTable.row(idx).data(firstRow);
-    }
-
-    function highlightSignature($tr) {
-        var $tr = getRowFromExtractionId(extractionId);
-        $tr.css({ 'background-color': '#fff169' });
-        $tr.find('.optional-metadata-content').css({ 'background-color': '#e5d85e' });
-    }
-
-    function getRowFromExtractionId(extractionId) {
-        return $('input[name="' + extractionId + '"]').parent().parent();
-    }
-
-    function setupSelectAll() {
-        var $allCheckboxes = $($dataTable.cells().nodes()).find('input.consensus');
-
-        $('#select-all').click(function(evt) {
-            var searchText = $('.dataTables_filter input').val();
-            if ($(evt.target).prop('checked')) {
-
-                // If the user has input search text, we want to only check the selected results.
-                if (searchText) {
-                    $dataTable.rows({ search: 'applied' }).data().each(function(value) {
-                        var name = $(value[5]).attr('name'),
-                            input = $dataTable.$('input[name="' + name + '"]');
-                        input.prop('checked', true);
-                    });
-
-                // Otherwise, we can select all the rows.
-                } else {
-                    $allCheckboxes.prop('checked', true);
-                }
-            } else {
-                $allCheckboxes.prop('checked', false);
-            }
-        });
-    }
-
-    function setupBuildReportListener() {
-        $('#custom-report-builder button').click(function() {
-            var chbxs = getSelectedCheckboxes(),
-                metadataField = getMetadataField(),
-                reportName = $('input[name="report-name"]').val();
-            if (!isValidSelection(chbxs)) {
-                return;
-            }
-            if (!reportName) {
-                alert('Custom reports require names');
-                return;
-            }
-            var parts = window.location.href.split('/'),
-                tag = parts[parts.length-1];
-            requestReport(chbxs, tag, reportName, metadataField);
-        });
-    }
-
-    /* Kicks off custom report builder and redirects user.
-     */
-    function requestReport(chbxs, tag, reportName, category) {
-        var payload = {
-            gene_signatures: chbxs,
-            report_name: reportName
-        };
-        if (category) {
-            payload['category'] = category
+    $(function() {
+        var elem;
+        dataTables();
+        watchClustergramWidths();
+        plotPCA(config.pcaPlot);
+        try {
+            elem = '#genes-heat-map';
+            createClustergram(
+                elem,
+                config.genesHeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
         }
-        $.ajax({
-            url: 'report/custom/' + tag,
-            type: 'POST',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(payload),
-            success: function(data) {
-                window.location = data.new_url;
-            }
-        });
-    }
-
-    /* Helper function for collecting data from selected checkboxes.
-     */
-    function getSelectedCheckboxes() {
-        var selected = [],
-            $checkboxes = $($dataTable.cells().nodes()).find('input.consensus');
-        $checkboxes.each(function(i, checkbox) {
-            var $checkbox = $(checkbox);
-            if ($checkbox.is(':checked')) {
-                selected.push({
-                    extractionId: $checkbox.attr('name'),
-                    platform: $checkbox.closest('tr').find('.platform').text()
-                });
-            }
-        });
-        return selected;
-    }
-
-    /* Helper function that validates the selected checkboxes, alerting and
-     * returning false if invalid.
-     */
-    function isValidSelection(chbxs, vizType) {
-        if (chbxs.length < 3) {
-            alert('Reports require at least three signatures.');
-            return false;
+        try {
+            elem = '#l1000cds2-heat-map';
+            createClustergram(
+                elem,
+                config.l1000cds2HeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
         }
-        return true;
-    }
-
-    /* Helper function that returns the metadata field if one has been
-     * selected.
-     */
-    function getMetadataField() {
-        var value = $('#custom-report-builder select').val();
-        if (value === '(Select a metadata field)') {
-            return;
+        try {
+            elem = '#enrichr-heat-maps';
+            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
         }
-        return value
-    }
+    });
 
-    /* Returns the query string parameter requested.
-     * Credit: http://stackoverflow.com/a/21903119.
-     */
-    function getUrlParameter(param) {
-        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
+    var clustergrams = [];
+
+    function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
+        var $enrichr = $(elem),
+            len = Object.keys(enrichrHeatMaps).length,
+            heatMap,
+            rootElement,
             i;
 
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
-
-            if (sParameterName[0] === param) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
+        for (i = 0; i < len; i++) {
+            heatMap = enrichrHeatMaps[i];
+            rootElement = '#' + heatMap.enrichr_library;
+            $enrichr.append(
+                '<div ' +
+                '   id="' + heatMap.enrichr_library + '"' +
+                '   class="heat-map enrichr-heat-map"' +
+                '></div>'
+            );
+            createClustergram(rootElement, heatMap);
         }
-    };
-});
+
+        showEnrichrHeatMap(enrichrHeatMaps[0].enrichr_library);
+        watchEnrichrClustergram($enrichr, enrichrHeatMaps);
+    }
+
+    function createClustergram(rootElement, clustergramData) {
+        var clustergram = Clustergrammer({
+            root: rootElement,
+            // This specifies the filtering for the clustergram.
+            // For more, see:
+            // https://github.com/MaayanLab/clustergrammer.js/blob/master/load_clustergram.js
+            ini_view: {N_row_sum :50},
+            network_data: clustergramData.network
+        });
+        clustergrams.push(clustergram);
+    }
+
+    function watchEnrichrClustergram($enrichr, enrichrHeatMaps) {
+        // When the user selects a new library, toggle the visible library.
+        $enrichr.find('select').change(function(evt) {
+            var newEnrichrLibrary = $(evt.target).val();
+            showEnrichrHeatMap(newEnrichrLibrary);
+        });
+    }
+
+    function showEnrichrHeatMap(enrichrLibrary) {
+        $('.enrichr-heat-map').hide();
+        $('#' + enrichrLibrary).show();
+    }
+
+    function dataTables() {
+        $('table').DataTable({ iDisplayLength: 5 });
+    }
+
+    function watchClustergramWidths() {
+        // Debounce this resizing callback because it's fairly intensive.
+        $(window).resize(_.debounce(function() {
+            $.each(clustergrams, function(i, clustergram) {
+                clustergram.resize_viz();
+            });
+        }, 250));
+    }
+
+    function plotPCA(pcaObj) {
+        if (typeof pcaObj === 'undefined')
+            return;
+
+        // If there is only one data series, use Geneva's blue. Otherwise,
+        // let Highcharts figure it out.
+        if (pcaObj.series.length == 1) {
+            Highcharts.setOptions({
+                colors: ['#1689E5']
+            });
+        }
+
+        var tooltipFormatter = function() { return this.key; },
+            mins = pcaObj.ranges[1],
+            maxs = pcaObj.ranges[0],
+            titles = pcaObj.titles,
+            chart;
+
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'pca-plot',
+                margin: [150, 150, 150, 150],
+                type: 'scatter',
+                options3d: {
+                    enabled: true,
+                    alpha: 20,
+                    beta: 30,
+                    depth: 500
+                }
+            },
+            legend: {
+                floating: true,
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top'
+            },
+            title: {
+                text: '3D PCA plot'
+            },
+            subtitle: {
+                text: 'using x y z coordinates'
+            },
+            xAxis: {
+                title: {text: titles[0]},
+                min: mins[0],
+                max: maxs[0]
+            },
+            yAxis: {
+                title: {text: titles[1]},
+                min: mins[1],
+                max: maxs[1]
+            },
+            zAxis: {
+                title: {text: titles[2]},
+                min: mins[2],
+                max: maxs[2]
+            },
+            series: pcaObj.series,
+            tooltip: {
+                formatter: tooltipFormatter,
+                useHTML: true,
+                backgroundColor: '#7FB800', // green
+                borderColor: '#7FB800',
+                borderRadius: 0,
+                shadow: false,
+                style: {
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                    padding: 6
+                }
+            }
+        });
+
+        // Add mouse events for rotation
+        $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+            e = chart.pointer.normalize(e);
+
+            var posX = e.pageX,
+                posY = e.pageY,
+                alpha = chart.options.chart.options3d.alpha,
+                beta = chart.options.chart.options3d.beta,
+                newAlpha,
+                newBeta,
+                sensitivity = 5; // lower is more sensitive
+
+            $(document).bind({
+                'mousemove.hc touchdrag.hc': function (e) {
+                    newBeta = beta + (posX - e.pageX) / sensitivity;
+                    chart.options.chart.options3d.beta = newBeta;
+                    newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                    chart.options.chart.options3d.alpha = newAlpha;
+                    chart.redraw(false);
+                },
+                'mouseup touchend': function () {
+                    $(document).unbind('.hc');
+                }
+            });
+        });
+    }
+}
