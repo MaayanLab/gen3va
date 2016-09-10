@@ -38,7 +38,7 @@ function createAndManageVisualizations(config) {
 
     function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
         var $enrichr = $(elem),
-            len = Object.keys(enrichrHeatMaps).length,
+            len = length(enrichrHeatMaps),
             heatMap,
             rootElement,
             i;
@@ -71,10 +71,14 @@ function createAndManageVisualizations(config) {
         try {
             makeClustergramColorLegend(rootElement, clustergram.params.viz.cat_colors.col['cat-0']);
             moveClustergramControls(rootElement);
-        } catch (e) {}
+        } catch (e) {
+            console.log(e);
+        }
         try {
             filterClustergramColsOnClick(clustergram);
-        } catch (e) {}
+        } catch (e) {
+            console.log(e);
+        }
         clustergrams.push(clustergram);
     }
 
@@ -121,19 +125,31 @@ function createAndManageVisualizations(config) {
     }
 
     function createClustergramResetButton(clustergram) {
-
+        if ($(clustergram.config.root).find('.reset-button').length) {
+            return;
+        }
+        var $button = $('<button class="btn btn-info reset-button">Reset heatmap</button>');
+        $(clustergram.config.root).find('.color-legend').after($button);
+        $button.click(function() {
+            // This resets the clustergram according to an email from Nick.
+            clustergram.update_view({'n_row_sum':'all'});
+            $button.remove();
+        });
     }
 
     function makeClustergramColorLegend(rootElement, colors) {
         var list = '',
+            isHidden = true,
+            MAX_CATS_BEFORE_HIDE = 20,
             $legend,
             $ul,
-            $h3,
-            isHidden = true;
+            $h3;
         $.each(colors, function(categoryName, hex) {
             categoryName = $.trim(categoryName.split(':')[1]);
+            var rgb = hexToRgb(hex),
+                rgba = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',.6)';
             list += '' +
-                '<li style="background-color: ' + hex + ';">' +
+                '<li style="border-left: 13px solid ' + rgba + '";>' +
                     categoryName +
                 '</li>';
         });
@@ -149,19 +165,22 @@ function createAndManageVisualizations(config) {
         $ul = $legend.find('ul');
         $h3 = $legend.find('h3');
         $(rootElement).prepend($legend);
-        $ul.hide();
-        $h3.click(function(evt) {
-            if (isHidden) {
-                isHidden = false;
-                $ul.show();
-                $h3.text('Hide color legend');
-            } else {
-                isHidden = true;
-                $ul.hide();
-                $h3.text('Show color legend');
-            }
-        });
-
+        if (length(colors) > MAX_CATS_BEFORE_HIDE) {
+            $ul.hide();
+            $h3.click(function(evt) {
+                if (isHidden) {
+                    isHidden = false;
+                    $ul.show();
+                    $h3.text('Hide color legend');
+                } else {
+                    isHidden = true;
+                    $ul.hide();
+                    $h3.text('Show color legend');
+                }
+            });
+        } else {
+            $h3.hide();
+        }
     }
 
     // Clustergrammer controls have 15px left padding. We want to remove this
@@ -178,7 +197,12 @@ function createAndManageVisualizations(config) {
             '.dendro_sliders,' +
             '.div_filters'
         ).css({
-            'padding-left': '0'
+            'padding-left': 0
+        });
+        // Prevent slider from going outside the div, i.e. disappearing halfway.
+        $('.d3-slider-handle').css({
+            'margin-left': 0,
+            width: '.5em'
         });
     }
 
@@ -316,6 +340,23 @@ function createAndManageVisualizations(config) {
         var index = array.indexOf(item);
         array.splice(index, 1);
         return array
+    }
+
+    function length(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    }
+
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
     }
 
     // For debugging.

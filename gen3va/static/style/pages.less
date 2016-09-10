@@ -236,13 +236,19 @@
       margin-left: 0;
 
       li {
-        color: white;
-        margin: 0 2px 2px 0;
+        color: black;
+        margin: 0 2px 4px 0;
         font-size: 12px;
+        font-weight: bold;
         /* This is required to remove whitespace "leading" between list items. */
         float: left;
+        line-height: 1.1em;
       }
     }
+  }
+  .reset-button {
+    display: block;
+    margin-bottom: 25px;
   }
 }
 
@@ -519,5 +525,10 @@
   }
   #search-box {
     margin-bottom: 10px;
+  }
+  .container {
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: 200;
   }
 }
