@@ -1,11 +1,12 @@
 function createAndManageVisualizations(config) {
 
-    var clustergrams = [];
+    var clustergrams = {},
+        originalData = {};
 
     $(function() {
         var elem;
-        dataTables();
-        watchClustergramWidths();
+        setupDataTables();
+        resizeClustergramsOnWindowResize();
         plotPCA(config.pcaPlot);
         try {
             elem = '#genes-heat-map';
@@ -40,37 +41,37 @@ function createAndManageVisualizations(config) {
         var $enrichr = $(elem),
             len = length(enrichrHeatMaps),
             heatMap,
-            rootElement,
+            root,
             i;
-
         for (i = 0; i < len; i++) {
             heatMap = enrichrHeatMaps[i];
-            rootElement = '#' + heatMap.enrichr_library;
+            root = '#' + heatMap.enrichr_library;
             $enrichr.append(
                 '<div ' +
                 '   id="' + heatMap.enrichr_library + '"' +
                 '   class="heat-map enrichr-heat-map"' +
                 '></div>'
             );
-            createClustergram(rootElement, heatMap);
+            createClustergram(root, heatMap);
         }
 
         showEnrichrHeatMap(enrichrHeatMaps[0].enrichr_library);
-        watchEnrichrClustergram($enrichr, enrichrHeatMaps);
+        changeEnrichrClustergramOnSelectChange($enrichr, enrichrHeatMaps);
     }
 
-    function createClustergram(rootElement, clustergramData) {
+    function createClustergram(root, clustergramData) {
         var clustergram = Clustergrammer({
-            root: rootElement,
+            root: root,
             // This specifies the filtering for the clustergram.
             // For more, see:
             // https://github.com/MaayanLab/clustergrammer.js/blob/master/load_clustergram.js
             ini_view: {N_row_sum :50},
             network_data: clustergramData.network
         });
+        originalData[root] = clustergramData;
         try {
-            makeClustergramColorLegend(rootElement, clustergram.params.viz.cat_colors.col['cat-0']);
-            moveClustergramControls(rootElement);
+            makeClustergramColorLegend(root, clustergram.params.viz.cat_colors.col['cat-0']);
+            fixClustergramControlsStyling(root);
         } catch (e) {
             console.log(e);
         }
@@ -79,7 +80,7 @@ function createAndManageVisualizations(config) {
         } catch (e) {
             console.log(e);
         }
-        clustergrams.push(clustergram);
+        clustergrams[root] = clustergram;
     }
 
     function filterClustergramColsOnClick(clustergram) {
@@ -90,15 +91,15 @@ function createAndManageVisualizations(config) {
             timer = null;
         $(clustergram.config.root).find('.col_label_group text')
             .click(function(evt) {
-                var $this = $(this);
                 clicks++;
+                var $target = $(evt.target);
                 if (clicks === 1) {
                     timer = setTimeout(function() {
                         clicks = 0;
-                        var colToHide = $this.attr('full_name');
+                        var colToHide = $target.attr('full_name');
                         hideColumn(clustergram, colToHide);
-                        hideD3Tooltip(colToHide);
-                        createClustergramResetButton(clustergram);
+                        hideD3Tooltips();
+                        makeClustergramResetButton(clustergram);
                     }, DELAY);
                 } else {
                     clearTimeout(timer);
@@ -111,33 +112,56 @@ function createAndManageVisualizations(config) {
             });
     }
 
+    /* Hides a clustergram column based on column name.
+     */
     function hideColumn(clustergram, colToHide) {
         var allCols = clustergram.config.network_data.col_nodes_names,
             colsToKeep = remove(allCols, colToHide);
         clustergram.filter_viz_using_names({'col': colsToKeep});
     }
 
-    // This is a hacky method. When you filter a clustergram, the tooltip does
-    // not disappear. Normally, I would ask Nick to fix this in Clustergrammer,
-    // but I need this wrapped up today.
-    function hideD3Tooltip(colToHide) {
-        $('.d3-tip span:contains("' + colToHide + '")').parent().css({opacity: 0});
+    /* Hides all D3 tooltips after a column has been hidden. This cannot just
+     * hide the tooltip for the removed column, because the user can quickly
+     * hover over another column before the delayed event happens. Just hide
+     * all of them.
+     */
+    function hideD3Tooltips() {
+        $('.d3-tip').css({opacity: 0});
     }
 
-    function createClustergramResetButton(clustergram) {
-        if ($(clustergram.config.root).find('.reset-button').length) {
+    /* Creates a reset button for each clustergram. This is in case the user
+     * filters the columns.
+     */
+    function makeClustergramResetButton(clustergram) {
+        var root = clustergram.config.root,
+            buttonAlreadyExists = !!$(root).find('.reset-button').length;
+        if (buttonAlreadyExists) {
             return;
         }
-        var $button = $('<button class="btn btn-info reset-button">Reset heatmap</button>');
-        $(clustergram.config.root).find('.color-legend').after($button);
+        var $button = $(
+            '<button class="btn btn-info reset-button">' +
+            '   Reset heat map' +
+            '</button>'
+        );
+        $(root).find('.color-legend').after($button);
         $button.click(function() {
-            // This resets the clustergram according to an email from Nick.
-            clustergram.update_view({'n_row_sum':'all'});
-            $button.remove();
+            resetClustergram(clustergram);
         });
     }
 
-    function makeClustergramColorLegend(rootElement, colors) {
+    function resetClustergram(clustergram) {
+        var root = clustergram.config.root,
+            data = originalData[root];
+        $(root).empty();
+        // This will happen in `createClustergram`, but just to be explicit
+        // about what is happening...
+        clustergrams[root] = undefined;
+        createClustergram(root, data);
+    }
+
+    /* Creates the clustergrams' color legends and handles events.
+     */
+    function makeClustergramColorLegend(root, colors) {
         var list = '',
             isHidden = true,
             MAX_CATS_BEFORE_HIDE = 20,
@@ -164,7 +188,7 @@ function createAndManageVisualizations(config) {
         );
         $ul = $legend.find('ul');
         $h3 = $legend.find('h3');
-        $(rootElement).prepend($legend);
+        $(root).prepend($legend);
         if (length(colors) > MAX_CATS_BEFORE_HIDE) {
             $ul.hide();
             $h3.click(function(evt) {
@@ -183,30 +207,28 @@ function createAndManageVisualizations(config) {
         }
     }
 
-    // Clustergrammer controls have 15px left padding. We want to remove this
-    // so the controls line up with the left-hand side of the page. We use
-    // jQuery because we need to override inline styling.
-    function moveClustergramControls(rootElement) {
-        $(rootElement).find(
-            '.title_section,' +
-            '.about_section,' +
-            '.icons_section,' +
-            '.reorder_section,' +
-            '.gene_search_container,' +
-            '.opacity_slider_container,' +
-            '.dendro_sliders,' +
-            '.div_filters'
+    /* Makes modifications to Clustergrammer's default styling:
+     * - Removes 15px of left padding so that the controls line up with the
+     *   left-hand side of the page
+     * - Restyles the sliders so they do not fall off the page.
+     */
+    function fixClustergramControlsStyling(root) {
+        $(root).find(
+            '.title_section, .about_section,.icons_section,' +
+            '.reorder_section, .gene_search_container,' +
+            '.opacity_slider_container, .dendro_sliders, .div_filters'
         ).css({
-            'padding-left': 0
+            'padding-left': '0'
         });
-        // Prevent slider from going outside the div, i.e. disappearing halfway.
         $('.d3-slider-handle').css({
-            'margin-left': 0,
-            width: '.5em'
+            'margin-left': '0',
+            'width': '.5em'
         });
     }
 
-    function watchEnrichrClustergram($enrichr, enrichrHeatMaps) {
+    /* Changes the Enrichr clustergram based on user selection.
+     */
+    function changeEnrichrClustergramOnSelectChange($enrichr, enrichrHeatMaps) {
         // When the user selects a new library, toggle the visible library.
         $enrichr.find('select').change(function(evt) {
             var newEnrichrLibrary = $(evt.target).val();
@@ -214,22 +236,63 @@ function createAndManageVisualizations(config) {
         });
     }
 
+    /* Shows an Enrichr heat map backed by the provided library.
+     */
     function showEnrichrHeatMap(enrichrLibrary) {
         $('.enrichr-heat-map').hide();
         $('#' + enrichrLibrary).show();
     }
 
-    function dataTables() {
+    /* Sets up DataTables instances.
+     */
+    function setupDataTables() {
         $('table').DataTable({ iDisplayLength: 5 });
     }
 
-    function watchClustergramWidths() {
+    /* Resizes every clustergram when the window is resized. Debounces to
+     * prevent overloading the event.
+     */
+    function resizeClustergramsOnWindowResize() {
         // Debounce this resizing callback because it's fairly intensive.
         $(window).resize(_.debounce(function() {
             $.each(clustergrams, function(i, clustergram) {
                 clustergram.resize_viz();
             });
         }, 250));
+    }
+
+    /* Removes an item from an array. Credit:
+     * http://stackoverflow.com/a/3954451
+     */
+    function remove(array, item) {
+        var index = array.indexOf(item);
+        array.splice(index, 1);
+        return array
+    }
+
+    /* Returns the length of an object.
+     */
+    function length(obj) {
+        var size = 0,
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                size++;
+            }
+        }
+        return size;
+    }
+
+    /* Converts a hexadecimal color to an RGB color. Credit:
+     * http://stackoverflow.com/questions/5623838
+     */
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
     }
 
     function plotPCA(pcaObj) {
@@ -331,32 +394,6 @@ function createAndManageVisualizations(config) {
                 }
             });
         });
-    }
-
-
-    // Utility function from:
-    // http://stackoverflow.com/a/3954451
-    function remove(array, item) {
-        var index = array.indexOf(item);
-        array.splice(index, 1);
-        return array
-    }
-
-    function length(obj) {
-        var size = 0, key;
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) size++;
-        }
-        return size;
-    }
-
-    function hexToRgb(hex) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        } : null;
     }
 
     // For debugging.
