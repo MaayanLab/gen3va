@@ -37,6 +37,8 @@ function createAndManageVisualizations(config) {
         }
     });
 
+    /* Creates the Enrichr clustergrams.
+     */
     function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
         var $enrichr = $(elem),
             len = length(enrichrHeatMaps),
@@ -59,6 +61,9 @@ function createAndManageVisualizations(config) {
         changeEnrichrClustergramOnSelectChange($enrichr, enrichrHeatMaps);
     }
 
+    /* Creates a new clustergram, caching the original data so we can "reset"
+     * it later.
+     */
     function createClustergram(root, clustergramData) {
         var clustergram = Clustergrammer({
             root: root,
@@ -83,6 +88,8 @@ function createAndManageVisualizations(config) {
         clustergrams[root] = clustergram;
     }
 
+    /* When the user single-clicks on a column, remove it.
+     */
     function filterClustergramColsOnClick(clustergram) {
         // These variables are used to disambiguate a single click from a
         // double click. See: http://stackoverflow.com/a/7845282
@@ -153,8 +160,8 @@ function createAndManageVisualizations(config) {
         var root = clustergram.config.root,
             data = originalData[root];
         $(root).empty();
-        // This will happen in `createClustergram`, but just to be explicit
-        // about what is happening...
+        // In `createClustergram`, the new clustergram will step on the old
+        // one, but just to be explicit...
         clustergrams[root] = undefined;
         createClustergram(root, data);
     }
