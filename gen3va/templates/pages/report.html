@@ -74,7 +74,7 @@
                     {% set more_signatures_url = config.TAG_URL ~ '/' ~ report.id %}
                 {% endif %}
                 <a href='{{ more_signatures_url }}' class='btn btn-info' id='more-signatures-btn'>
-                    Gene Signatures ({{ report.gene_signatures|length }})
+                    Signatures ({{ report.gene_signatures|length }}) and Custom Report Builder
                 </a>
                 <div class='table-responsive'>
                     <table class='table data-table responsive'>

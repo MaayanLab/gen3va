@@ -385,3 +385,33 @@
   font-size: 20px;
   font-weight: 100;
 }
+#get-started-page ul,
+#get-started-page ol {
+  padding-left: 15px;
+}
+#get-started-page .pass {
+  color: #7FB800;
+}
+#get-started-page .fail {
+  color: #F15A5A;
+}
+#get-started-page .fail a,
+#get-started-page .fail a:link,
+#get-started-page .fail a:visited {
+  color: #F15A5A;
+}
+#get-started-page .fail a:hover,
+#get-started-page .fail a:link:hover,
+#get-started-page .fail a:visited:hover,
+#get-started-page .fail a:focus,
+#get-started-page .fail a:link:focus,
+#get-started-page .fail a:visited:focus,
+#get-started-page .fail a:active,
+#get-started-page .fail a:link:active,
+#get-started-page .fail a:visited:active {
+  color: #F15A5A;
+  text-decoration: underline;
+}
+#get-started-page #search-box {
+  margin-bottom: 10px;
+}

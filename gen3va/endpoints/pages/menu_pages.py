@@ -45,6 +45,12 @@ def collections():
                            menu_item='collections')
 
 
+@menu_pages.route('/get-started', methods=['GET'])
+def get_started():
+    return render_template('pages/get-started.html',
+                           menu_item='get-started')
+
+
 @menu_pages.route('/upload/<string:type_>', methods=['GET'])
 def upload(type_):
     if type_ == 'combined':

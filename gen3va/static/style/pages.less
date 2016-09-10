@@ -480,3 +480,30 @@
     font-weight: 100;
   }
 }
+
+#get-started-page {
+  ul,
+  ol {
+    padding-left: 15px;
+  }
+  .pass {
+    color: @color-green;
+  }
+  .fail {
+    color: @color-red;
+    a,
+    a:link,
+    a:visited {
+      color: @color-red;
+      &:hover,
+      &:focus,
+      &:active {
+        color: @color-red;
+        text-decoration: underline;
+      }
+    }
+  }
+  #search-box {
+    margin-bottom: 10px;
+  }
+}
