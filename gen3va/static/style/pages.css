@@ -158,11 +158,6 @@
 #report-page #gene-signatures-table #more-signatures-btn {
   margin-bottom: 10px;
 }
-#report-page iframe {
-  border: none;
-  height: 800px;
-  width: 100%;
-}
 #report-page .section {
   margin-bottom: 30px;
 }
@@ -189,6 +184,22 @@
   border: 1px solid #eee !important;
   width: 100% !important;
   padding: 5px !important;
+}
+#report-page div.color-legend {
+  margin-bottom: 10px;
+}
+#report-page div.color-legend h3 {
+  margin: 0 0 10px 0;
+}
+#report-page div.color-legend ul {
+  margin-left: 0;
+}
+#report-page div.color-legend ul li {
+  color: white;
+  margin: 0 2px 2px 0;
+  font-size: 12px;
+  /* This is required to remove whitespace "leading" between list items. */
+  float: left;
 }
 /* These selectors cannot be nested because Clustergrammer creates them in the
  * <body> tag. But these should only appear on report pages.

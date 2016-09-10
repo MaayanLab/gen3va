@@ -68,7 +68,68 @@ function createAndManageVisualizations(config) {
             ini_view: {N_row_sum :50},
             network_data: clustergramData.network
         });
+        try {
+            makeClustergramColorLegend(rootElement, clustergram.params.viz.cat_colors.col['cat-0']);
+            moveClustergramControls(rootElement);
+        } catch (e) {}
         clustergrams.push(clustergram);
+    }
+
+    function makeClustergramColorLegend(rootElement, colors) {
+        var list = '',
+            $legend,
+            $ul,
+            $h3,
+            isHidden = true;
+        $.each(colors, function(categoryName, hex) {
+            categoryName = $.trim(categoryName.split(':')[1]);
+            list += '' +
+                '<li style="background-color: ' + hex + ';">' +
+                    categoryName +
+                '</li>';
+        });
+        $legend = $(
+            '<div class="color-legend">' +
+                '<h3 class="btn btn-info">Show color legend</h3>' +
+                '<ul class="list-inline">' +
+                    list +
+                '</ul>' +
+                '<div class="clear"></div>' +
+            '</div>'
+        );
+        $ul = $legend.find('ul');
+        $h3 = $legend.find('h3');
+        $(rootElement).prepend($legend);
+        $ul.hide();
+        $h3.click(function(evt) {
+            if (isHidden) {
+                isHidden = false;
+                $ul.show();
+                $h3.text('Hide color legend');
+            } else {
+                isHidden = true;
+                $ul.hide();
+                $h3.text('Show color legend');
+            }
+        });
+
+    }
+
+    // Clustergrammer controls have 15px left padding. We want to remove this
+    // so the controls line up with the left-hand side of the page. We use
+    // jQuery because we need to override inline styling.
+    function moveClustergramControls(rootElement) {
+        $(rootElement).find(
+            '.title_section,' +
+            '.about_section,' +
+            '.icons_section,' +
+            '.reorder_section,' +
+            '.gene_search_container,' +
+            '.opacity_slider_container,' +
+            '.dendro_sliders,' +
+            '.div_filters').css({
+            'padding-left': '0'
+        });
     }
 
     function watchEnrichrClustergram($enrichr, enrichrHeatMaps) {
