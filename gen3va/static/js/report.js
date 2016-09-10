@@ -17,23 +17,23 @@ function createAndManageVisualizations(config) {
             $(elem).hide();
             console.log(e);
         }
-        //try {
-        //    elem = '#l1000cds2-heat-map';
-        //    createClustergram(
-        //        elem,
-        //        config.l1000cds2HeatMap
-        //    );
-        //} catch (e) {
-        //    $(elem).hide();
-        //    console.log(e);
-        //}
-        //try {
-        //    elem = '#enrichr-heat-maps';
-        //    createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
-        //} catch (e) {
-        //    $(elem).hide();
-        //    console.log(e);
-        //}
+        try {
+            elem = '#l1000cds2-heat-map';
+            createClustergram(
+                elem,
+                config.l1000cds2HeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#enrichr-heat-maps';
+            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
     });
 
     function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
@@ -79,22 +79,49 @@ function createAndManageVisualizations(config) {
     }
 
     function filterClustergramColsOnClick(clustergram) {
-        $(clustergram.config.root).find('.col_label_group text').click(function(evt) {
-            var colToHide = $(this).attr('full_name'),
-                allCols = clustergram.config.network_data.col_nodes_names,
-                colsToKeep = remove(allCols, colToHide);
-            console.log(colsToKeep);
-            clustergram.filter_viz_using_names({'col': colsToKeep});
-            hideD3Tooltip(clustergram, colToHide);
-            createClustergramResetButton(clustergram);
-        });
+        // These variables are used to disambiguate a single click from a
+        // double click. See: http://stackoverflow.com/a/7845282
+        var DELAY = 500,
+            clicks = 0,
+            timer = null;
+        $(clustergram.config.root).find('.col_label_group text')
+            .click(function(evt) {
+                var $this = $(this);
+                clicks++;
+                if (clicks === 1) {
+                    timer = setTimeout(function() {
+                        clicks = 0;
+                        var colToHide = $this.attr('full_name');
+                        hideColumn(clustergram, colToHide);
+                        hideD3Tooltip(colToHide);
+                        createClustergramResetButton(clustergram);
+                    }, DELAY);
+                } else {
+                    clearTimeout(timer);
+                    clicks = 0;
+                }
+
+            })
+            .dblclick(function(evt) {
+                evt.preventDefault();
+            });
+    }
+
+    function hideColumn(clustergram, colToHide) {
+        var allCols = clustergram.config.network_data.col_nodes_names,
+            colsToKeep = remove(allCols, colToHide);
+        clustergram.filter_viz_using_names({'col': colsToKeep});
+    }
+
+    // This is a hacky method. When you filter a clustergram, the tooltip does
+    // not disappear. Normally, I would ask Nick to fix this in Clustergrammer,
+    // but I need this wrapped up today.
+    function hideD3Tooltip(colToHide) {
+        $('.d3-tip span:contains("' + colToHide + '")').parent().css({opacity: 0});
     }
 
     function createClustergramResetButton(clustergram) {
-    }
 
-    function hideD3Tooltip(clustergram, colToHide) {
-        $('.d3-tip span:contains("' + colToHide + '")').parent().css({opacity: 0});
     }
 
     function makeClustergramColorLegend(rootElement, colors) {
