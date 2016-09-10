@@ -1,5 +1,7 @@
 function createAndManageVisualizations(config) {
 
+    var clustergrams = [];
+
     $(function() {
         var elem;
         dataTables();
@@ -15,26 +17,24 @@ function createAndManageVisualizations(config) {
             $(elem).hide();
             console.log(e);
         }
-        try {
-            elem = '#l1000cds2-heat-map';
-            createClustergram(
-                elem,
-                config.l1000cds2HeatMap
-            );
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
-        try {
-            elem = '#enrichr-heat-maps';
-            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
+        //try {
+        //    elem = '#l1000cds2-heat-map';
+        //    createClustergram(
+        //        elem,
+        //        config.l1000cds2HeatMap
+        //    );
+        //} catch (e) {
+        //    $(elem).hide();
+        //    console.log(e);
+        //}
+        //try {
+        //    elem = '#enrichr-heat-maps';
+        //    createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        //} catch (e) {
+        //    $(elem).hide();
+        //    console.log(e);
+        //}
     });
-
-    var clustergrams = [];
 
     function createAndWatchEnrichrHeatMaps(elem, enrichrHeatMaps) {
         var $enrichr = $(elem),
@@ -72,7 +72,29 @@ function createAndManageVisualizations(config) {
             makeClustergramColorLegend(rootElement, clustergram.params.viz.cat_colors.col['cat-0']);
             moveClustergramControls(rootElement);
         } catch (e) {}
+        try {
+            filterClustergramColsOnClick(clustergram);
+        } catch (e) {}
         clustergrams.push(clustergram);
+    }
+
+    function filterClustergramColsOnClick(clustergram) {
+        $(clustergram.config.root).find('.col_label_group text').click(function(evt) {
+            var colToHide = $(this).attr('full_name'),
+                allCols = clustergram.config.network_data.col_nodes_names,
+                colsToKeep = remove(allCols, colToHide);
+            console.log(colsToKeep);
+            clustergram.filter_viz_using_names({'col': colsToKeep});
+            hideD3Tooltip(clustergram, colToHide);
+            createClustergramResetButton(clustergram);
+        });
+    }
+
+    function createClustergramResetButton(clustergram) {
+    }
+
+    function hideD3Tooltip(clustergram, colToHide) {
+        $('.d3-tip span:contains("' + colToHide + '")').parent().css({opacity: 0});
     }
 
     function makeClustergramColorLegend(rootElement, colors) {
@@ -127,7 +149,8 @@ function createAndManageVisualizations(config) {
             '.gene_search_container,' +
             '.opacity_slider_container,' +
             '.dendro_sliders,' +
-            '.div_filters').css({
+            '.div_filters'
+        ).css({
             'padding-left': '0'
         });
     }
@@ -258,4 +281,16 @@ function createAndManageVisualizations(config) {
             });
         });
     }
+
+
+    // Utility function from:
+    // http://stackoverflow.com/a/3954451
+    function remove(array, item) {
+        var index = array.indexOf(item);
+        array.splice(index, 1);
+        return array
+    }
+
+    // For debugging.
+    window.clustergrams = clustergrams;
 }
