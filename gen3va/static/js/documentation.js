@@ -6,7 +6,6 @@ $(function() {
     }
 
     $('#documentation-nav li a').click(function(evt) {
-        //debugger;
         var $this = $(this),
             id = $this.attr('href').split('#')[1];
         scrollTo(id);

@@ -1,7 +1,20 @@
 function createAndManageVisualizations(config) {
 
     var clustergrams = {},
-        originalData = {};
+        originalData = {},
+        baseColors = [
+            '#00ffff', '#f0ffff', '#f5f5dc', '#000000',
+            '#0000ff', '#a52a2a', '#00ffff', '#00008b',
+            '#008b8b', '#a9a9a9', '#006400', '#bdb76b',
+            '#8b008b', '#556b2f', '#ff8c00', '#9932cc',
+            '#8b0000', '#e9967a', '#9400d3', '#ff00ff',
+            '#ffd700', '#008000', '#4b0082', '#f0e68c',
+            '#add8e6', '#e0ffff', '#90ee90', '#d3d3d3',
+            '#ffb6c1', '#ffffe0', '#00ff00', '#ff00ff',
+            '#800000', '#000080', '#808000', '#ffa500',
+            '#ffc0cb', '#800080', '#800080', '#ff0000',
+            '#c0c0c0', '#ffffff', '#ffff00'
+        ];
 
     $(function() {
         var elem;
@@ -82,10 +95,47 @@ function createAndManageVisualizations(config) {
         }
         try {
             filterClustergramColsOnClick(clustergram);
+            setTimeout(function() {
+                highlightDuplicateDatasets(clustergram);
+            }, 500);
         } catch (e) {
             console.log(e);
         }
         clustergrams[root] = clustergram;
+    }
+
+    /* Provides highlights for duplicate datasets. For example, if two
+     * signatures came from the same GSE, we want the user to know that.
+     */
+    function highlightDuplicateDatasets(clustergram) {
+        var cols = clustergram.config.network_data.col_nodes_names,
+            uniqueNames = {},
+            colors = baseColors.slice(),
+            color;
+        cols.forEach(function(name, i) {
+            var cName = cleanName(name);
+            if (typeof uniqueNames[cName] === 'undefined') {
+                uniqueNames[cName] = 1;
+            } else {
+                uniqueNames[cName]++;
+            }
+        });
+        $.each(uniqueNames, function(name, count) {
+            if (count > 1) {
+                if (colors.length > 0) {
+                    color = colors.pop();
+                } else {
+                    color = 'red';
+                }
+                highlightColumn(clustergram, name, color);
+            }
+        });
+    }
+
+    function highlightColumn(clustergram, colName, color) {
+        var $root = $(clustergram.config.root),
+            $path = $root.find('g[data-full-name="' + colName + '"] path');
+        $path.attr('fill', color);
     }
 
     /* When the user single-clicks on a column, remove it.
@@ -401,6 +451,12 @@ function createAndManageVisualizations(config) {
                 }
             });
         });
+    }
+
+    /* Strip the preceding number, spaces, and hyphens from the names.
+     */
+    function cleanName(name) {
+        return name.replace(/^[0-9]+ - /, '');
     }
 
     // For debugging.

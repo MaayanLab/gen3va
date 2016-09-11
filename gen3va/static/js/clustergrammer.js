@@ -4547,6 +4547,9 @@ var Clustergrammer =
 	  var col_label_group = col_label_obj
 	  // append new group for rect and label (not white lines)
 	  .append('g').attr('class', 'col_label_group')
+		  .attr('data-full-name', function(d) {
+			  return d.name.replace(/^[0-9]+ - /, '');
+		  })
 	  // rotate column labels
 	  .attr('transform', 'translate(' + params.viz.x_scale.rangeBand() / 2 + ',' + x_offset_click + ') rotate(45)').on('mouseover', function () {
 	    d3.select(this).select('text').classed('active', true);
@@ -10728,6 +10731,7 @@ var Clustergrammer =
 
 
 	// module
+
 
 	// exports
 
