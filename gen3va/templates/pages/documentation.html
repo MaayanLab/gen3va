@@ -16,6 +16,7 @@
                 <ol>
                     <li><a href='documentation#overview'>Overview</a></li>
                     <li><a href='documentation#understanding-reports'>Understanding Reports</a></li>
+                    <li><a href='documentation#custom-reports'>Custom Reports</a></li>
                     <li><a href='documentation#methods'>Methods</a></li>
                     <li><a href='documentation#api'>API</a></li>
                 </ol>
@@ -53,7 +54,7 @@
                                 target='_blank'>here</a>, while the related report can be found <a
                                 href='http://amp.pharm.mssm.edu/gen3va/report/approved/AGING_BD2K_LINCS_DCIC_COURSERA'
                                 target='_blank'>here</a>. A report can also be generated from a subset of signatures associated
-                        with a tag. This can be done using the <em>Custom Report Builder</em> on each tag page.</p>
+                        with a tag. This can be done using the <a href='documentation#custom-reports'>custom report builder</a> on each tag page.</p>
                 </div>
             </div>
 
@@ -71,18 +72,29 @@
                         attempt to find consensus between signatures.</p>
                 </div>
                 <div class='section'>
-                    <h4>PCA and hierarchical clustering plots</h4>
+                    <h4>PCA plots and heatmaps</h4>
                     <div>
-                        <p>GEN3VA reports provide principal component analysis (Fig. 1) and hierarchical clustering (Fig. 2)
+                        <p>GEN3VA reports provide principal component analysis (Fig. 1) and heatmaps (Fig. 2)
                             plots of the gene signatures in a collection. These plots are interactive; you can rotate, zoom, and
-                            mouse over the plots to view more information. The hierarchical clustering plots are built using <a
+                            mouse over the plots to view more information. The heatmaps are built using <a
                                     href='http://amp.pharm.mssm.edu/clustergrammer/' target='_blank'>Clustergrammer</a>, a
                             visualization application developed by the Ma'ayan Lab.</p>
                         <img src='static/images/screenshots/screenshot_pca.png'/>
-                        <p class='caption'>Fig. 1: Screenshot of the principal component analysis plot of 116 gene signatures
-                            extracted from studies that profiled the effect of adding endogenous ligands to mammalian cells.</p>
-                        <img src='static/images/screenshots/screenshot_hierarchical_clustering.png'/>
-                        <p class='caption'>Fig. 2: Screenshot of the hierarchical clustering of the 116 gene signatures from
+                        <p class='caption'>Fig. 1: Screenshot of the principal component analysis plot of 116 gene signatures extracted from studies that profiled the effect of adding endogenous ligands to mammalian cells.</p>
+                    </div>
+                    <div>
+                        <h4>Manipulating the heatmaps</h4>
+                        <p>
+                            <a href='http://amp.pharm.mssm.edu/clustergrammer/' target='_blank'>Clustergrammer</a> provides a good video tutorial for interacting with the heatmaps, but GEN3VA has a couple additional features. First, GEN3VA heatmaps all have a <span class='mono'>dataset</span> category. Gene signatures from the same study will be grouped in the same category, the category being the study or dataset name. This is useful for checking if clusters in the heatmap are merely artifacts of duplicate data or are genuinely interesting.
+                        </p>
+                        <p>
+                            Second, you can remove a column from a dataset using <span class='mono'>shift + click</span>. This allows you to probe what the heatmap will look like with specific signatures removed. A single click will sort the column.
+                        </p>
+                        <p>
+                            These changes are not permanent, but you can build a custom report with any subset of signatures you would like using the <a href='documentation#custom-reports'>custom report builder</a>.
+                        </p>
+                        <img src='static/images/screenshots/screenshot_heatmap.png'/>
+                        <p class='caption'>Fig. 2: Screenshot of the heatmap of the 116 gene signatures from
                             the endogenous ligand collection.</p>
                     </div>
                 </div>
@@ -100,9 +112,20 @@
                     <p><a href='http://amp.pharm.mssm.edu/L1000CDS2' target='_blank'>L1000CDS2</a> is a web application that
                         queries gene expression signatures against the LINCS L1000 data to identify and prioritize small
                         molecules that can either reverse or mimic the observed differential expression from the input
-                        signature. GEN3VA creates L1000CDS2 hierarchical clustering plots by performing this analysis for every
+                        signature. GEN3VA creates L1000CDS2 heatmaps by performing this analysis for every
                         gene signature in the tagged collection and then clustering the scores for mimicking and reversing the
                         expression pattern from the input signatures.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2 id='custom-reports'>Custom Reports</h2>
+                <div class='section'>
+                    <p>Sometimes a researcher may want to build a report from a subset of gene signatures from an existing collection. There are few a reasons to do this, such as wanting to categorize the signatures using a different metadata field or wanting to remove specific signatures for quality control reasons.</p>
+                    <p>
+                        GEN3VA has a custom report builder (Fig. 3) that allows a user to select all or some of the gene signatures from an existing collection and build a report. To build a custom report for a collection, click on the <strong>Signatures and Custom Report Builder</strong> button located at the top of any report page and follow the instructions there.</p>
+                    <img src='static/images/screenshots/screenshot_custom_reports.png'/>
+                        <p class='caption'>Fig. 3: Screenshot of a user building a custom report from the AGING_BD2K_LINCS_DCIC_COURSERA collection. Gene signature selection not shown.</p>
                 </div>
             </div>
 
