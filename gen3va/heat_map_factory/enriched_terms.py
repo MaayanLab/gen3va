@@ -2,7 +2,6 @@
 """
 
 import json
-from operator import itemgetter
 import pandas
 import requests
 from requests.exceptions import RequestException
@@ -10,7 +9,6 @@ import time
 
 from substrate import EnrichrResults, EnrichmentTerm
 from gen3va import Config
-from gen3va import database
 from gen3va.heat_map_factory import filters, utils
 
 

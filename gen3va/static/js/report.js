@@ -31,23 +31,23 @@ function createAndManageVisualizations(config) {
             $(elem).hide();
             console.log(e);
         }
-        try {
-            elem = '#l1000cds2-heat-map';
-            createClustergram(
-                elem,
-                config.l1000cds2HeatMap
-            );
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
-        try {
-            elem = '#enrichr-heat-maps';
-            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
+        //try {
+        //    elem = '#l1000cds2-heat-map';
+        //    createClustergram(
+        //        elem,
+        //        config.l1000cds2HeatMap
+        //    );
+        //} catch (e) {
+        //    $(elem).hide();
+        //    console.log(e);
+        //}
+        //try {
+        //    elem = '#enrichr-heat-maps';
+        //    createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        //} catch (e) {
+        //    $(elem).hide();
+        //    console.log(e);
+        //}
     });
 
     /* Creates the Enrichr clustergrams.
@@ -77,16 +77,16 @@ function createAndManageVisualizations(config) {
     /* Creates a new clustergram, caching the original data so we can "reset"
      * it later.
      */
-    function createClustergram(root, clustergramData) {
+    function createClustergram(root, data) {
         var clustergram = Clustergrammer({
             root: root,
             // This specifies the filtering for the clustergram.
             // For more, see:
             // https://github.com/MaayanLab/clustergrammer.js/blob/master/load_clustergram.js
             ini_view: {N_row_sum :50},
-            network_data: clustergramData.network
+            network_data: data.network
         });
-        originalData[root] = clustergramData;
+        originalData[root] = data;
         try {
             makeClustergramColorLegend(root, clustergram.params.viz.cat_colors.col['cat-0']);
             fixClustergramControlsStyling(root);
@@ -95,9 +95,7 @@ function createAndManageVisualizations(config) {
         }
         try {
             filterClustergramColsOnClick(clustergram);
-            setTimeout(function() {
-                highlightDuplicateDatasets(clustergram);
-            }, 500);
+            highlightDuplicateDatasets(clustergram);
         } catch (e) {
             console.log(e);
         }
@@ -108,28 +106,31 @@ function createAndManageVisualizations(config) {
      * signatures came from the same GSE, we want the user to know that.
      */
     function highlightDuplicateDatasets(clustergram) {
-        var cols = clustergram.config.network_data.col_nodes_names,
-            uniqueNames = {},
-            colors = baseColors.slice(),
-            color;
-        cols.forEach(function(name, i) {
-            var cName = cleanName(name);
-            if (typeof uniqueNames[cName] === 'undefined') {
-                uniqueNames[cName] = 1;
-            } else {
-                uniqueNames[cName]++;
-            }
-        });
-        $.each(uniqueNames, function(name, count) {
-            if (count > 1) {
-                if (colors.length > 0) {
-                    color = colors.pop();
+        var DELAY = 2000;
+        setTimeout(function() {
+            var cols = clustergram.config.network_data.col_nodes_names,
+                uniqueNames = {},
+                colors = baseColors.slice(),
+                color;
+            cols.forEach(function (name, i) {
+                var cName = cleanName(name);
+                if (typeof uniqueNames[cName] === 'undefined') {
+                    uniqueNames[cName] = 1;
                 } else {
-                    color = 'red';
+                    uniqueNames[cName]++;
                 }
-                highlightColumn(clustergram, name, color);
-            }
-        });
+            });
+            $.each(uniqueNames, function (name, count) {
+                if (count > 1) {
+                    if (colors.length > 0) {
+                        color = colors.pop();
+                    } else {
+                        color = 'red';
+                    }
+                    highlightColumn(clustergram, name, color);
+                }
+            });
+        }, DELAY);
     }
 
     function highlightColumn(clustergram, colName, color) {
@@ -141,32 +142,15 @@ function createAndManageVisualizations(config) {
     /* When the user single-clicks on a column, remove it.
      */
     function filterClustergramColsOnClick(clustergram) {
-        // These variables are used to disambiguate a single click from a
-        // double click. See: http://stackoverflow.com/a/7845282
-        var DELAY = 500,
-            clicks = 0,
-            timer = null;
-        $(clustergram.config.root).find('.col_label_group text')
-            .click(function(evt) {
-                clicks++;
-                var $target = $(evt.target);
-                if (clicks === 1) {
-                    timer = setTimeout(function() {
-                        clicks = 0;
-                        var colToHide = $target.attr('full_name');
-                        hideColumn(clustergram, colToHide);
-                        hideD3Tooltips();
-                        makeClustergramResetButton(clustergram);
-                    }, DELAY);
-                } else {
-                    clearTimeout(timer);
-                    clicks = 0;
-                }
-
-            })
-            .dblclick(function(evt) {
-                evt.preventDefault();
-            });
+        d3.selectAll(clustergram.config.root + ' .col_label_text').on('click.report', function(d) {
+            if (d3.event.shiftKey) {
+                var colToHide = d.name;
+                hideColumn(clustergram, colToHide);
+                hideD3Tooltips();
+                highlightDuplicateDatasets(clustergram);
+                makeClustergramResetButton(clustergram);
+            }
+        });
     }
 
     /* Hides a clustergram column based on column name.
@@ -214,6 +198,7 @@ function createAndManageVisualizations(config) {
         // one, but just to be explicit...
         clustergrams[root] = undefined;
         createClustergram(root, data);
+        highlightDuplicateDatasets(clustergram);
     }
 
     /* Creates the clustergrams' color legends and handles events.
