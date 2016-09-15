@@ -51,11 +51,26 @@ def view_custom_tag(report_id):
 def _get_metadata_names_and_percentages(signatures):
     metadata = {}
     for sig in signatures:
+        sig_metadata = {}
         for meta in sig.filtered_optional_metadata:
-            if meta.name not in metadata:
-                metadata[meta.name] = 0
-            metadata[meta.name] += 1
+            name = meta.name
+            # Sometimes a user may input two metadata fields with the same
+            # name. For example, since GEO2Enrichr automatically collects the
+            # organism field, if a user also inputs the organism field, then
+            # we will over-count the coverage of this field. This check
+            # prevents that from happening.
+            if name in sig_metadata:
+                continue
+            else:
+                sig_metadata[name] = True
+            if name not in metadata:
+                metadata[name] = 0
+            metadata[name] += 1
+
     num_sigs = len(signatures)
     for name, count in metadata.iteritems():
-        metadata[name] = round((float(count) / num_sigs) * 100, 2)
+        if count > num_sigs:
+            metadata[name] = 100
+        else:
+            metadata[name] = round((float(count) / num_sigs) * 100, 2)
     return metadata
