@@ -31,23 +31,23 @@ function createAndManageVisualizations(config) {
             $(elem).hide();
             console.log(e);
         }
-        //try {
-        //    elem = '#l1000cds2-heat-map';
-        //    createClustergram(
-        //        elem,
-        //        config.l1000cds2HeatMap
-        //    );
-        //} catch (e) {
-        //    $(elem).hide();
-        //    console.log(e);
-        //}
-        //try {
-        //    elem = '#enrichr-heat-maps';
-        //    createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
-        //} catch (e) {
-        //    $(elem).hide();
-        //    console.log(e);
-        //}
+        try {
+            elem = '#l1000cds2-heat-map';
+            createClustergram(
+                elem,
+                config.l1000cds2HeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#enrichr-heat-maps';
+            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
     });
 
     /* Creates the Enrichr clustergrams.
