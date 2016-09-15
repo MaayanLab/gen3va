@@ -1,20 +1,7 @@
 function createAndManageVisualizations(config) {
 
     var clustergrams = {},
-        originalData = {},
-        baseColors = [
-            '#00ffff', '#f0ffff', '#f5f5dc', '#000000',
-            '#0000ff', '#a52a2a', '#00ffff', '#00008b',
-            '#008b8b', '#a9a9a9', '#006400', '#bdb76b',
-            '#8b008b', '#556b2f', '#ff8c00', '#9932cc',
-            '#8b0000', '#e9967a', '#9400d3', '#ff00ff',
-            '#ffd700', '#008000', '#4b0082', '#f0e68c',
-            '#add8e6', '#e0ffff', '#90ee90', '#d3d3d3',
-            '#ffb6c1', '#ffffe0', '#00ff00', '#ff00ff',
-            '#800000', '#000080', '#808000', '#ffa500',
-            '#ffc0cb', '#800080', '#800080', '#ff0000',
-            '#c0c0c0', '#ffffff', '#ffff00'
-        ];
+        originalData = {};
 
     $(function() {
         var elem;
@@ -78,6 +65,12 @@ function createAndManageVisualizations(config) {
      * it later.
      */
     function createClustergram(root, data) {
+
+        var hasCategory = typeof data.network.col_nodes[0]['cat-0'] !== 'undefined',
+            catIdx = hasCategory ? '1' : '0';
+
+        addDuplicateHlights(catIdx, data.network.col_nodes, data.network.views);
+
         var clustergram = Clustergrammer({
             root: root,
             // This specifies the filtering for the clustergram.
@@ -88,14 +81,15 @@ function createAndManageVisualizations(config) {
         });
         originalData[root] = data;
         try {
-            makeClustergramColorLegend(root, clustergram.params.viz.cat_colors.col['cat-0']);
+            if (hasCategory) {
+                makeClustergramColorLegend(root, clustergram.params.viz.cat_colors.col['cat-0']);
+            }
             fixClustergramControlsStyling(root);
         } catch (e) {
             console.log(e);
         }
         try {
             filterClustergramColsOnClick(clustergram);
-            highlightDuplicateDatasets(clustergram);
         } catch (e) {
             console.log(e);
         }
@@ -105,43 +99,36 @@ function createAndManageVisualizations(config) {
     /* Provides highlights for duplicate datasets. For example, if two
      * signatures came from the same GSE, we want the user to know that.
      */
-    function highlightDuplicateDatasets(clustergram) {
-        // When a clustergram is being modified or reset, it takes a while. It
-        // seems like one of the last things to happen is coloring the wedges.
-        // We delay 2 seconds because we want to color the duplicates *after*
-        // the clustergram has completely loaded. There is no callback function
-        // for this.
-        var DELAY = 2000;
-        setTimeout(function() {
-            var cols = clustergram.config.network_data.col_nodes_names,
-                uniqueNames = {},
-                colors = baseColors.slice(),
-                color;
-            cols.forEach(function (name, i) {
-                var cName = cleanName(name);
-                if (typeof uniqueNames[cName] === 'undefined') {
-                    uniqueNames[cName] = 1;
-                } else {
-                    uniqueNames[cName]++;
-                }
-            });
-            $.each(uniqueNames, function (name, count) {
-                if (count > 1) {
-                    if (colors.length > 0) {
-                        color = colors.pop();
-                    } else {
-                        color = 'red';
-                    }
-                    highlightColumn(clustergram, name, color);
-                }
-            });
-        }, DELAY);
-    }
+    function addDuplicateHlights(catIdx, colNodes, views) {
+        var uniqueNames = {},
+            uniqueNamesIndices;
 
-    function highlightColumn(clustergram, colName, color) {
-        var $root = $(clustergram.config.root),
-            $path = $root.find('g[data-full-name="' + colName + '"] path');
-        $path.attr('fill', color);
+        colNodes.forEach(function(col, i) {
+            var cName = cleanName(col.name);
+            if (typeof uniqueNames[cName] === 'undefined') {
+                uniqueNames[cName] = 1;
+            } else {
+                uniqueNames[cName]++;
+            }
+        });
+
+        uniqueNamesIndices = Object.keys(uniqueNames);
+        colNodes.forEach(function(col, i) {
+            var cName = cleanName(col.name);
+            if (uniqueNames[cName] === 1) {
+                col['cat-' + catIdx] = 'dataset: ' + cName;
+                col['cat_' + catIdx + '_index'] = 0;
+            } else {
+                col['cat-' + catIdx] = 'dataset: ' + cName;
+                col['cat_' + catIdx + '_index'] = uniqueNamesIndices.indexOf(cName) + 1;
+            }
+        });
+
+        if (views) {
+            views.forEach(function(view, i) {
+                addDuplicateHlights(catIdx, view.nodes.col_nodes, undefined);
+            });
+        }
     }
 
     /* When the user single-clicks on a column, remove it.
@@ -152,7 +139,6 @@ function createAndManageVisualizations(config) {
                 var colToHide = d.name;
                 hideColumn(clustergram, colToHide);
                 hideD3Tooltips();
-                highlightDuplicateDatasets(clustergram);
                 makeClustergramResetButton(clustergram);
             }
         });
@@ -203,7 +189,6 @@ function createAndManageVisualizations(config) {
         // one, but just to be explicit...
         clustergrams[root] = undefined;
         createClustergram(root, data);
-        highlightDuplicateDatasets(clustergram);
     }
 
     /* Creates the clustergrams' color legends and handles events.
