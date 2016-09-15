@@ -106,6 +106,11 @@ function createAndManageVisualizations(config) {
      * signatures came from the same GSE, we want the user to know that.
      */
     function highlightDuplicateDatasets(clustergram) {
+        // When a clustergram is being modified or reset, it takes a while. It
+        // seems like one of the last things to happen is coloring the wedges.
+        // We delay 2 seconds because we want to color the duplicates *after*
+        // the clustergram has completely loaded. There is no callback function
+        // for this.
         var DELAY = 2000;
         setTimeout(function() {
             var cols = clustergram.config.network_data.col_nodes_names,
