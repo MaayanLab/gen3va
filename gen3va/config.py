@@ -6,8 +6,12 @@ import os
 
 class Config(object):
 
-    with open('gen3va/app.conf') as f:
-        lines = [x for x in f.read().split('\n')]
+    if os.environ.get('CONFIG'):
+        import json
+        lines = json.loads(os.environ['CONFIG'])
+    else:
+        with open('gen3va/app.conf') as f:
+            lines = [x for x in f.read().split('\n')]
 
     DEBUG = lines[1] == 'True'
 
